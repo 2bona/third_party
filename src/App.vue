@@ -1,29 +1,61 @@
-<template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
-  </div>
-</template>
 
-<style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<template>
+    <v-app  >               
+    <v-container fluid class="pa-0">
+      
+    <v-snackbar
+      :value="snackbarStatus"
+      :timeout="timeout"
+      :color="snackbarColor"
+      top left
+    >
+      {{ text }}
+      <v-btn text>
+        Close
+      </v-btn>
+    </v-snackbar>
+    <v-content>
+      <router-view></router-view>
+
+    </v-content>   </v-container>
+
+  </v-app>
+</template>
+<style >
+.texti{
+  background: -webkit-gradient(linear,left top,right top,from(#ff8a00),to(#da1b60));
+    background: linear-gradient(to right,#ff8a00,#da1b60);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    text-shadow: none;
+
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.v-toolbar__content, .v-toolbar__extension {
+    padding: 4px 9px!important;
+}
+body, html{
+  overflow-x: hidden;
 }
 </style>
+<script>
+export default {
+    name: "App",
+    components: {
+        
+    },
+    data() {
+        return {
+          vendor: 'chuks world kitchen',
+      timeout: 6000
+        }
+    },
+    computed: {
+      text(){return this.$store.getters.getSnackbarText},
+      snackbarColor(){return this.$store.getters.getSnackbarColor},
+      snackbarStatus(){return this.$store.getters.getSnackbarStatus},
+    },
+
+}
+</script>
