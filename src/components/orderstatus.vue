@@ -2,7 +2,7 @@
 <div class="container px-8 mt-12">
 
 
-    <v-card width="100%" class="mt-6" flat tile height="600" color="transparent">
+    <v-card width="100%" class="mt-6" flat tile  color="transparent">
         <v-row justify="space-between">
             <v-flex xs5>
               <p class="overline text-uppercase font-weight-bold grey--text text--darken-2">Order Status</p>  
@@ -12,7 +12,7 @@
             </v-flex>
 
         </v-row>
-        <v-row justify="space-around" >
+        <v-row justify="space-around">
             <v-avatar
             tile class="my-5 elevation-2"
             style="border-radius: 10px"

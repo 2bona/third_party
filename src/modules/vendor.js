@@ -1,90 +1,161 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import VendorAPI from "../api/VendorApi.js";
+import router from "../router";
+import NProgress from "nprogress";
+const axios = require("axios");
+
+import {
+  AXIOS_CONFIG
+} from "./../config.js";
 export const vendor = {
   state: {
     vendors: [],
-    vendorsLoadStatus: 0,
-    vendor: {},
+    vendor: JSON.parse(localStorage.getItem("vendor")) || "",
+    menu: JSON.parse(localStorage.getItem("menu")) || '',
+    list: JSON.parse(localStorage.getItem("list")) || '',
+    items: JSON.parse(localStorage.getItem("items")) || '',
+    options: JSON.parse(localStorage.getItem("options")) || '',
     vendorLoadStatus: 0
   },
   actions: {
-    loadVendors({ commit }) {
-      commit("setVendorsLoadStatus", 1);
-
-      VendorAPI.getVendors()
-        .then(function(response) {
-          commit("setVendors", response.data);
-          commit("setVendorsLoadStatus", 2);
-        })
-        .catch(function() {
-          commit("setVendors", []);
-          commit("setVendorsLoadStatus", 3);
-        });
+     addVendor({
+       commit,
+       state,
+       dispatch
+     }, data) {
+           localStorage.setItem("vendor", data)
+           commit("setVendor", data)
+     },
+    addCategory({
+      commit,
+      state,
+      dispatch
+    }, data) {
+          // dispatch('loadCategories', {vendor_name: data.vendor_name});
     },
-    loadVendor({ commit }, data) {
-      commit("setVendorLoadStatus", 1);
-
-      VendorAPI.getVendor(data.id)
-        .then(function(response) {
-          commit("setVendor", response.data);
-          commit("setVendorLoadStatus", 2);
-        })
-        .catch(function() {
-          commit("setVendor", {});
-          commit("setVendorLoadStatus", 3);
-        });
+    
+    loadPage({
+      commit,
+      state,
+      dispatch
+    }, data) {
+      dispatch('loadOptions')
+      dispatch('loadItems')
     },
-    addVendor({ commit, state, dispatch }, data) {
-      commit("setVendorLoadStatus", 1);
-
-      VendorAPI.postAddNewVendor(
-        data.name,
-        data.address,
-        data.city,
-        data.state,
-        data.zip
-      )
-        .then(function(response) {
-          commit("setVendorLoadStatus", 2);
-          dispatch("loadVendors");
+    loadCategories({
+      commit,
+      state,
+      dispatch
+    }, data) {
+      let url = "/category/all?vendor_name="+data.name
+      axios.get(AXIOS_CONFIG.API_URL + url)
+        .then(function (response) {
+          let menu = response.data.menu;
+          localStorage.setItem("menu", JSON.stringify(menu))
+          commit("setMenu", menu)
+        }).catch(function (error) {
         })
-        .catch(function() {
-          commit("setVendorLoadStatus", 3);
+    },
+    loadItems({
+      commit,
+      state,
+      dispatch
+    }, data) {
+      let url = "/item/all"
+      axios.get(AXIOS_CONFIG.API_URL + url)
+        .then(function (response) {
+          let items = response.data.items.data;
+          localStorage.setItem("items", JSON.stringify(items))
+          commit("setItems", items)
+        }).catch(function (error) {
+        })
+    },
+    saveItems({
+      commit,
+      state,
+      dispatch
+    }, data) {
+          localStorage.setItem("items", JSON.stringify(data.data));
+          commit("setItems", data.data);
+    },
+loadOptions({
+      commit,
+      state,
+      dispatch
+    }, data) {
+      let url = "/options/all"
+      axios.get(AXIOS_CONFIG.API_URL + url)
+        .then(function (response) {
+          let options = response.data.options;
+          let list = response.data.list;
+          localStorage.setItem("options", JSON.stringify(options))
+          localStorage.setItem("lists", JSON.stringify(list))
+          commit("setOptions", options)
+          commit("setList", list)
+        }).catch(function (error) {
+          console.log(error)
+        })
+    },
+  loadVendor({
+      commit,
+      state,
+      dispatch
+    }, data) {
+      let url = "/vendor/find?user_id="+data.vendor
+      axios.get(AXIOS_CONFIG.API_URL + url)
+      .then(function (response) {
+        let vendor = response.data.vendor;
+        let v_name = response.data.vendor.name;
+        localStorage.setItem("vendor", JSON.stringify(vendor))
+        commit("setVendor", vendor)
+        dispatch('loadCategories', {
+          vendor_name: v_name
         });
+      }).catch(function (error) {
+        console.log(error);
+        })
     }
-  },
+},
   mutations: {
-    setVendorsLoadStatus(state, status) {
-      state.VendorsLoadStatus = status;
+    setVendor(state, data) {
+      state.vendor = data
     },
-
-    setVendors(state, Vendors) {
-      state.Vendors = Vendors;
+    setMenu(state, menu) {
+      state.menu = menu
     },
-
+    setOptions(state, options) {
+      state.options = options
+    },
+    setList(state, list) {
+      state.list = list
+    },
+    setItems(state, items) {
+      state.items = items
+    },
     setVendorLoadStatus(state, status) {
-      state.VendorLoadStatus = status;
+      state.VendorLoadStatus = status
     },
-
-    setVendor(state, Vendor) {
-      state.Vendor = Vendor;
-    }
   },
   getters: {
-    getVendorsLoadStatus(state) {
-      return state.VendorsLoadStatus;
+    getMenu(state) {
+      return state.menu
     },
-
-    getVendors(state) {
-      return state.Vendors;
+    getOptions(state) {
+      return state.options
     },
-
-    getVendorLoadStatus(state) {
-      return state.VendorLoadStatus;
+    getList(state) {
+      return state.list
     },
-
+    getItems(state) {
+      return state.items
+    },
     getVendor(state) {
-      return state.Vendor;
-    }
+      return state.vendor
+    },
+    getVendorLoadStatus(state) {
+      return state.vendorLoadStatus
+    },
+
+
   }
 };

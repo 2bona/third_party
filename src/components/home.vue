@@ -1,7 +1,6 @@
-
 <template>
     <v-app>
-                <v-app-bar
+    <v-app-bar
       color=""
       dense
       fixed
@@ -85,9 +84,6 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-
-    
-
 <v-content style="overflow-x:hidden"> 
     <router-view name="content"></router-view>
  

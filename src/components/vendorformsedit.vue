@@ -10,7 +10,7 @@
          <v-text-field
             ref="name"
             value="value"
-            class="font-weight-bold grey--text text--darken-4"
+            class="font-weight-regular grey--text text--darken-4"
             
             placeholder="Name of item"
             color="orange"
@@ -19,7 +19,7 @@
          <v-text-field
             ref="email"
             value="value"
-            class="font-weight-bold grey--text text--darken-4"
+            class="font-weight-regular grey--text text--darken-4"
             placeholder="Price"
             color="orange"
             required
@@ -61,7 +61,7 @@
           name="description"
           label="Description"
           color="orange"
-          class="font-weight-bold grey--text text--darken-4"
+          class="font-weight-regular grey--text text--darken-4"
           placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
          value="content"
         ></v-textarea>
@@ -69,7 +69,7 @@
           </v-flex>
           <v-flex xs12>
             <v-select
-            class="font-weight-bold grey--text text--darken-4"
+            class="font-weight-regular grey--text text--darken-4"
             :items="extras"
             attach
             chips
@@ -81,7 +81,7 @@
 </v-flex>
 <v-flex xs12>
             <v-select
-            class="font-weight-bold grey--text text--darken-4"
+            class="font-weight-regular grey--text text--darken-4"
             :items="tags"
             attach
             chips

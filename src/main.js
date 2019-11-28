@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 
 /**
@@ -13,13 +14,10 @@ import vuetify from "./plugins/vuetify";
 import router from "./router";
 import VueMeta from "vue-meta";
 import "./registerServiceWorker";
-
 import Vuex from "vuex";
 import store from "./store.js";
 import axios from "axios";
 // import "./stylus/main.styl";
-// import NProgress from "nprogress";
-
 // axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -27,17 +25,6 @@ import axios from "axios";
 
 // axios.defaults.headers.common['Authorization'] = 'Bearer' + apitoken;
 axios.defaults.baseURL = "http://127.0.0.1:8000/api";
-// before a request is made start the nprogress
-// axios.interceptors.request.use(config => {
-//   NProgress.start()
-//   return config
-// })
-
-// before a response is returned stop nprogress
-// axios.interceptors.response.use(response => {
-//   NProgress.done()
-//   return response
-// })
 Vue.use(axios);
 
 Vue.config.productionTip = false;
@@ -58,6 +45,13 @@ Vue.filter("name", function(text) {
     return text.slice(0, 15) + "...";
   } else {
     return text;
+  }
+});
+Vue.filter("price", function(value) {
+  if (value != null) {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  } else {
+    return 0;
   }
 });
 new Vue({

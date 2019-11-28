@@ -2,49 +2,53 @@
    <v-card style="overflow-x: hidden;" flat tile class="pb-9">
        <v-row  justify="space-around">
            <v-avatar
-               size="90"
-               tile
+               size="80"
                color="transparent"
-               style="border-radius:10px"
-               class="mt-6 mb-3 elevation-15"
+               class="mt-6 mb-3 elevation-15" 
            >
-               <img src="https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="profile">
+               <img :src="user.image" @click="openImageInput" alt="profile">
+             <v-overlay
+          absolute opacity="0.3"
+          z-index="1"
+          :value="attachments.length">
+             </v-overlay>
+        <v-btn :loading="loading2" style="z-index:7" dark absolute x-small rounded fab v-show="attachments.length" color="orange" class="mt-0 mb-0 mx-4" @click="uploadFile"> <v-icon color="orange lighten-4" dark>mdi-cloud-upload</v-icon></v-btn>
            </v-avatar>
-           <v-flex xs12 class="mb-3">
-            <h2 class="text-center text-capitalize font-weight-medium">Emeka okolo</h2>
-            <p class="text-center blue--text text--lighten-2 caption"><v-icon color="blue lighten-2" size="13">mdi-map-marker</v-icon> Awka, Nigeria</p>
+           <v-flex xs12 class="mb-4">
+            <h3 class="text-center mb-0 text-capitalize grey--text text--darken-1 font-weight-bold"><span>{{user.surname}}</span> <span> {{user.middle_name}} </span> <span>{{user.first_name}}</span></h3>
+            <p class="text-center mb-0 blue--text text--lighten-2 caption"><v-icon color="blue lighten-2" size="13">mdi-map-marker</v-icon> Awka, Nigeria</p>
            </v-flex>
+        <input  v-show="false" ref="file" type="file" @change="fieldChange" class="v-input">
            <v-row class="">
               <v-flex xs4>
-                  <h3 class="grey--text text--darken-1 font-weight-medium  text-center mb-0">
+                  <h5 class="grey--text text--darken-1 font-weight-regular  text-center mb-0">
                       20
-                  </h3>
-                  <p class=" mt-0 grey--text text-uppercase caption font-weight-regular text--lighten-1  text-center">
+                  </h5>
+                  <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
                       Orders
                   </p>
            </v-flex>   
               <v-flex xs4>
-                    <h3 class="green--text font-weight-medium  text-center mb-0">
+                    <h5 class="green--text font-weight-regular  text-center mb-0">
                       N2,000
-                    </h3>
-                  <p class=" mt-0 grey--text text-uppercase caption font-weight-regular text--lighten-1  text-center">
+                    </h5>
+                  <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
                       Wallet
                   </p>
            </v-flex>   
               <v-flex xs4>
-                   <h3 class="grey--text text--darken-1  font-weight-medium  text-center mb-0">
+                   <h5 class="grey--text text--darken-1  font-weight-regular  text-center mb-0">
                       5000
-                  </h3>
-                  <p class=" mt-0 grey--text text-uppercase caption font-weight-regular text--lighten-1  text-center">
+                  </h5>
+                  <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
                       Points
                   </p>
            </v-flex>   
            </v-row>    
        </v-row>
-<v-tabs background-color=" darken-1" color="orange" grow mobile-break-point="90">
-        <v-tab class="font-weight-bold">Your Favourites</v-tab>
-        <v-tab class="font-weight-bold">Account Setting</v-tab>
-
+<v-tabs slider-color="orange" class="grey--text text--lighten-1" active-class="orange--text" color="orange" grow mobile-break-point="90">
+        <v-tab class=" text-capitalize">favourites</v-tab>
+        <v-tab class=" text-capitalize">Account</v-tab>
         <v-tab-item>
     <div class="container">
           <v-flex xs12>
@@ -67,11 +71,11 @@
                     <v-layout row wrap>
                       <v-flex xs12>
                         <p
-                          class=" body-1 grey--text text-truncate text--darken-3 font-weight-regular my-0"
+                          class=" body-2 grey--text text-truncate text--darken-1 font-weight-regular my-0"
                         >Roasted Bread and tea</p>
                       </v-flex>
                       <v-flex xs12>
-                        <p class="caption font-weight-black  my-0" style>N1000</p>
+                        <p class="caption font-weight-regular  my-0" style>N1000</p>
                       </v-flex>
                     </v-layout>
                   </v-card-text>
@@ -122,91 +126,89 @@
           </v-flex>
         </div>
         </v-tab-item>
-
         <v-tab-item class="px-4 pt-4 pb-8">
   <v-expansion-panels>
     <v-expansion-panel>
-      <v-expansion-panel-header class="px-3"><p class="mb-0 subtitle-2"><v-icon color="orange">mdi-account</v-icon> Account Information</p> </v-expansion-panel-header>
-  <v-expansion-panel-content class="px-4 py-2">
-        <div>
+      <v-expansion-panel-header @click="overlay = true" class="px-3"><p class="grey--text  font-weight-regular  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-account</v-icon> Account Information</p> </v-expansion-panel-header>
+  <v-expansion-panel-content style="position: relative" class="px-4 py-2">
+         <v-form  
+          onSubmit="return false;" ref="form">
 <v-flex xs12>
       
          <v-text-field
-            ref="name"
-            class="font-weight-bold grey--text text--darken-4"
-            label="Name"
-            value="Okoli Bona"
-            placeholder="Your Full Name"
+            validate-on-blur @keyup.enter.native="edit"
+            class="grey--text text--darken-2"
+            label="First name"
+            v-model="user.first_name"
+            placeholder="Your first name"
+            :rules="[rules.required, rules.min]"
             color="orange"
             required
           ></v-text-field>
          <v-text-field
-            ref="email"
-            class="font-weight-bold grey--text text--darken-4"
+            validate-on-blur @keyup.enter.native="edit"
+            class="grey--text text--darken-2"
+            label="Middle name"
+            v-model="user.middle_name"
+            placeholder="Your middle name"
+            color="orange"
+            required
+          ></v-text-field>
+         <v-text-field
+            validate-on-blur @keyup.enter.native="edit"
+            class="grey--text text--darken-2"
+            label="Last name"
+            :rules="[rules.required, rules.min]"
+            v-model="user.surname"
+            placeholder="Your surname"
+            color="orange"
+            required
+          ></v-text-field>
+         <v-text-field
+            validate-on-blur @keyup.enter.native="edit"
+            class="grey--text text--darken-2"
             label="Email"
-            value="sayhitobona@gmail.com"
-            placeholder="Your Email"
+            :rules="[rules.required, rules.email]"
+            v-model="user.email"
+            placeholder="Your email"
+            :disabled="user.verification_type === 'email'"
             color="orange"
             required
           ></v-text-field>
-   
-
 </v-flex>
    <v-row class="px-3"  justify="space-between">
-
 <v-flex xs12>
          <v-text-field
-            ref="phone"
-            label="Phone Number"
-            class="font-weight-bold grey--text text--darken-4"
-            value="08033685498"
-            placeholder="Your Phone Number"
+            label="Phone number"
+            :disabled="user.verification_type === 'phone'"
+            validate-on-blur @keyup.enter.native="edit"
+            class="grey--text text--darken-2"
+            v-model="user.phone" :rules="numberRules"
+            placeholder="Your phone number"
             color="orange"
             required
-          ></v-text-field>
-   
+          ></v-text-field> 
 </v-flex>
-<v-flex xs12>
-            <v-select
-            class="font-weight-bold grey--text text--darken-4"
-            :items="items"
-            attach
-            chips
-            placeholder="what do you like"
-            label="Likes"
-            color="orange"
-            multiple
-          ></v-select>
-</v-flex>
-
    </v-row>
-
-   <v-row class="px-3"  justify="space-between">
-
-<v-flex xs12>
-
-       <v-textarea
-          name="bio"
-          label="Bio"
-          color="orange"
-          class="font-weight-bold grey--text text--darken-4"
-          placeholder="A little info about you."
-          hint="Maximum of 100 words"
-        ></v-textarea>
-          
-          </v-flex>
-
-   </v-row>
-
       <v-row class="my-5 px-3"  justify="space-around">
-<v-btn  to="/pay/pin" class="px-6" small color="orange" dark rounded>Edit</v-btn>
+<v-btn  @click.prevent="edit" :loading="loading" class="px-6" small color="orange" dark rounded>Edit</v-btn>
       </v-row>
-
-</div>
+</v-form>
+          <v-overlay
+          absolute opacity="0.3"
+          :value="overlay"
+        >
+          <v-btn
+          text
+            @click="overlay = false"
+          >
+            <v-icon>mdi-pencil-lock-outline</v-icon>
+          </v-btn>
+        </v-overlay>
   </v-expansion-panel-content>
     </v-expansion-panel>
     <v-expansion-panel>
-      <v-expansion-panel-header class="px-3"><p class="mb-0 subtitle-2"><v-icon color="orange">mdi-map-marker</v-icon> Locations</p> </v-expansion-panel-header>
+      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-regular  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-map-marker</v-icon> Locations</p> </v-expansion-panel-header>
   <v-expansion-panel-content class="px-0 py-2">
          <v-carousel show-arrows-on-hover
  height="290px" :show-arrows="false">
@@ -222,7 +224,7 @@
     ></iframe>
       </v-card>
       <v-row>
-        <v-btn rounded small class="mx-auto mt-2" color="red lighten-1">delete</v-btn>
+        <v-btn rounded small class="mx-auto mt-2" icon color="red lighten-2"><v-icon>mdi-trash-can</v-icon></v-btn>
   
       </v-row>
     </v-carousel-item>
@@ -231,13 +233,13 @@
       </v-expansion-panel-content>
     </v-expansion-panel>
     <v-expansion-panel>
-      <v-expansion-panel-header class="px-3"><p class="mb-0 subtitle-2"><v-icon color="orange">mdi-credit-card</v-icon> Payment</p> </v-expansion-panel-header>
+      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-regular  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-credit-card</v-icon> Payment</p> </v-expansion-panel-header>
           <v-expansion-panel-content class="px-0 py-2 pb-1">
    <v-carousel show-arrows-on-hover
  height="250px" :show-arrows="false">
     <v-carousel-item  v-for="n in 4" :key="n">
  <v-card color="blue-grey darken-3" elevation="8" width="250px" style="border-radius: 10px" height="130px" class="mx-auto pt-2 pb-1 pl-5 pr-6">
-     <v-row class="px-0" justify="">
+     <v-row class="px-0">
          
          <v-flex xs12 class="text-right">
              <v-avatar
@@ -274,7 +276,7 @@
      </v-row>
     </v-card>
       <v-row class="my-5 px-3"  justify="space-around">
-<v-btn  to="/pay/pin" class="" small color="red lighten-1" dark rounded>delete</v-btn>
+<v-btn  to="/pay/pin" icon class="" small color="red lighten-2" dark rounded><v-icon>mdi-trash-can</v-icon></v-btn>
       </v-row>
     </v-carousel-item>
    </v-carousel>
@@ -286,7 +288,7 @@
  
           <v-list>
             <v-list-item class="px-4 pr-6">
-                 <v-list-item-title class=" pl-0 subtitle-2">
+                 <v-list-item-title class=" pl-0 subtitle-2 grey--text  font-weight-regular  text--darken-2">
                 Location Tracking
                 <span class="caption"></span>
               </v-list-item-title>
@@ -296,43 +298,21 @@
              
             </v-list-item>
                 <v-list-item>
-                 <v-list-item-title class="subtitle-2">
+                 <v-list-item-title class="subtitle-2 grey--text  font-weight-regular  text--darken-2">
                 Fund your wallet
               </v-list-item-title>
               <v-list-item-action>
-                <v-btn dark small color="green" rounded class="px-8 font-weight-bold green--text text--lighten-4"><v-icon size="15" class="pr-2 mt-0">mdi-cash-refund</v-icon>fund</v-btn>
+                <v-btn dark small color="green" rounded class="px-8 font-weight-bold green--text text--lighten-4"><v-icon size="15" class="px-2 mt-0">mdi-cash-refund</v-icon></v-btn>
               </v-list-item-action>
-            </v-list-item>
-            <v-list-item>
-                 <v-list-item-title class="subtitle-2">
-                Become a Vendor
-              </v-list-item-title>
-              <v-list-item-action>
-                <v-btn to="/Regvendor" dark rounded small color="grey" class="px-10 font-weight-bold grey--text text--lighten-4"><v-icon size="15" class="pr-1 mt-0">mdi-chef-hat</v-icon>register</v-btn>
-              </v-list-item-action>
-             
-            </v-list-item>
-        
-            <v-list-item>
-                 <v-list-item-title class="subtitle-2">
-                Become a Delivery Agent
-              </v-list-item-title>
-              <v-list-item-action>
-                <v-btn to="/Regagent" dark rounded small color="grey" class="px-10 font-weight-bold grey--text text--lighten-4 "><v-icon size="15" class="pr-1 mt-0">mdi-bike-fast</v-icon>register</v-btn>
-              </v-list-item-action>
-             
             </v-list-item>
             <v-list-item>
                  <v-list-item-title class="subtitle-2">
               </v-list-item-title>
               <v-list-item-action>
-                <v-btn dark   rounded color="red"  small  class="px-7 font-weight-bold red--text text--lighten-4"><v-icon size="15" class="pr-1 mt-0">mdi-close-circle-outline</v-icon> Logout</v-btn>
-              </v-list-item-action>
-             
+                <v-btn dark @click="logout"  text color="red"  class=" font-weight-regular text-capitalize red--text ">Logout</v-btn>
+              </v-list-item-action> 
             </v-list-item>
-
-          </v-list>
-         
+          </v-list> 
 </v-card> 
         </v-tab-item>
       </v-tabs>
@@ -346,13 +326,148 @@
 }
 </style>
 <script>
+import axios from 'axios'
+import wrapper from 'axios-cache-plugin'
+
+let http = wrapper(axios, {
+  maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
+  ttl: 60000, // time to live. if you set this option the cached item will be auto deleted after ttl(ms).
+  excludeHeaders: true // should headers be ignored in cache key, helpful for ignoring tracking headers
+})
+
 export default {
   components: {
     navbottom: () => import('./navbottom'),
   },
     data: () => ({
-      items: ['peppery food', 'chicken', 'turkey', 'fish', 'soup', 'rice', 'fries', 'street bites'],
-      value: ['peppery food', 'chicken', 'turkey', 'fish', 'soup', 'rice', 'fries', 'street bites'],
+      loading: false,
+      loading2: false,
+    attachments: [],
+    overlay: true,
+    visible: true,
+     rules: {
+        required: value => !!value || "Required.",
+        min: value => value.length >= 3 || "Min 3 characters",
+        c_password: value =>
+          this.password === this.c_password || "does not match passoword",
+        email: value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(value) || "Invalid e-mail.";
+        }
+      },
+      numberRules: [
+        (v) => (v != null && v.length >= 11) || "Min 11 characters",
+        (v) => !!v || 'Phone number is required',
+        (v) => v[0] === '0' || 'Phone number must start with "0"',
+        (v) => /^[0-9]*$/.test(v) || 'Number must be valid'
+      ]
     }),
+      computed: {
+    user() {
+      return this.$store.getters.getUser
+    }
+  },
+    methods: {
+      logout(){
+        this.$store.dispatch('logout');
+      },
+    openImageInput () {
+      this.attachments = []
+      this.$refs.file.click()
+    },
+    text (val) {
+      this.form.description = val
+    },
+    fieldChange (e) {
+      this.attachments = []
+      let selectedFiles = e.target.files
+      if (!selectedFiles.length) {
+        return false
+      }
+      for (let i = 0; i < selectedFiles.length; i++) {
+        this.attachments.push(selectedFiles[i])
+      }
+    },
+    uploadFile () {
+      var sn = this
+      sn.loading2 = true
+      const fd = new FormData()
+      for (var i = 0; i < sn.$refs.file.files.length; i++) {
+        let file = sn.$refs.file.files[i]
+        fd.append('files[' + i + ']', file)
+      }
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+      axios.post('/upload', fd, config)
+        .then(res => {
+          var d = res.data.success
+          sn.$store.dispatch('setUser', d.user)
+          sn.loading2 = false
+          sn.attachments = []
+        })
+        .catch(err => {
+          sn.attachments = []
+          sn.$store.dispatch('snack', {
+            color: 'red',
+            text: err
+          })
+          sn.loading2 = false
+        })
+    },
+  edit() {
+    if (this.$refs.form.validate()) {
+    this.loading = true
+    const url = '/edituser'
+    var sn = this
+      http({
+        url: url,
+        method: 'post',
+        params: {
+          first_name: sn.user.first_name,
+          surname: sn.user.surname,
+          middle_name: sn.user.middle_name,
+          email: sn.user.email,
+          phone: sn.user.phone,
+        }
+      })
+        .then((response) => {
+          console.log(response)
+          sn.loading = false
+          var d = response.data.success
+          if (d.user) {
+            sn.$store.dispatch('setUser', d.user)
+          } else if (d.error) {
+             sn.$store.dispatch('snack', {
+            color: 'green',
+            text: d.error
+          })
+          }
+          sn.$store.dispatch('snack', {
+            color: 'green',
+            text: 'Your profile has been successfully edited'
+          })
+          }).catch(function (error) {
+          var d = error.response.data.error;
+          if (d.email) {
+            sn.error.email = d.email[0]
+          }
+         if (d.phone) {
+            sn.error.phone = d.phone[0]
+          }
+         if (d.first_name) {
+            sn.error.first_name = d.first_name[0]
+          }
+         if (d.surname) {
+            sn.error.surname = d.surname[0]
+          }
+         if (d.middlename) {
+            sn.error.middlename = d.middlename[0]
+          }
+          sn.loading = false
+        })
+      } else {
+          sn.loading = false
+      }
+    }
+    }
 }
 </script>

@@ -197,9 +197,9 @@ import flickity from "vue-flickity";
 
 export default {
   created() {
-    this.$store.dispatch("load");
-    this.$store.dispatch("load", {
-      id: "1"
+    // this.$store.dispatch("loadCategories");
+    this.$store.dispatch("loadCategories", {
+      name: "mummy's pots"
     });
   },
   computed: {
@@ -209,9 +209,8 @@ export default {
     LoadStatus() {
       return this.$store.getters.getVendorLoadStatus;
     },
-
     /*
-        Gets the 
+        Gets the Vendor
       */
     vendor() {
       return this.$store.getters.getVendor;

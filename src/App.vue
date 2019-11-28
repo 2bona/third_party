@@ -4,15 +4,13 @@
     <v-container fluid class="pa-0">
       
     <v-snackbar
-      :value="snackbarStatus"
-      :timeout="timeout"
-      :color="snackbarColor"
-      top left
+      :value="snackbar.status"
+      :timeout="6000"
+      :color="snackbar.color"
+      class="text-center"
+      top
     >
-      {{ text }}
-      <v-btn text>
-        Close
-      </v-btn>
+      {{ snackbar.text }}
     </v-snackbar>
     <v-content>
       <router-view></router-view>
@@ -52,10 +50,10 @@ export default {
         }
     },
     computed: {
-      text(){return this.$store.getters.getSnackbarText},
-      snackbarColor(){return this.$store.getters.getSnackbarColor},
-      snackbarStatus(){return this.$store.getters.getSnackbarStatus},
+      snackbar(){return this.$store.getters.getSnackbar},
     },
+    methods: {
+    }
 
 }
 </script>

@@ -1,48 +1,32 @@
 <template>
   <div>
-    <v-app-bar
-      style="background: linear-gradient(to bottom, #000000b8 0%,#0d0d0d6e 50%, rgba(0, 0, 0, 0) 100%);"
-      dark
-      color="transparent"
-      fixed
-      flat
-    >
-      <v-btn @click="back()" icon>
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <v-toolbar-title>Cart</v-toolbar-title>
-      <div class="flex-grow-1"></div>
-     
-    </v-app-bar>
-    <div class="mt-12">
-     <v-card flat tile class="my-12 pt-6 px-3">
+    <div class="mt-0">
+     <v-card flat tile color="transparent" class="pb-12 pt-0 ">
    <!-- <span class="overline grey--text  text--darken-1 font-weight-bold">
        Cart
        </span>  -->
-        <v-tabs centered background-color=" darken-1" color="orange"  mobile-break-point="90" :show-arrows='false'>
-        <v-tab class="font-weight-black caption">add food</v-tab>
-        <v-tab class="font-weight-black caption">tracking order</v-tab>
-        <v-tab class="font-weight-black caption">done order</v-tab>
+        <v-tabs grow centered  color="orange"  mobile-break-point="900">
+        <v-tab class="text-capitalize">cart</v-tab>
+        <v-tab class="text-capitalize">track</v-tab>
+        <v-tab class="text-capitalize">orders</v-tab>
 
-        <v-tab-item>
-          <v-card flat tile color="transparent" min-height="70vh">
+        <v-tab-item class="px-3 pb-2" style="background-color:transparent" >
+          <v-card flat tile color="transparent" min-height="80vh">
             
          
         <v-flex class="mx-auto my-4" xs12 sm6 md6 lg6 v-for="n in slides[0].items" :key="n.sn">
           <v-card
             width="95%"
-            height="95px"
+            height="89px"
             max-height
             min-height
             
-            
-            color="transparent"
             style=" border-radius:10px 10px 10px 10px"
             class="mx-2 mb-2 px-1 pt-1 pb-1"
           >
             <v-list-item three-line class="pa-0">
                 <v-list-item-avatar
-                  size="87"
+                  size="81"
                   tile
                   color="transparent"
                   style="border-radius: 10px;"
@@ -55,20 +39,20 @@
                   <v-flex xs9>
                       <h2
                         style="line-height:1;text-decoration: none;"
-                        class="body-1 grey--text text-truncate text--darken-3 font-weight-regular"
+                          class="py-1 body-2 grey--text  text-truncate text--darken-2 font-weight-regular my-0"
                       >{{n.name}}</h2>
                   </v-flex>
                   <v-flex style="
     position: absolute;
     right: -9px;
-    margin-top: -11px;
+    margin-top: -17px;
 ">
                     <v-btn icon class="ma-1">
-                      <v-icon small color="grey darken-1">mdi-trash-can-outline</v-icon>
+                      <v-icon small color="grey lighten-1">mdi-trash-can-outline</v-icon>
                     </v-btn>
                   </v-flex>
                 </v-layout>
-                <p class="caption font-weight-bold grey--text text--darken-3 mb-0">N1000</p>
+                <p style="padding-left:2px;" class="caption font-weight-regular grey--text text--darken-1 mb-0"><v-icon size="11.5px" style="width: 4.8px; padding-bottom:1.8px; margin-right:3px">mdi-currency-ngn</v-icon>1000</p>
              
               <p class="mb-0 ">
                          <span class="d-flex justify mb-0 mt-0">
@@ -104,12 +88,12 @@
 
       
 
-        <v-tab-item>
-      <v-card flat tile color="transparent" min-height="70vh">
+        <v-tab-item class="px-3">
+      <v-card flat tile color="transparent" min-height="80vh">
         <v-flex class="mx-auto my-4" xs12 sm6 md6 lg6 v-for="n in slides[0].items" :key="n.sn">
           <v-card
             width="95%"
-            height="95px"
+            height="89px"
             max-height
             min-height
             color="transparent"
@@ -117,7 +101,7 @@
             class="mx-2 mb-2 px-1 pt-1 pb-1">
             <v-list-item three-line class="pa-0">
                 <v-list-item-avatar
-                  size="87"
+                  size="81"
                   tile
                   color="transparent"
                   style="border-radius: 10px;"
@@ -130,12 +114,12 @@
                   <v-flex xs9>
                       <h2
                         style="line-height:1;text-decoration: none;"
-                        class="body-1 grey--text text-truncate text--darken-3 font-weight-regular"
+                          class="py-1 body-2 grey--text  text-truncate text--darken-2 font-weight-regular my-0"
                       >{{n.name}}</h2>
                   </v-flex>
             
                 </v-layout>
-                <p class="caption font-weight-bold grey--text text--darken-3 mb-0">N1000</p>
+                <p style="padding-left:2px;" class="caption font-weight-regular grey--text text--darken-1 mb-0"><v-icon size="11.5px" style="width: 4.8px; padding-bottom:1.8px; margin-right:3px">mdi-currency-ngn</v-icon>1000</p>
              
               <v-btn @click="overlay2 = !overlay2" flat depressed color="orange lighten-4" x-small class="mb-2">
                 view detail
@@ -156,24 +140,22 @@
           </v-layout>
       </v-card>
         </v-tab-item>
-        <v-tab-item>
-        <v-card flat tile color="transparent" min-height="70vh">
-        <v-flex class="mx-auto my-2" xs12 sm6 md6 lg6 v-for="n in slides[0].items" :key="n.sn">
+        <v-tab-item class="px-3">
+        <v-card flat tile color="transparent" min-height="80vh">
+        <v-flex class="mx-auto my-3" xs12 sm6 md6 lg6 v-for="n in slides[0].items" :key="n.sn">
           <v-card
             width="95%"
-            height="95px"
+            height="89px"
             max-height
             min-height
-            
-            
             color="transparent"
             style=" border-radius:10px 10px 10px 10px"
-            class="mx-2 mb-2 px-1 pt-1 pb-1"
+            class="mx-2 mb-2 px-1 pb-1"
           >
             <v-list-item three-line class="pa-0">
               <router-link to="/item">
                 <v-list-item-avatar
-                  size="82"
+                  size="81"
                   tile
                   color="transparent"
                   style="border-radius: 10px;"
@@ -188,13 +170,13 @@
                     <router-link style="text-decoration: none;" to="/item/vendor/egusi">
                       <h2
                         style="line-height:1;text-decoration: none;"
-                        class="body-1 grey--text text-truncate text--darken-3 font-weight-regular"
+                          class="py-1 body-2 grey--text  text-truncate text--darken-2 font-weight-regular my-0"
                       >{{n.name}}</h2>
                     </router-link>
                   </v-flex>
             
                 </v-layout>
-                <p class="caption font-weight-bold grey--text text--darken-3 mb-0">N1000</p>
+                <p style="padding-left:2px;" class="caption font-weight-regular grey--text text--darken-1 mb-0"><v-icon size="11.5px" style="width: 4.8px; padding-bottom:1.8px; margin-right:3px">mdi-currency-ngn</v-icon>1000</p>
              
             <v-btn @click="overlay1=!overlay1" flat depressed color="orange lighten-4" x-small class="mb-2">
                 give your review
@@ -306,6 +288,9 @@
 .v-tooltip__content{
     padding: 0px 0px!important;
     width: 90%;
+}
+.theme--light.v-tabs-items {
+    background-color: #FFF0;
 }
 </style>
 <script>

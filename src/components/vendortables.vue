@@ -1,9 +1,40 @@
 <template>
 <v-container>
 
+           <v-flex xs12 class="my-5 px-0">
+        <h1 class="title mb-5 font-weight-bold grey--text">Sales</h1>
+  <v-simple-table>
+    <template v-slot:default>
+      <thead>
+        <tr>
+          <th class="text-left">Info</th>
+          <th class="text-left">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr >
+          <td>Sales today</td>
+          <td>200</td>
+        </tr>
+       <tr >
+          <td>Sales this week</td>
+          <td>200</td>
+        </tr>
+         <tr >
+          <td>Sales this month</td>
+          <td>200</td>
+        </tr>
         
+        <tr>
+          <td>Sales this year</td>
+          <td>200</td>
+        </tr>
+      </tbody>
+    </template>
+  </v-simple-table>
+   </v-flex>
    <v-flex xs12 class="my-5 px-0">
-        <h1 class="title mb-5 font-weight-bold grey--text">Account</h1>
+        <h1 class="title mb-5 font-weight-bold grey--text">Orders</h1>
   <v-simple-table>
     <template v-slot:default>
       <thead>
@@ -17,11 +48,16 @@
           <td>Orders today</td>
           <td>200</td>
         </tr>
-        <tr >
+       <tr >
+          <td>Orders this week</td>
+          <td>200</td>
+        </tr>
+         <tr >
           <td>Orders this month</td>
           <td>200</td>
         </tr>
-        <tr >
+        
+        <tr>
           <td>Orders this year</td>
           <td>200</td>
         </tr>
@@ -31,7 +67,7 @@
    </v-flex>
         
    <v-flex xs12 class="my-5 px-0">
-        <h1 class="title mb-5 font-weight-bold grey--text">Orders</h1>
+        <h1 class="title mb-5 font-weight-bold grey--text">List of orders</h1>
           <v-simple-table dense>
     <template v-slot:default>
       <thead>
