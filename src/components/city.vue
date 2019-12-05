@@ -1,169 +1,64 @@
 <template>
-  <div>
-    <v-card color="transparent"  max-width="600px"  class="mx-auto pb-0 mt-0" flat tile>
-      <v-card-title
-        class="font-weight-black pb-0 text-center grey--text text--darken-1"
-      >Vendor Registration</v-card-title>
-      <span
-        class="px-6 pt-0 mb-4 font-weight-regular caption grey--text text--lighten-1"
-      >From your kitchen to the world.</span>
-      <v-stepper class="mx-2 my-4  pb-12" v-model="e6">
-          <v-stepper-header>
-        <v-stepper-step edit-icon="mdi-check" editable :complete="(name.length > 2) && (phone.length > 9)" color="orange"   step='1'>
-          Basic Information
-          <!-- <small>Summarize if needed</small> -->
-        </v-stepper-step>
-           <v-stepper-step disabled color="orange" edit-icon="mdi-check" editable :complete="(address.length > 2)" step="2">
-          Address
-          <!-- <small>Summarize if needed</small> -->
-        </v-stepper-step>
-               <v-stepper-step color="orange" editable edit-icon="mdi-check"  :complete="(tags.length > 2 || bio.length > 2)" step="3">
-          Additional Information
-          <!-- <small>Summarize if needed</small> -->
-        </v-stepper-step>
-        </v-stepper-header>
-          
-    <v-stepper-items>
-        <v-stepper-content class="px-5" step="1">
-          <v-card flat tile color class=" mb-2">
-            <v-card-text class="pb-0">
-              <v-form  onSubmit="return false;" ref="form">
-              <v-text-field
-                class=""
-                autofocus
-                v-model="name" validate-on-blur
-                color="orange"
-                :rules="[rules.required, rules.min]"
-                label="Business Name"
-                placeholder="Business name. eg. mummy's pot"
-                required
-              ></v-text-field>
-              <v-text-field
-                class=""
-                color="orange" validate-on-blur
-                label="Phone Number"
-                type="text" :rules="numberRules"
-                v-model="phone"
-                placeholder="Business phone number."
-                required
-              ></v-text-field>
-                <v-select
-                class="font-weight-medium grey--text text--darken-4"
-                :items="cities"
-                attach
-                chips cache-items
-                v-model="city"
-                placeholder :loading="load2"
-                label="City"
-                color="orange"
-              ></v-select>
-                <v-select
-                class="font-weight-medium grey--text text--darken-4"
-                :items="areas"
-                attach :disabled="disable"
-                chips :loading="load"
-                v-model="area"
-                placeholder cache-items
-                label="Areas you can deliver to"
-                color="orange"
-                multiple
-              ></v-select>
-              </v-form>
-            </v-card-text>
-            <div class="text-right pr-5">
-            <v-btn  right class="mt-3 elevation-5" dark fab small color="orange" @click="$refs.form.validate() ? e6 = 2 : false"><v-icon>mdi-arrow-right</v-icon></v-btn>
-            </div>
-            <v-card class="mt-2" flat tile height="300">
-              
-            </v-card>
-          </v-card>
-        </v-stepper-content>
-     
-        <v-stepper-content class="px-5 py-4" step="2">
-          <v-card flat tile color class="mb-2">
-            <v-card-text style="position:relative" class="">
+  <div class="px-3">
+    <v-card class="pb-0 mt-0 mb-5 pb-12" flat tile>
+    <v-btn small class="mx-auto my-3" color="primary" @click="display = !display" v-text="display ? 'hide form': 'add new city'"></v-btn>
+    <v-scale-transition>
+      <div v-show="display">
+     <v-card flat tile color class="mb-2">
+            <v-card-text style="position:relative" class="pb-0 pl-4">
               <v-text-field
                 name="address"
-                label="Address"
+                label="City"
                 ref="autocomplete"
-                v-model="address" :disabled="disabled"
+                v-model="address"
                 color="orange"
                 class="font-weight-medium mb-3"
-                placeholder="Business address."
-                hint="Note : If your address does not show enter your nearest landmark then select your location on the map"
-              >
+                placeholder="Enter city">
              </v-text-field>
-             
-
 <!-- save food by vendor and list food to user  -->
-              <v-row justify="space-around" class="pr-3">
-                <v-card id="map" color="grey" width="100%" height="350"></v-card>
+              <v-row justify="space-around" class="px-3 mb-6">
+                <v-card id="map" color="grey" width="100%" height="300"></v-card>
                 <div id="infowindow-content">
                   <img src width="16" height="16" id="place-icon" />
                   <span id="place-name" class="body-1 font-weight-bold"></span>
                   <br />
                   <span id="place-address" class="caption"></span>
                 </div>
-              </v-row>      <v-overlay
-          absolute opacity="0.3"
-          :value="disabled">
-          <v-btn
-          text
-          @click="disabled = false"
+              </v-row>     
+          <v-btn :loading="loading" absolute right @click="registerCity"
+          color="primary" :disabled="address.length < 3"
           >
-            <v-icon>mdi-pencil-lock-outline</v-icon>
-          </v-btn>
-        </v-overlay>
+        Submit
+            </v-btn>
             </v-card-text>
-<div class="text-right pr-5">
-            <v-btn  right class="mt-3 elevation-5" dark fab small color="orange" @click="e6 = 3"><v-icon>mdi-arrow-right</v-icon></v-btn>
 
-            </div>          </v-card>
-        </v-stepper-content>
- 
-
-        <v-stepper-content class="pb-12 pl-9" step="3">
-          <v-card flat tile color class="mb-2">
-            <v-card-text class="pb-0 pl-0">
-              <v-form  ref="form3">
-              <v-select
-                class="font-weight-medium grey--text text--darken-4"
-                :items="tags"
-                attach
-                chips
-                v-model="tag"
-                placeholder
-                label="Tags"
-                color="orange"
-                multiple
-              ></v-select>
-              <v-textarea
-                name="bio"
-                v-model="bio"
-                label="Bio"
-                color="orange"
-                class="font-weight-medium"
-                placeholder="A little info about your business."
-                hint="Maximum of 100 words"
-              ></v-textarea>
-              </v-form>
-              <v-btn  :loading="loading" class="mt-12" color="orange" @click="registerVendor()" dark rounded>Register</v-btn>
-            </v-card-text>
-          </v-card>
-        </v-stepper-content>
-    </v-stepper-items>
-      </v-stepper>
-      <!-- 
-        <v-btn
-            @click="registerVendor()"
-            to="/vendoradmin"
-            dark
-            large
-            rounded
-            color="orange"
-            class="px-5 mx-auto"
-      >Register</v-btn>-->
+ </v-card>
+      </div>
+    </v-scale-transition>
     </v-card>
+ 
+    <v-card
+        class=" my-5 mx-auto"
+      max-width="400" width="100%"
+      tile
+    >
+      <v-list>
+          <v-subheader>Cities</v-subheader>
+            <v-list-item-group color="primary">
+                  <v-list-item :to="'/area/'+item.id+'/'+item.name"
+                    v-for="(item, i) in items"
+                    :key="i">
+                       <v-list-item-icon>
+            <v-icon>mdi-tag</v-icon>
+          </v-list-item-icon>
+                         <v-list-item-content>
+            <v-list-item-title v-text="item.name"></v-list-item-title>
+          </v-list-item-content>
+                  </v-list-item>
+            </v-list-item-group>
+      </v-list>
+    </v-card>
+   
   </div>
 </template>
 <style>
@@ -185,18 +80,9 @@ export default {
   data() {
     return {
       name: "",
+      display: false,
       loading: false,
-      load: false,
-      load2: true,
-      disable: true,
-      cities: [],
-      city: [],
-      areas: [],
-      selectedAreas: [],
-      area: [],
-      phone: "",
-      bio: "",
-      e6: 1,
+      items:[],
       rules: {
         required: value => !!value || "Required.",
         min: value => value.length >= 3 || "Min 3 characters",
@@ -215,11 +101,10 @@ export default {
       ],
       address: "",
       lat: "",
+      tags: "",
       long: "",
       disabled: false,
       place_id: "",
-      items: [],
-      tag: []
     }
   },
   mounted: function() {
@@ -377,87 +262,48 @@ export default {
     });
   },
   created() {
-    var sn = this;
-    axios
-        .get("/city/cities")
-        .then(function (response) {
-            sn.cities = response.data.city
-            sn.load2 = false
-        }).then(() => {
-          this.$store.dispatch("loadTags");
-        })
-  },
-  computed: {
-    user() {
-      return this.$store.getters.getUser.id;
-    },
-    registerStatus() {
-      return this.$store.getters.getLoadStatus;
-    }, 
-    tags() {
-      return this.$store.getters.getTags;
-    }
-  },
-  watch: {
-    city (val) {
-      if (!val) {
-        this.areas = []
-        this.disable = true
-      } else if(val) {
-        this.areas = []
-        this.load = true
-        var sn = this
-        axios
-         .get("/city/areas?city="+sn.city)
+      var sn = this;
+      axios
+         .get("/city/all")
          .then(function (response) {
-            sn.areas = response.data.areas
-            sn.disable = false
-            sn.load = false
-          })
-      }
+             sn.items = response.data.city
+         })
+         },
+  computed: {
+    city() {
+      return this.$store.getters.getUser.id;
     }
   },
 methods: {
     logout () {
      this.$store.dispatch('logout')
     },
-  registerVendor() {
+  registerCity() {
 
     var sn = this
     sn.loading = true
-    if (sn.$refs.form.validate() && sn.address.length > 6 ) {
+   
         axios
-         .post("/vendor/save", {
-           name: this.name,
-           phone: this.phone,
-           address: this.address,
-           user_id: this.user,
-           bio: this.bio,
-           tags: this.tag,
-           city: this.city,
-           areas: this.area,
+         .post("/city/save", {
+           name: this.address,
            lat: this.lat,
            lng: this.long,
            place_id: this.place_id,
-           category: 'vendor'
          })
          .then(function (response) {
            sn.loading = false
-           var d = response.data
-           sn.$store.dispatch("addVendor", d.vendor)
-            sn.$store.dispatch('snack', {
+           sn.$store.dispatch('snack', {
               color: 'green',
-            text: d.message
+            text: 'City saved'
           })
-          sn.$router.push('/vendoradmin')
          })
          .catch(function () {
            sn.loading = false
+            sn.$store.dispatch('snack', {
+              color: 'red',
+            text: 'An error occured'
+          })
          });
-          } else {
-        sn.loading = false
-        sn.e6 = 1
-      }
     }
   }
 };

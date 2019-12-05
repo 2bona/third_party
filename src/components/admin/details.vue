@@ -1,0 +1,1032 @@
+<template>
+<div>
+<v-row class="py-3 mb-12 px-2">
+    <v-flex xs12 class="mb-3 pt-0 px-0">
+           <v-btn v-show="!dialog && !dialog1 && !dialog2 && !dialog3 && !dialog4 && !dialog5 && !dialog6 && !dialog45"
+              fixed @click="$router.go(-1)"
+              fab
+              bottom
+              right
+              color="white" style="z-index:999" class="mb-12">
+              <v-icon>mdi-arrow-left</v-icon>
+            </v-btn>
+        <v-card  flat tile color="transparent">
+    <v-container fluid>
+        <v-row justify="space-around">
+                      <input v-show="false" ref="file81" type="file" @change="itemFieldChange($event)">
+          <v-col
+          class=""
+            cols="12"
+            >
+            <v-card class="pa-4 mx-auto" max-width="650px">
+           <v-skeleton-loader v-show="$route.params.id != items.id"
+            ref="skeleton" width="300"
+            type="heading" 
+            tile
+          ></v-skeleton-loader>  
+        <h3 v-show="$route.params.id == items.id" class="grey--text text--darken-1 text-capitalize">{{ items.name }} </h3>
+  
+        
+          <v-row justify="space-around" class="mt-3">
+           <v-btn :disabled="$route.params.id != items.id" @click="editCat(items.name, items.id)"  text x-small color="grey"><v-icon>mdi-pencil-outline</v-icon> edit</v-btn>
+           <v-btn :disabled="$route.params.id != items.id" @click="addCat(items.name, items.id)" text x-small color="grey"><v-icon>mdi-plus</v-icon>add item</v-btn>
+           <v-btn  :disabled="$route.params.id != items.id" @click="deleteCat(items.name, items.id)" text x-small color="grey"><v-icon>mdi-trash-can</v-icon>delete</v-btn>
+           </v-row> 
+           <v-divider class="my-4"></v-divider>
+                   <v-progress-linear v-if="dialog45"
+      indeterminate
+      color="grey lighten-1"
+    ></v-progress-linear>     
+           <v-skeleton-loader v-for="n in 4" :key="n" v-show="$route.params.id != items.id"
+        ref="skeleton" width="300"
+        type="list-item-avatar-two-line"
+        tile
+      ></v-skeleton-loader>
+     <v-flex v-show="$route.params.id == items.id" class="my-2 px-1" xs12 v-for="n in items.items" :key="n.id">
+          <v-card :disabled="dialog45"
+            width="95%"
+            height="auto"
+            max-height
+            min-height
+            color="transparent"
+            style=" border-radius:4px"
+            class="mx-2 mb-2 py-1 px-1"
+          >
+            <v-list-item class="pa-0">
+                <v-list-item-avatar
+                  size="30"
+                  tile
+                  style="border-radius: 4px; align-self: flex-start; top: 8px;"
+                  class="my-0 elevation-10 mr-2">
+                       <v-img @click="openItemImageInput(n.id)" :src="n.image"></v-img>
+                       <v-overlay
+          absolute opacity="0.3" 
+          z-index="1" 
+          :value="itemAttach === n.id">
+             </v-overlay>
+        <v-btn :loading="loading11" style="z-index:7" dark absolute x-small  rounded icon v-show="itemAttach === n.id" color="orange" class="mt-0 mb-0 mx-auto" @click="editItemImage(items.id, n.id)"> <v-icon color="orange lighten-4" dark>mdi-cloud-upload</v-icon></v-btn>
+                </v-list-item-avatar>
+              <v-list-item-title @click="n.status = !n.status" style="" class="py-0">
+                <v-layout>
+                  <v-flex xs8>
+                      <h2
+                        style="text-decoration: none;"
+                        class="py-0 body-2 grey--text text-capitalize  text-truncate text--darken-1 font-weight-medium my-0"
+                      ><v-icon size="9px" :color="n.available ? 'green' : 'red'">mdi-circle</v-icon>{{n.name}}</h2>
+                  </v-flex>
+         <v-slide-x-reverse-transition>
+          <v-flex v-show="!n.status" xs5 style="
+            position: absolute; right: -2px; z-index:99; top: -3px;">  
+              <v-btn  @click="editCatItem(items.id, n.id, n.name, n.price, n.description, n.main_option)"  icon text color="grey lighten-2" small class="mt-1 mr-1">
+                   <v-icon>mdi-pencil-outline</v-icon>
+                    </v-btn>
+                      <v-btn icon text @click="deleteCatItem(items.id, n.id,n.name)" color="grey lighten-2" small class="mt-1 mr-1">
+                        <v-icon>mdi-trash-can</v-icon>
+                    </v-btn>
+                  </v-flex>
+            </v-slide-x-reverse-transition>
+            <v-slide-x-transition>
+      <v-switch v-show="!n.status" @click.prevent="offFood(n.available, n.name, n.id, items.id)" :style="n.status ? 'position: absolute;transform: rotate(270deg);top: 15px;right: -25px;' : 'position: absolute;transform: rotate(270deg);right: -25px; top: 15px;'" v-model="n.available" color="grey lighten-4" class="mt-2 mb-0 pb-0" ></v-switch>
+            </v-slide-x-transition>
+                </v-layout>
+                <p style="padding-left:10px;" class="caption font-weight-regular grey--text text--darken-1 mb-0"><v-icon size="11.5px" style="width: 4.8px; padding-bottom:1.8px; margin-right:3px">mdi-currency-ngn</v-icon>{{n.price | price}}</p>
+                       <p class="mb-0 ">
+                         <span class="d-flex justify mb-0 mt-0">
+          </span> </p>
+                        <v-flex xs12>
+                <v-expand-transition>
+          <v-layout v-show="!n.status" style="width:100%;padding-left: 13px !important;" row wrap class="py-1"> 
+      <v-flex xs12>
+        <p class="overline my-0 py-0 grey--text font-weight-bold text-capitalize">Cumpolsory</p>
+            <v-divider class=" grey lighten-4 mb-1"></v-divider>
+        <v-layout row wrap class="pl-3">
+            <div style="max-width:150px;display: inline-grid;" v-show="img.pivot.type === 'compulsory'" v-for="img in n.main_option" :key="img.id+img.pivot.type">
+   <v-chip
+      class="ma-1"
+      x-small>
+     {{img.name}}
+    </v-chip>
+          </div>   </v-layout>      
+      </v-flex>
+      <v-flex xs12>
+        <p class="overline my-0 py-0 grey--text font-weight-bold text-capitalize">Optional</p>
+            <v-divider class="grey lighten-4 mb-1"></v-divider>
+              <v-layout row wrap class="pl-3">
+                <div style="max-width:150px;display: inline-grid;"
+                 v-show="img.pivot.type === 'optional'"
+                 v-for="img in n.main_option"
+                 :key="img.id+img.pivot.type">
+   <v-chip
+      class="ma-1 text-center text-truncate"
+      x-small
+    >
+      {{img.name}}
+    </v-chip>
+     </div>
+
+              </v-layout>
+      </v-flex>
+      <v-flex xs12>
+        <p class="overline my-0 py-0 grey--text font-weight-bold text-capitalize">Overview</p>
+            <v-divider class="grey lighten-4 mb-1"></v-divider>
+            <div style="width:40px;display: inline-grid;" class="mb-2 mr-2">
+              <v-avatar
+            size="25px"  class=" mx-auto elevation-2"
+            color="green">
+      <v-icon small dark>mdi-cart-outline</v-icon>          </v-avatar> 
+          <p class="overline mb-0 text-capitalize text-center grey--text">{{n.sold}}</p>
+            </div>
+            <div style="width:40px;display: inline-grid;" class="mb-2 mr-2">
+              <v-avatar
+            size="25px"  class=" mx-auto elevation-2"
+            color="orange">
+      <v-icon small dark>mdi-star-outline</v-icon> </v-avatar> 
+          <p class="overline mb-0 text-capitalize text-center grey--text">{{n.avg_rating}}</p>
+            </div>
+      </v-flex>
+          </v-layout> 
+                </v-expand-transition>    
+                        </v-flex>
+
+              </v-list-item-title>
+            </v-list-item>
+          </v-card>
+                     </v-flex>
+            </v-card>
+          </v-col>
+          <div class="text-center">
+    <v-dialog
+      v-model="dialog"
+      width="500"
+      :persistent="loading">
+      <v-card>
+        <v-card-title
+          class="body-2 grey lighten-2"
+          primary-title>
+          Add Category
+        </v-card-title>
+    <v-form onSubmit="return false;" ref="form">
+        <v-card-text>
+  <v-text-field
+  v-model="content" autofocus
+    @keyup.enter.native="addCategory"
+    label="Type here"
+          ></v-text-field>
+           </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn
+            color="orange"
+            class="px-3 mx-auto"
+            rounded :disabled="content.length < 2"
+            dark small
+            :loading="loading"
+            @click="addCategory()"
+          >
+            submit
+          </v-btn>
+        </v-card-actions>
+        </v-form> 
+      </v-card>
+    </v-dialog>
+   
+
+    <v-dialog
+      v-model="dialog1"
+      width="500"
+      :persistent="loading1">
+      <v-card>
+        <v-card-title
+          class="body-2 grey lighten-2"
+          primary-title>
+          Edit items
+        </v-card-title>
+    <v-form onSubmit="return false;" ref="form2">
+        <v-card-text>
+  <v-text-field
+  v-model="editContent" autofocus
+  @keyup.enter.native="editCategory(editContent, editId)"
+></v-text-field> 
+      </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn
+            color="orange"
+            class="px-3 mx-auto"
+            rounded
+            dark small :disabled="editContent.length < 2"
+            :loading="loading1"
+            @click="editCategory(editContent, editId)"
+          >
+            edit
+          </v-btn>
+        </v-card-actions>
+        </v-form> 
+      </v-card>
+    </v-dialog>
+        <v-dialog
+      v-model="dialog2"
+      width="200">
+      <v-card>
+        <v-card-title
+          class="body-2 grey lighten-2"
+          primary-title
+        >
+          Delete {{deleteName}} and its Items?
+        </v-card-title>
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-btn
+            color="orange"
+            class="px-3 mx-auto"
+            rounded
+            dark small
+          :loading="loading2"
+           @click="deleteCategory(deleteId)"
+          >
+            sure
+          </v-btn>
+          <v-btn
+            color="red"
+            class="px-3 mx-auto"
+            rounded
+            dark small
+            @click="dialog2=false"
+          >
+            cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+        <v-dialog
+      v-model="dialog3"
+      width="200">
+      <v-card>
+        <v-card-title
+          class="body-2 grey lighten-2"
+          primary-title
+        >
+        Turn {{offName}}?
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn
+            color="orange"
+            class="px-3 mx-auto"
+            rounded
+            dark small
+          :loading="loading3"
+           @click="offItem()"
+          >
+            sure
+          </v-btn>
+          <v-btn
+            color="red"
+            class="px-3 mx-auto"
+            rounded
+            dark small
+            @click="dialog3=false"
+          >
+            cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+        <v-dialog
+      v-model="dialog4"
+      width="200">
+      <v-card>
+        <v-card-title
+          class="body-2 item-truncate grey lighten-2"
+          primary-title
+        >
+          Delete {{deleteCatItemName}}?
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn
+            color="orange"
+            class="px-3 mx-auto"
+            rounded
+            dark small
+          :loading="loading4"
+           @click="deleteItem(deleteCatId, deleteCatItemId)"
+          >
+            sure
+          </v-btn>
+          <v-btn
+            color="red"
+            class="px-3 mx-auto"
+            rounded
+            dark small
+            @click="dialog4=false"
+          >
+            cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog  v-model="dialog5"
+      width="500">
+ <v-card flat tile class=" pb-9">
+   <v-form onSubmit="return false;" ref="form4">
+     <v-card-title primary-title class=" grey lighten-2 body-2 mb-3">
+         Add new item to {{items.name}}
+     </v-card-title>
+             <div class="px-5 pb-9">
+<v-flex xs12>
+    <v-text-field 
+      class="font-weight-regular grey--text text--darken-4"
+      label="Name" placeholder="eg. Jollof Rice"
+      color="orange" v-model="name" 
+      required  :rules="[rules.required]"
+    ></v-text-field>
+    <v-text-field
+      class="font-weight-regular grey--text text--darken-4"
+      label="Price" v-model="price"
+      placeholder="0" hint="put only number eg '1000' not '1,000'"
+      color="orange" prepend-inner-icon="mdi-currency-ngn"
+      required   :rules="numberRules"
+    ></v-text-field>
+</v-flex>
+   <v-row class="px-3"  justify="space-between">
+<v-flex xs12>
+        <v-file-input ref="file2" @change="fieldChanges" class="font-weight-regular grey--text text--darken-4"
+        prepend-icon="mdi-camera" placeholder="Item picture"
+        label="Image" :rules="[rules.required]"></v-file-input>
+</v-flex>
+<v-flex xs12>
+       <v-textarea
+          name="description"
+          label="Description (optional)"
+          color="orange" v-model="description"
+          class="font-weight-regular grey--text text--darken-4"
+          placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
+        ></v-textarea>
+          </v-flex>
+          <v-flex xs12>
+            <v-select
+            class="font-weight-regular grey--text text--darken-4"
+            :items="mainOptionsList"
+            attach v-model="compulsory"
+            chips
+            label="Required"
+            color="orange"
+            multiple
+          ></v-select>
+</v-flex>
+<v-flex xs12>
+            <v-select
+            class="font-weight-regular grey--text text--darken-4"
+            :items="mainOptionsList"
+            attach v-model="optional"
+            chips
+            placeholder="eg. plantain, eggs, coleslaw, moi-moi"
+            label="Optional extras (optional)"
+            color="orange"
+            multiple
+          ></v-select>
+</v-flex>
+   </v-row>
+
+      <v-row class="my-5 px-3"  justify="space-around">
+<v-btn :loading="loading5" @click="addCategoryItem(addId)"  class="px-6"  color="orange" dark small rounded>add</v-btn>
+      </v-row>
+
+</div>
+  </v-form>
+ </v-card>
+    </v-dialog>
+    <v-dialog  v-model="dialog6"
+      width="500">
+ <v-card flat tile>
+   <v-form onSubmit="return false;" ref="form45">
+     <v-card-title primary-title class=" grey lighten-2 body-2 mb-3">
+         Edit {{editCatItemName}} 
+     </v-card-title>
+             <div class="px-5 pb-5">
+<v-flex xs12>
+    <v-text-field 
+      class="font-weight-regular grey--text text--darken-4"
+      label="Name" placeholder="eg. Jollof Rice"
+      color="orange" v-model="editCatItemName" 
+      required  :rules="[rules.required]"
+    ></v-text-field>
+    <v-text-field
+      class="font-weight-regular grey--text text--darken-4"
+      label="Price" v-model="editCatItemPrice"
+      placeholder="0" hint="put only number eg '1000' not '1,000'"
+      color="orange" prepend-inner-icon="mdi-currency-ngn"
+      required   :rules="numberRules"
+    ></v-text-field>
+</v-flex>
+   <v-row class="px-3"  justify="space-between">
+<v-flex xs12>
+       <v-textarea
+          name="description"
+          label="Description (optional)"
+          color="orange" v-model="editCatItemDescription"
+          class="font-weight-regular grey--text text--darken-4"
+          placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
+        ></v-textarea>
+          </v-flex>
+                    <v-flex xs12>
+            <v-select :loading="!mainOptionsList.length"
+            class="font-weight-regular grey--text text--darken-4"
+            :items="mainOptionsList"
+            attach v-model="compValue"
+            chips
+            placeholder="eg. meat, fish, garri, fufu"
+            label="Compulsory extras (optional)"
+            color="orange"
+            multiple
+          ></v-select>
+</v-flex>
+<v-flex xs12>
+            <v-select
+            class="font-weight-regular grey--text text--darken-4"
+            :items="mainOptionsList" :loading="!mainOptionsList.length"
+            attach v-model="optValue"
+            chips
+            placeholder="eg. plantain, eggs, coleslaw, moi-moi"
+            label="Optional extras (optional)"
+            color="orange"
+            multiple
+          ></v-select>
+</v-flex>
+   </v-row>
+
+      <v-row class="px-3"  justify="space-around">
+<v-btn :loading="loading6" @click="editCategoryItem()"  class="px-6"  color="orange" dark small rounded>edit</v-btn>
+      </v-row>
+
+</div>
+  </v-form>
+ </v-card>
+
+    </v-dialog>
+    
+  </div>
+        </v-row>
+  </v-container>
+        </v-card>
+    </v-flex>
+</v-row>
+</div>
+</template>
+<style>
+
+</style>
+<script>
+import axios from 'axios'
+import wrapper from 'axios-cache-plugin'
+import mainOptions from "./options.vue";
+  
+
+let http = wrapper(axios, {
+  maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
+  ttl: 60000, // time to live. if you set this option the cached item will be auto deleted after ttl(ms).
+  excludeHeaders: true // should headers be ignored in cache key, helpful for ignoring tracking headers
+})
+
+export default {
+  components: {
+    mainOptions
+  },
+  data() {
+    return {
+      content: '',
+      name: '',
+      description: '',
+      category_name: '',
+      generic: '',
+      price: '',
+      editCatId: '',
+      editCatitemId: '',
+      editCatItemName: '',
+      editCatItemDescription: '',
+      editCatItemPrice: '',
+      editContent: '',
+      editId: '',
+      optionname: '',
+      optional: [],
+      optionprice:  '',
+      compulsory: [],
+      deleteId: '',
+      deleteCatId: '',
+      deleteCatItemId: '',
+      deleteName: '',
+      offName: '',
+      offId: '',
+      offCat: '',
+      offAvailable: '',
+      deleteCatItemName: '',
+      attachments: [],
+      attach: '',
+      itemAttach: '',
+      optionAttachments: [],
+      itemAttachments: [],
+      overlay: true,
+      visible: true,
+      addId: '',
+      compValue: [],
+      optValue: [],
+      dialog: false,
+      dialog1: false,
+      dialog2: false,
+      dialog3: false,
+      dialog4: false,
+      dialog45: false,
+      dialog5: false,
+      dialog6: false,
+      loading: false,
+      loading1: false,
+      loading2: false,
+      loading3: false,
+      loading4: false,
+      loading5: false,
+      loading6: false,
+      loading11: false,
+      valid: true,
+      rules: {
+        required: value => !!value || "Required.",
+      },
+      numberRules: [
+        (v) => /^[0-9]*$/.test(v) || 'Price must be only numbers'
+      ],
+      radios: 'Thank you soo much, we will keep improving',
+
+    }
+  },
+  computed: {
+  vendor() {
+      return this.$store.getters.getVendor;
+    },
+  menu() {
+      return this.$store.getters.getMenu;
+    },
+  options() {
+      return this.$store.getters.getOptions;
+    },
+    filtered() {
+
+    },
+  list() {
+      return this.$store.getters.getList;
+    },
+  mainOptionsList() {
+      return this.$store.getters.getMainOptionsList;
+    },
+     mainOptions() {
+      return this.$store.getters.getMainOptions;
+    },
+  items() {
+      return this.$store.getters.getItems;
+    },
+  },
+beforeRouteEnter (to, from, next) {
+  next(vm => {
+      let n = to
+    // access to component instance via `vm`
+      vm.$store.dispatch("loadItems", {
+        id: n.params.id
+    })
+  })
+},
+methods: {
+  addCategory(){
+      var sn = this
+  if (sn.$refs.form.validate()){
+    sn.loading = true
+    axios.post("/category/save", {
+      content: sn.content,
+      vendor_id: sn.vendor.id,
+      vendor_name: sn.vendor.name,
+    })
+    .then(function (response) {
+      console.log(response.data)
+      sn.$store.dispatch("loadItems", {
+      id: sn.$route.params.id
+    });
+    sn.dialog = false
+    sn.loading = false
+    sn.$store.dispatch('snack', {
+      color: 'green',
+      text: 'Category added'
+    })
+  }).catch(function (error) {
+    sn.loading = false
+    sn.dialog = false
+    sn.$store.dispatch('snack', {
+      color: 'red',
+      text: 'Error occured'
+    })
+  })
+    }
+    },
+  editCategory(x, y){
+      var sn = this
+  if (sn.$refs.form2.validate()){
+    sn.loading1 = true
+    axios.post("/category/update", {
+      id: y,
+      content: x,
+    })
+    .then(function (response) {
+      console.log(response.data)
+      sn.$store.dispatch("loadItems", {
+      id: sn.$route.params.id
+    });
+    sn.loading1 = false
+    sn.dialog1 = false
+    sn.$store.dispatch('snack', {
+      color: 'green',
+      text: 'Category edited'
+    })
+  }).catch(function (error) {
+    sn.dialog1 = false
+    sn.loading1 = false
+    sn.$store.dispatch('snack', {
+      color: 'red',
+      text: 'Error occured'
+    })
+  })
+    }
+    },
+  editCategoryItem(){
+      var sn = this
+  if (sn.$refs.form45.validate()){
+            var comp = []
+        var compa = []
+      if (sn.compValue) {
+         var g =  sn.compValue.forEach(element => {
+          comp.push(sn.mainOptions.find((item) => {
+           return item.name === element
+           }))
+         }); 
+         compa = comp.map((item) => {
+           return item.id
+         })
+      }
+        var opt = []
+        var opta = []
+      if (sn.optValue) {
+         var h =  sn.optValue.forEach(element => {
+          opt.push (sn.mainOptions.find((item) => {
+           return item.name === element
+           }))
+         }); 
+           opta = opt.map((item) => {
+           return item.id
+         })
+      }
+    sn.loading6 = true
+    sn.dialog45 = true
+    sn.dialog6 = false
+    axios.post("/item/update", {
+      cat_id: sn.editCatId,
+      item_id: sn.editCatItemId,
+      name: sn.editCatItemName,
+      compulsory: JSON.stringify(compa),
+      optional: JSON.stringify(opta),
+      price: sn.editCatItemPrice,
+      description: sn.editCatItemDescription,
+    })
+    .then(function (response) {
+      console.log(response.data)
+      sn.$store.dispatch("loadItems", {
+          id: sn.$route.params.id
+      });
+      sn.loading6 = false
+      sn.dialog45 = false
+      sn.$store.dispatch('snack', {
+        color: 'green',
+        text: 'Item edited'
+    })
+  }).catch(function (error) {
+    sn.dialog45 = false
+    sn.loading6 = false
+    sn.$store.dispatch('snack', {
+      color: 'red',
+      text: 'Error occured'
+    })
+  })
+    }
+    },
+  deleteCategory(x){
+      var sn = this
+  if (sn.deleteId != ''){
+    sn.loading2 = true
+    sn.dialog2 = false
+    sn.dialog45 = true
+    axios.post("/category/delete", {
+      id: x
+    })
+    .then(function (response) {
+      console.log(response.data)
+      sn.$store.dispatch("loadItems", {
+        id: this.$route.params.id
+    });
+    sn.loading2 = false
+    sn.dialog45 = false
+    sn.$store.dispatch('snack', {
+      color: 'green',
+      text: 'Category deleted'
+    })
+  }).catch(function (error) {
+    sn.dialog45 = false
+    sn.loading2 = false
+    sn.$store.dispatch('snack', {
+      color: 'red',
+      text: 'Error occured'
+    })
+  })
+    }
+    },
+  deleteItem(x, y){
+      var sn = this
+  if (sn.deleteCatItemId != ''){
+    sn.loading4 = true
+    sn.dialog4 = false
+    sn.dialog45 = true
+    axios.post("/item/delete", {
+      cat_id: x,
+      item_id: y
+    })
+    .then(function (response) {
+      var d = response.data.message
+      sn.$store.dispatch("loadItems", {
+          id: sn.$route.params.id
+      });
+    sn.loading4 = false  
+    sn.dialog45 = false
+    sn.$store.dispatch('snack', {
+      color: 'green',
+      text: d
+    })
+  }).catch(function (error) {
+    sn.dialog45 = false
+    sn.loading4 = false
+    sn.$store.dispatch('snack', {
+      color: 'red',
+      text: 'Error occured'
+    })
+  })
+    }
+    },
+  editCat(x, y){
+    var sn = this
+    sn.editContent = x
+    sn.editId = y
+    sn.dialog1=true
+    },
+  offFood(e, i, o, u){
+    var sn = this
+    if (e) {
+      sn.offName = 'Off'
+    } else {
+      sn.offName = 'On'
+    }
+    sn.offAvailable = !e
+    sn.offId = o
+    sn.offCat = u
+    sn.dialog3 = true
+    },
+   offItem(){
+    var sn = this
+    sn.loading3 = true
+    sn.dialog3 = false
+    sn.dialog45 = true
+    axios.post("/item/available", {
+      item_id: sn.offId,
+      cat_id: sn.offCat, 
+      availability: sn.offAvailable
+    })
+    .then(function (response) {
+     let d = response.data.message
+      // sn.$store.dispatch("loadOptions");
+      sn.$store.dispatch("loadItems", {
+          id: sn.$route.params.id
+      });
+      sn.loading3 = false
+      sn.dialog45 = false
+      sn.$store.dispatch('snack', {
+        color: 'green',
+        text: d
+    })
+  }).catch(function (error) {
+    sn.dialog45 = false
+    sn.loading3 = false
+    sn.$store.dispatch('snack', {
+      color: 'red',
+      text: 'Error occured'
+    })
+  })
+    },
+  editCatItem(u, v, x, y, z, a){
+    var sn = this
+    sn.compValue = []
+    sn.optValue = []
+    sn.editCatId = u
+    if (a.length) {
+      var compItems =[]
+      var optItems =[]
+      a.forEach(elem => {
+        if (elem.pivot.type === 'compulsory') {
+          compItems.push(elem)
+        }else {
+          optItems.push(elem)
+        }
+     })
+      sn.compValue = compItems.map((item) => {
+            return item.name
+        })
+      sn.optValue = optItems.map((item) => {
+            return item.name
+        })
+    }
+    console.log(sn.list)
+    console.log(sn.optValue)
+    sn.editCatItemId = v
+    sn.editCatItemName = x
+    sn.editCatItemPrice = y
+    sn.editCatItemDescription = z
+    sn.dialog6=true
+    },
+  addCat(x, y){
+    var sn = this
+    sn.addContent = x
+    sn.addId = y
+    sn.dialog5=true
+    },
+  deleteCat(x, y){
+    this.deleteId = y
+    this.deleteName = x
+    this.dialog2 = true
+    },
+  deleteCatItem(x, y, z){
+    this.deleteCatId = x
+    this.deleteCatItemId = y
+    this.deleteCatItemName = z
+    this.dialog4 = true
+    },
+  fieldChange (e) {
+    this.attachments = []
+    let selectedFile = e
+    if (!selectedFile.length) {
+      return false
+    }
+      for (let i = 0; i < selectedFile.length; i++) {
+        this.attachments.push(selectedFile[i])
+      }
+    },
+  optionFieldChange (e, i) {
+    this.attach = i
+    this.optionAttachments = []
+    let selectedFile = e.target.files
+    if (!selectedFile.length) {
+      return false
+    }
+      for (let i = 0; i < selectedFile.length; i++) {
+        this.optionAttachments.push(selectedFile[i])
+      }
+    },
+  itemFieldChange (e) {
+    this.itemAttachments = []
+    let selectedFile = e.target.files
+    if (!selectedFile.length) {
+      return false
+    }
+      for (let i = 0; i < selectedFile.length; i++) {
+        this.itemAttachments.push(selectedFile[i])
+      }
+    },
+fieldChanges (e) {
+    this.attachments = []
+    let selectedFile = e
+    if (!selectedFile.length) {
+      return false
+    }
+      for (let i = 0; i < selectedFile.length; i++) {
+        this.attachments.push(selectedFile[i])
+      }
+    },
+addCategoryItem(x){
+  var sn = this
+  if (sn.$refs.form4.validate()){
+    sn.loading5 = true
+    sn.dialog45 = true
+        var comp = []
+        var compa = []
+      if (sn.compulsory) {
+         var g =  sn.compulsory.forEach(element => {
+          comp.push (smain_s.find((item) => {
+           return item.name === element
+           }))
+         }); 
+         compa = comp.map((item) => {
+           return item.id
+         })
+      }
+        var opt = []
+        var opta = []
+      if (smain_al) {
+         var h =  smain_al.forEach(element => {
+          opt.push (smain_s.find((item) => {
+           return item.name === element
+           }))
+         }); 
+           opta = opt.map((item) => {
+           return item.id
+         })
+      }
+    const fd = new FormData()
+    fd.append('name', sn.name)
+    fd.append('price', sn.price)
+    fd.append('description', sn.description)
+    fd.append('compulsory', JSON.stringify(compa))
+    fd.append('optional', JSON.stringify(opta))
+    fd.append('generic', sn.name)
+    fd.append('category_id', sn.addId)
+    fd.append('category_name', sn.addContent)
+    for (var i = 0; i < sn.$refs.file2.$refs.input.files.length; i++) {
+      let file = sn.$refs.file2.$refs.input.files[i]
+      fd.append('files[' + i + ']', file)
+    }
+    const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+    sn.dialog5 = false
+    axios.post('/item/save', fd, config)
+    .then(res => {
+      sn.$store.dispatch('loadItems', {
+          id: sn.$route.params.id
+      })
+      sn.attachments = []
+      sn.loading5 = false
+      sn.dialog45 = false
+      sn.$store.dispatch('snack', {
+      color: 'green',
+      text: 'Item added successfully'
+    })
+    })
+      .catch(err => {
+        sn.attachments = []
+        sn.$store.dispatch('snack', {
+          color: 'red',
+          text: err
+        })
+        sn.loading5 = false
+        sn.dialog5 = false     
+        sn.dialog45 = false     
+     })
+    }
+  },
+editItemImage(x, y){
+  var sn = this
+  if (sn.itemAttachments.length){
+    sn.loading11 = true
+    const fd = new FormData()
+    fd.append('cat_id', x)
+    fd.append('item_id', y)
+    var file = sn.$refs.file81.files[0]
+    fd.append('files[' + 0 + ']', file)
+    const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+    axios.post('/item/image', fd, config)
+    .then(res => {
+      var d = res.data
+      sn.$store.dispatch('loadItems', {
+          id: sn.$route.params.id
+      })
+      sn.itemAttachments = []
+      sn.loading11 = false
+      sn.itemAttach=null
+      sn.$store.dispatch('snack', {
+        color: 'green',
+      text: 'Image edited'
+    })
+    })
+      .catch(err => {
+        sn.itemAttachments = []
+        sn.itemAttach=null
+        sn.$store.dispatch('snack', {
+          color: 'red',
+          text: err
+        })
+        sn.loading11 = false
+     })
+    } else{
+      sn.itemAttach = null
+    }
+  },
+openImageInput(i) {
+    this.optionAttachments = []
+    this.$refs.file8[i].click()
+    },
+openItemImageInput(d) {
+      this.itemAttach = d
+    this.itemAttachments = []
+    this.$refs.file81.click()
+    }
+  }
+}
+</script>

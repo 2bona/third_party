@@ -19,8 +19,14 @@
           color="orange"
           icons-and-text
           height="55"
-          background-color="transparent"
-        >
+          background-color="transparent">
+          <v-tab v-show="false" class="overline font-weight-medium text-capitalize" v-for="n in 4" :key="n">
+             <v-skeleton-loader
+            ref="skeleton" height="25" width="25"
+            type="avatar" 
+            tile
+          ></v-skeleton-loader>
+          </v-tab>
           <v-tab class="overline font-weight-medium text-capitalize" v-for="n in 20" :key="n">
             chuks{{n}}
             <v-avatar size="25" tile color="white" style="border-radius:4px" class="pt-1">
@@ -35,19 +41,25 @@
     </v-app-bar>
     <v-flex xs12 lg9 class style="margin: 6rem 0px 6rem 0px">
       <v-card style="overflow-x:hidden;" flat tile color="transparent">
-        <v-card-title class="body-1 px-2 font-weight-bod grey--text text--lighten-1">
-          Popular combo
-          <div class="flex-grow-1"></div>
-        </v-card-title>
+               <p class="body-1 pt-0 px-2 mt-5 my-3 font-weight-bold grey--text">
+           Popular combo
+               </p>
         <div class="container pt-0 pb-1 mb-0">
           <v-flex xs12>
             <v-layout row wrap>
+              <v-flex v-show="false" xs6 class="px-1 py-3" sm4 v-for="n in 4" :key="n">
+          <v-skeleton-loader
+            ref="skeleton"
+            type="card" 
+            
+          ></v-skeleton-loader> 
+              </v-flex>
               <v-flex xs6 sm4 v-for="n in 4" :key="n">
                 <v-card
                   flat
                   color="transparent"
                   style=" border-radius:10px 10px 10px 10px"
-                  class="elevation-2 mx-auto pt-1 mb-2"
+                  class="elevation-2 mx-auto pt-1 mb-5"
                   width="95%"
                   max-width="225"
                   height
@@ -113,8 +125,7 @@
                         <v-chip
                           x-small
                           color="white"
-                          class="elevation-1 mb-0 grey--text text--darken-1 text-truncate"
-                        >
+                          class="elevation-1 mb-0 grey--text text--darken-1 text-truncate">
                           <v-icon color="green" size="7" class="mr-1">mdi-circle-slice-8</v-icon>mummy's pot filterthis
                         </v-chip>
                       </v-flex>
@@ -126,12 +137,17 @@
           </v-flex>
         </div>
       </v-card>
-
-      <v-layout row wrap class="mt-0 mx-0" style="overflow-x:hidden; ">
-        <v-card-title class="body-1 pt-0 px-2 mt-0 font-weight-regular grey--text">
+        <p class="body-1 pt-0 px-2 my-2 font-weight-bold grey--text">
           Vendors
-          <div class="flex-grow-1"></div>
-        </v-card-title>
+        </p>
+      <v-layout row wrap class="mt-0 mx-0" style="overflow-x:hidden; ">
+        <v-flex v-show="false" class="my-2 px-3" xs12 sm6 md6 lg6 v-for="n in 4" :key="n">
+            <v-skeleton-loader
+            ref="skeleton" height="100"
+            type="list-item-avatar-three-line" 
+            tile
+          ></v-skeleton-loader> 
+        </v-flex>
         <v-flex class="my-2" xs12 sm6 md6 lg6 v-for="n in slides[0].items" :key="n.sn">
           <v-card
             width="95%"
@@ -212,6 +228,14 @@
 <style></style>
 <script>
 import navbottom from "./navbottom";
+import axios from 'axios'
+import wrapper from 'axios-cache-plugin'
+
+let http = wrapper(axios, {
+  maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
+  ttl: 60000, // time to live. if you set this option the cached item will be auto deleted after ttl(ms).
+  excludeHeaders: true // should headers be ignored in cache key, helpful for ignoring tracking headers
+})
 export default {
   components: {
     navbottom
@@ -239,95 +263,31 @@ export default {
               show: true,
               sn: 0,
               name: "Meat balls"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 1,
-              name: "Spaghetti"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 2,
-              name: "Baked Burger"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1485963631004-f2f00b1d6606?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 3,
-              name: "Salad"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1539735776517-befcae86494d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 4,
-              name: "Fried Fritata"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1539735776517-befcae86494d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 5,
-              name: "Fried Fritata"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1539735776517-befcae86494d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 6,
-              name: "Fried Fritata"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 7,
-              name: "Baked Fish and sauce"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 8,
-              name: "Agidi and pepper soup"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 9,
-              name: "Jollof rice and chicken with salad"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 10,
-              name: "Sea food"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 11,
-              name: "Sea food"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 12,
-              name: "Sea food"
             }
           ]
         }
       ]
     };
+  },
+  created () {
+    // let url = '/page/all'
+    // const sn = this
+    // http({
+    //   url: url,
+    //   method: 'get',
+    //   params: {
+    //     category: this.$route.params.category,
+    //     brand: this.$route.params.brand
+    //   }
+    // })
+    //   .then((response) => {
+    //     sn.items = response.data.data
+    //     sn.visible = false
+    //   }).catch(function (error) {
+    //     alert(error)
+    //     sn.visible = false
+    //     sn.$router.go(-1)
+    //   })
   }
 };
 </script>

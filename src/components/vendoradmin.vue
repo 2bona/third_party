@@ -1,11 +1,10 @@
 <template>
-<div>
-  <h1 class="px-3 grey--text text--darken-2">Vendor Dashboard</h1>
+<v-card flat tile color="grey lighten-4">
   <v-content style="overflow-x:hidden"> 
     <router-view></router-view>
   </v-content>
   <navbottomadmin></navbottomadmin>
-</div>
+</v-card>
 </template>
 <script>
 import navbottomadmin from "./navbottomadmin";

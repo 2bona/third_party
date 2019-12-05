@@ -136,8 +136,7 @@ export const user = {
         delete axios.defaults.headers.common["Authorization"]
         router.push("/auth/login")
       })
-    },
-       
+    },  
   },
   mutations: {
     setLoadStatus(state, status) {

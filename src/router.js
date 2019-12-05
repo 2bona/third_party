@@ -23,15 +23,26 @@ const router = new VueRouter({
         )
     },
     {
+      path: "/city",
+      component: () =>
+        import(/* webpackChunkName: "city" */ "./components/city.vue")
+    },
+    {
+      path: "/area/:id/:name",
+      props: true,
+      component: () =>
+        import(/* webpackChunkName: "area" */ "./components/area.vue")
+    },
+    {
       path: "/Regvendor",
       component: () =>
         import(
           /* webpackChunkName: "Register-vendor" */ "./components/Register-vendor.vue"
-        ),
-      meta: {
-        role: true,
-        requiresAuth: true
-      }
+        )
+      // meta: {
+      //   role: true,
+      //   requiresAuth: true
+      // }
     },
     {
       path: "/Regagent",
@@ -95,6 +106,16 @@ const router = new VueRouter({
         import(/* webpackChunkName: "cart" */ "./components/cart.vue")
     },
     {
+      path: "/usercity",
+      component: () =>
+        import(/* webpackChunkName: "userCity" */ "./components/userCity.vue")
+    },
+    {
+      path: "/userarea/:id/:name",
+      component: () =>
+        import(/* webpackChunkName: "userArea" */ "./components/userArea.vue")
+    },
+    {
       path: "/checkout",
       component: () =>
         import(/* webpackChunkName: "checkout" */ "./components/checkout.vue")
@@ -136,10 +157,26 @@ const router = new VueRouter({
       props: true,
       children: [
         {
+          path: "/",
+          component: () =>
+            import(
+              /* webpackChunkName: "items" */ "./components/admin/itemadmin.vue"
+            ),
+          props: true
+        },
+        {
           path: "items",
           component: () =>
             import(
               /* webpackChunkName: "items" */ "./components/admin/itemadmin.vue"
+            ),
+          props: true
+        },
+        {
+          path: "item/:id",
+          component: () =>
+            import(
+              /* webpackChunkName: "items" */ "./components/admin/details.vue"
             ),
           props: true
         },
