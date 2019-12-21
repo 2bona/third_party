@@ -20,12 +20,20 @@ if (token) {
 }
 export const user = {
   state: {
-    user: JSON.parse(localStorage.getItem("user"))|| [],
+    user: JSON.parse(localStorage.getItem("user"))|| '',
     LoadStatus: 0,
+    areaList: {},
+    item: [],
+    addresses: {},
+    vendorList: [],
     userAddStatus: 0,
     userRegisteredStatus: 0,
     isLoggedIn: false,
+    mapNav: false,
+    vendorLoading: false,
     token: localStorage.getItem("token") || "",
+    city: JSON.parse(localStorage.getItem("usercity")) || "",
+    area: JSON.parse(localStorage.getItem("userarea")) || "",
     loginError: "",
     loginStatus: isLoggesIn,
     registerError: "",
@@ -61,47 +69,6 @@ export const user = {
         commit("setUserRegisterError", error.response.data.error)
       })
     },
-    login({ commit, state, dispatch }, data) {
-      localStorage.removeItem("token") // store the token in localstorage
-      localStorage.removeItem("user")
-      commit("setUserLoginStatus", 1)
-      axios
-        .post(AXIOS_CONFIG.API_URL + "/login", {
-          email: data.email,
-          password: data.password
-        })
-        .then(function(response){
-          let authUser = response.data.success.user
-          let authToken = response.data.success.token
-          localStorage.setItem("token", authToken) // store the token in localstorage
-          localStorage.setItem("user", JSON.stringify(authUser))
-          commit("setUser", JSON.stringify(authUser))
-          commit("setToken", authToken)
-          commit("setUserLoginStatus", 2)
-          let role = authUser.role
-          if (localStorage.getItem("token") != null) {
-            if (router.currentRoute.params.nextUrl != null) {
-              router.push(router.currentRoute.params.nextUrl)
-            } else {
-              if (role === "admin") {
-                router.push("/admin")
-              } else {
-                router.push("/")
-              }
-            }
-          }
-        })
-        .catch(function(error) {
-          commit("setUserLoginStatus", 3)
-          commit("setToken", null)
-          commit("setUserLoginErrors", error)
-          localStorage.removeItem("token")
-          commit("setSnackbarStatus", 1)
-          commit("setSnackbarText", error.response.data.error)
-          commit("setSnackbarColor", "orange")
-          delete axios.defaults.headers.common["Authorization"]
-        })
-    },
     passcode({ commit, state, dispatch }, data) {
       localStorage.setItem("user", JSON.stringify(data))
       commit("setUser", data)
@@ -122,6 +89,52 @@ export const user = {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + data
     },
+    setUserArea({ commit, state, dispatch }, data) {
+      localStorage.setItem("userarea", JSON.stringify(data.area))
+      commit("setUserArea", data.area)
+    },
+    setAreaList({ commit, state, dispatch }, data) {
+      commit("setUserAreaList", data.items)
+    },
+    setVendorList({
+        commit,
+        state,
+        dispatch
+      }, data) {
+      commit("setVendorList", data.items)
+    },
+    setItem({
+        commit,
+        state,
+        dispatch
+      }, data) {
+      commit("setItem", data)
+    },
+    mapNav({
+        commit,
+        state,
+        dispatch
+      }, data) {
+      commit("setMapNav", data)
+    },
+    vendorLoading({
+        commit,
+        state,
+        dispatch
+      }, data) {
+      commit("setVendorLoading", data)
+    },
+    setAddresses({
+        commit,
+        state,
+        dispatch
+      }, data) {
+      commit("setUserAddresses", data)
+    },
+    setUserCity({ commit, state, dispatch }, data) {
+      localStorage.setItem("usercity", JSON.stringify(data.city))
+      commit("setUserCity", data.city)
+    },
     snack({ commit, state, dispatch }, data) {
       commit("setSnackbar", {
            color: data.color,
@@ -130,13 +143,18 @@ export const user = {
          })
     },
     logout({ commit, state, dispatch }, data) {
-      axios.get(AXIOS_CONFIG.API_URL + "/logout").then(function(response) {
-        localStorage.removeItem("token")
+           localStorage.removeItem("token")
         localStorage.removeItem("user")
+        localStorage.removeItem("usercity")
+        localStorage.removeItem("userarea")
         delete axios.defaults.headers.common["Authorization"]
+      axios.get(AXIOS_CONFIG.API_URL + "/logout").then(function(response) {
+        router.push("/auth/login")
+      }).catch(()=>{
+        
         router.push("/auth/login")
       })
-    },  
+    }
   },
   mutations: {
     setLoadStatus(state, status) {
@@ -144,6 +162,27 @@ export const user = {
     },
     setUser(state, user) {
       state.user = user
+    },
+    setItem(state, item) {
+      state.item = item
+    },
+    setVendorLoading(state, data) {
+      state.vendorLoading = data
+    },
+    setVendorList(state, vendorList) {
+      state.vendorList = vendorList
+    },
+    setUserCity(state, city) {
+      state.city = city
+    },
+    setUserAddresses(state, addresses) {
+      state.addresses = addresses
+    },
+    setUserArea(state, area) {
+      state.area = area
+    },
+    setUserAreaList(state, area) {
+      state.areaList = area
     },
     setUserLoginErrors(state, loginError) {
       state.loginError = loginError
@@ -158,10 +197,13 @@ export const user = {
       state.snackbar = snack
       setTimeout(() => {
         state.snackbar.status = 0
-      }, 6000)
+      }, 4000)
     },
     setToken(state, token) {
       state.token = token
+    },
+    setMapNav(state, mapNav) {
+      state.mapNav = mapNav
     },
     setUserAddedStatus(state, snack) {
       state.userAddStatus = snack
@@ -178,6 +220,15 @@ export const user = {
     getUserLoginStatus(state) {
       return state.loginStatus
     },
+    getUserAddresses(state) {
+      return state.addresses
+    },
+    getVendorList(state) {
+      return state.vendorList
+    },
+    getItem(state) {
+      return state.item
+    },
     getUserRegisteredStatus(state) {
       return state.userRegisteredStatus
     },
@@ -187,8 +238,23 @@ export const user = {
     getSnackbar(state) {
       return state.snackbar
     },
+    getMapNav(state) {
+      return state.mapNav
+    },
+    getVendorLoading(state) {
+      return state.vendorLoading
+    },
     getUser(state) {
       return state.user
+    },
+    getUserArea(state) {
+      return state.area
+    },
+    getUserAreaList(state) {
+      return state.areaList
+    },
+    getUserCity(state) {
+      return state.city
     },
     getToken(state) {
       return state.token

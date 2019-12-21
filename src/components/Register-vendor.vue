@@ -98,6 +98,7 @@
 <!-- save food by vendor and list food to user  -->
               <v-row justify="space-around" class="pr-3">
                 <v-card id="map" color="grey" width="100%" height="350"></v-card>
+    
                 <div id="infowindow-content">
                   <img src width="16" height="16" id="place-icon" />
                   <span id="place-name" class="body-1 font-weight-bold"></span>
@@ -181,6 +182,8 @@
 </style>
 <script>
 import axios from "axios";
+import $Scriptjs from 'scriptjs'
+
 export default {
   data() {
     return {
@@ -222,8 +225,55 @@ export default {
       tag: []
     }
   },
-  mounted: function() {
-    var markers = [];
+    mounted(){
+    $Scriptjs('https://maps.googleapis.com/maps/api/js?key=AIzaSyA1Uoi_ddjhFR5HNAgofZNat9eQAsUFtg0&libraries=places', () => {
+      this.initMap()
+    })
+  },
+  created() {
+    var sn = this;
+    axios
+      .get("/city/cities")
+      .then(function (response) {
+          sn.cities = response.data.city
+          sn.load2 = false
+      }).then(() => {
+        this.$store.dispatch("loadTags");
+      })
+  },
+  computed: {
+    user() {
+      return this.$store.getters.getUser.id;
+    },
+    registerStatus() {
+      return this.$store.getters.getLoadStatus;
+    }, 
+    tags() {
+      return this.$store.getters.getTags;
+    }
+  },
+  watch: {
+    city (val) {
+      if (!val) {
+        this.areas = []
+        this.disable = true
+      } else if(val) {
+        this.areas = []
+        this.load = true
+        var sn = this
+        axios
+         .get("/city/areas?id="+sn.city)
+         .then(function (response) {
+            sn.areas = response.data.areas
+            sn.disable = false
+            sn.load = false
+          })
+      }
+    }
+  },
+methods: {
+  initMap(){
+ var markers = [];
     var geocoder = new google.maps.Geocoder();
     var map = (this.map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 6.222, lng: 7.0821 },
@@ -376,48 +426,6 @@ export default {
       sn.long = place.geometry.location.lng();
     });
   },
-  created() {
-    var sn = this;
-    axios
-        .get("/city/cities")
-        .then(function (response) {
-            sn.cities = response.data.city
-            sn.load2 = false
-        }).then(() => {
-          this.$store.dispatch("loadTags");
-        })
-  },
-  computed: {
-    user() {
-      return this.$store.getters.getUser.id;
-    },
-    registerStatus() {
-      return this.$store.getters.getLoadStatus;
-    }, 
-    tags() {
-      return this.$store.getters.getTags;
-    }
-  },
-  watch: {
-    city (val) {
-      if (!val) {
-        this.areas = []
-        this.disable = true
-      } else if(val) {
-        this.areas = []
-        this.load = true
-        var sn = this
-        axios
-         .get("/city/areas?city="+sn.city)
-         .then(function (response) {
-            sn.areas = response.data.areas
-            sn.disable = false
-            sn.load = false
-          })
-      }
-    }
-  },
-methods: {
     logout () {
      this.$store.dispatch('logout')
     },

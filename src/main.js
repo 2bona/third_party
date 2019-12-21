@@ -17,6 +17,8 @@ import "./registerServiceWorker";
 import Vuex from "vuex";
 import store from "./store.js";
 import axios from "axios";
+import moment from "moment";
+
 // import "./stylus/main.styl";
 // axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
@@ -24,7 +26,7 @@ import axios from "axios";
 // axios.defaults.headers.post['Accept'] = 'application/json';
 
 // axios.defaults.headers.common['Authorization'] = 'Bearer' + apitoken;
-axios.defaults.baseURL = "http://localhost:8000/api";
+axios.defaults.baseURL = "http://192.168.0.100:8000/api";
 Vue.use(axios);
 
 Vue.config.productionTip = false;
@@ -39,7 +41,14 @@ Vue.use(VueMeta, {
   // tagIDKeyName: "vmid",
   // refreshOnceOnNavigation: true
 });
-
+Vue.filter("myDate", function(created) {
+  return moment(created).format("MMM Do YYYY");
+});
+Vue.filter("nowDate", function(created) {
+  return moment(created)
+    .startOf("seconds")
+    .fromNow();
+});
 Vue.filter("name", function(text) {
   if (text.length >= 15) {
     return text.slice(0, 15) + "...";
@@ -52,6 +61,37 @@ Vue.filter("price", function(value) {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   } else {
     return 0;
+  }
+});
+Vue.filter("distance", function(value) {
+  if (value != null) {
+    return (value / 1000).toFixed(1) + "km";
+  } else {
+    return 0;
+  }
+});
+Vue.filter("duration", function(value) {
+  if (value != null && val != 0) {
+    var val = Math.floor((value % 3600) / 60);
+
+    if (val <= 5) {
+      return "15mins";
+    } else if (val <= 10) {
+      return "20mins";
+    } else if (val <= 15) {
+      return "30mins";
+    } else if (val <= 20) {
+      return "40mins";
+    } else if (val <= 30) {
+      return "45mins";
+    } else if (val > 30) {
+      return "55mins";
+    } else {
+      return "0";
+    }
+    // return val > 0 ? val + (val == 1 ? "min" : "mins") : "";
+  } else {
+    return "0";
   }
 });
 new Vue({

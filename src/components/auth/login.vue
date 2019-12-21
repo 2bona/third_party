@@ -87,7 +87,6 @@ export default {
           }
       })
         .then((response) => {
-          console.log(response.data.success)
           sn.loading = false
           sn.$store.dispatch('setUser', response.data.success.user)
           sn.$store.dispatch('setToken', response.data.success.token)

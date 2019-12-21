@@ -25,6 +25,7 @@
           class="mt-4 orange--text"
         >
           <span class>proceed</span>
+          
         </v-btn>
       </v-form>
     </v-card-text>
@@ -63,11 +64,11 @@ export default {
         this.loading = true;
         const url = "/passcode";
         var data = "";
-        let sn = this;
+        const sn = this;
         if (sn.user.type === "email") {
-          let data = sn.user.email;
+          var data = sn.user.email;
         } else {
-          let data = sn.user.phone;
+          var data = sn.user.phone;
         }
         http({
           url: url,

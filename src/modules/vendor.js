@@ -11,6 +11,7 @@ export const vendor = {
   state: {
     vendors: [],
     tags: [],
+    orderList: [],
     vendor: JSON.parse(localStorage.getItem("vendor")) || "",
     mainOptions: JSON.parse(localStorage.getItem("mainOptions")) || "",
     mainOptionsList: JSON.parse(localStorage.getItem("mainOptionsList")) || "",
@@ -18,6 +19,7 @@ export const vendor = {
     list: JSON.parse(localStorage.getItem("list")) || '',
     items: JSON.parse(localStorage.getItem("items")) || '',
     options: JSON.parse(localStorage.getItem("options")) || '',
+    orderFull:  {},
     vendorLoadStatus: 0
   },
   actions: {
@@ -72,6 +74,57 @@ export const vendor = {
           commit("setItems", items)
         }).catch(function (error) {
         })
+    },
+    orderList({
+      commit,
+      state,
+      dispatch
+    }, data) {
+      let url = "/order/all"
+      axios.get(AXIOS_CONFIG.API_URL + url)
+        .then(function (response) {
+          var orderList = response.data.orders;
+          commit("setOrderList", orderList)
+        }).catch(function (error) {
+          console.log(error)
+        })
+    },
+    getOrder({
+      commit,
+      state,
+      dispatch
+    }, data) {
+      commit("setOrder", {})
+      let url = "/order/find?id=" + data.id
+      axios.get(AXIOS_CONFIG.API_URL + url)
+        .then(function (response) {
+          var order = response.data.order;
+          commit("setOrder", order)
+        }).catch(function (error) {
+          console.log(error)
+        })
+    },
+    order({
+      commit,
+      state,
+      dispatch
+    }, data) {
+      if (data.action === null) {
+         dispatch("getOrder", {
+           id: data.id
+         })
+      } else{
+      let url = "/order/"+data.action+"?id=" + data.id
+      axios.get(AXIOS_CONFIG.API_URL + url)
+        .then(function (response) {
+          console.log(response.data.message)
+          dispatch("getOrder", {
+            id: data.id
+          })
+        }).catch(function (error) {
+          console.log(error)
+        })
+      }
     },
     loadMainOptions({
       commit,
@@ -150,11 +203,17 @@ loadOptions({
     setVendor(state, data) {
       state.vendor = data
     },
+    setOrderList(state, data) {
+      state.orderList = data
+    },
     setMenu(state, menu) {
       state.menu = menu
     },
     setOptions(state, options) {
       state.options = options
+    },
+    setOrder(state, order) {
+      state.orderFull = order
     },
     setMainOptions(state, items) {
       state.mainOptions = items
@@ -179,11 +238,17 @@ loadOptions({
     getMenu(state) {
       return state.menu
     },
+    getOrderList(state) {
+      return state.orderList
+    },
     getTags(state) {
       return state.tags
     },
     getOptions(state) {
       return state.options
+    },
+    getOrderFull(state) {
+      return state.orderFull
     },
     getMainOptions(state) {
       return state.mainOptions

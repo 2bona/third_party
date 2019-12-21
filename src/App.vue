@@ -1,6 +1,6 @@
 
 <template>
-    <v-app  >               
+    <v-app dark>               
     <v-container fluid class="pa-0">
       
     <v-snackbar
@@ -32,6 +32,7 @@
 }
 .v-toolbar__content, .v-toolbar__extension {
     padding: 4px 9px!important;
+    justify-content:space-around!important;
 }
 body, html{
   overflow-x: hidden;

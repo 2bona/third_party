@@ -76,6 +76,8 @@
 </style>
 <script>
 import axios from "axios";
+import $Scriptjs from 'scriptjs'
+
 export default {
   data() {
     return {
@@ -108,18 +110,39 @@ export default {
     }
   },
   mounted: function() {
+    const sn = this
+      $Scriptjs.get('https://maps.googleapis.com/maps/api/js?key=AIzaSyA1Uoi_ddjhFR5HNAgofZNat9eQAsUFtg0&libraries=places', function () {
+sn.map()
+    })
+  },
+  created() {
+      var sn = this;
+      axios
+         .get("/city/all")
+         .then(function (response) {
+             sn.items = response.data.city
+         })
+         },
+  computed: {
+    city() {
+      return this.$store.getters.getUser.id;
+    }
+  },
+methods: {
+  map(){
+    const sn = this
     var markers = [];
     var geocoder = new google.maps.Geocoder();
-    var map = (this.map = new google.maps.Map(document.getElementById("map"), {
+    var map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 6.222, lng: 7.0821 },
       zoom: 13
-    }));
-    this.autocomplete = new google.maps.places.Autocomplete(
-      this.$refs.autocomplete.$refs.input
+    });
+    sn.autocomplete = new google.maps.places.Autocomplete(
+      sn.$refs.autocomplete.$refs.input
     );
 
-    this.autocomplete.bindTo("bounds", map);
-    this.autocomplete.setFields([
+    sn.autocomplete.bindTo("bounds", map);
+    sn.autocomplete.setFields([
       "address_components",
       "place_id",
       "geometry",
@@ -132,15 +155,15 @@ export default {
     var marker = new google.maps.Marker({
       map: map,
       anchorPoint: new google.maps.Point(0, -29)
-    });  var sn = this
+    }); 
     map.addListener("click", e => {
       // 3 seconds after the center of the map has changed, pan back to the
       // marker.
       setMapOnAll(null);
       markers = [];
       getloc(e);
-      this.long = e.latLng.lng();
-      this.lat = e.latLng.lat();
+      sn.long = e.latLng.lng();
+      sn.lat = e.latLng.lat();
       var latitude = e.latLng.lat();
       var longitude = e.latLng.lng();
     
@@ -213,9 +236,8 @@ export default {
     }
 
 //when you select an address form auto complete
-      var sn = this
-    this.autocomplete.addListener("place_changed", () => {
-      this.disabled = true
+    sn.autocomplete.addListener("place_changed", () => {
+      sn.disabled = true
       infowindow.close();
       marker.setVisible(false);
       let place = sn.autocomplete.getPlace();
@@ -256,25 +278,11 @@ export default {
       infowindowContent.children["place-address"].textContent = address;
       infowindow.open(map, marker);
 
-      sn.address = this.$refs.autocomplete.$refs.input.value;
+      sn.address = sn.$refs.autocomplete.$refs.input.value;
       sn.lat = place.geometry.location.lat();
       sn.long = place.geometry.location.lng();
     });
   },
-  created() {
-      var sn = this;
-      axios
-         .get("/city/all")
-         .then(function (response) {
-             sn.items = response.data.city
-         })
-         },
-  computed: {
-    city() {
-      return this.$store.getters.getUser.id;
-    }
-  },
-methods: {
     logout () {
      this.$store.dispatch('logout')
     },

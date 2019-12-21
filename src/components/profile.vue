@@ -4,15 +4,14 @@
            <v-avatar
                size="80"
                color="transparent"
-               class="mt-6 mb-3 elevation-15" 
-           >
-               <img :src="user.image" @click="openImageInput" alt="profile">
+               class="mt-6 mb-3 elevation-15">
+               <v-img :src="user.image" @click="openImageInput" alt="profile"></v-img>
              <v-overlay
-          absolute opacity="0.3"
-          z-index="1"
-          :value="attachments.length">
+              absolute opacity="0.3"
+              z-index="1"
+              :value="attachments.length">
              </v-overlay>
-        <v-btn :loading="loading2" style="z-index:7" dark absolute x-small rounded fab v-show="attachments.length" color="orange" class="mt-0 mb-0 mx-4" @click="uploadFile"> <v-icon color="orange lighten-4" dark>mdi-cloud-upload</v-icon></v-btn>
+        <v-btn :loading="loading2" style="z-index:7" dark absolute x-small rounded fab v-show="attachments.length" color="orange" class="mt-0 mb-0 mx-auto" @click="uploadFile"> <v-icon color="orange lighten-4" dark>mdi-cloud-upload</v-icon></v-btn>
            </v-avatar>
            <v-flex xs12 class="mb-4">
             <h3 class="text-center mb-0 text-capitalize grey--text text--darken-1 font-weight-bold"><span>{{user.surname}}</span> <span> {{user.middle_name}} </span> <span>{{user.first_name}}</span></h3>
@@ -22,23 +21,23 @@
            <v-row class="">
               <v-flex xs4>
                   <h5 class="grey--text text--darken-1 font-weight-regular  text-center mb-0">
-                      20
+                      {{user.orders}}
                   </h5>
                   <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
                       Orders
                   </p>
-           </v-flex>   
+           </v-flex>
               <v-flex xs4>
                     <h5 class="green--text font-weight-regular  text-center mb-0">
-                      N2,000
+                      <v-icon size="12" color="green" style="padding-bottom: 3px">mdi-currency-ngn</v-icon>{{user.wallet | price}}
                     </h5>
                   <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
                       Wallet
                   </p>
-           </v-flex>   
+           </v-flex>
               <v-flex xs4>
                    <h5 class="grey--text text--darken-1  font-weight-regular  text-center mb-0">
-                      5000
+                      {{user.points}}
                   </h5>
                   <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
                       Points
@@ -129,7 +128,7 @@
         <v-tab-item class="px-4 pt-4 pb-8">
   <v-expansion-panels>
     <v-expansion-panel>
-      <v-expansion-panel-header @click="overlay = true" class="px-3"><p class="grey--text  font-weight-regular  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-account</v-icon> Account Information</p> </v-expansion-panel-header>
+      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-regular  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-account</v-icon> Account Information</p> </v-expansion-panel-header>
   <v-expansion-panel-content style="position: relative" class="px-4 py-2">
          <v-form  
           onSubmit="return false;" ref="form">
@@ -194,17 +193,6 @@
 <v-btn  @click.prevent="edit" :loading="loading" class="px-6" small color="orange" dark rounded>Edit</v-btn>
       </v-row>
 </v-form>
-          <v-overlay
-          absolute opacity="0.3"
-          :value="overlay"
-        >
-          <v-btn
-          text
-            @click="overlay = false"
-          >
-            <v-icon>mdi-pencil-lock-outline</v-icon>
-          </v-btn>
-        </v-overlay>
   </v-expansion-panel-content>
     </v-expansion-panel>
     <v-expansion-panel>
@@ -366,6 +354,16 @@ export default {
     user() {
       return this.$store.getters.getUser
     }
+  },
+  mounted(){
+     axios.get('/load')
+        .then(res => {
+          var d = res.data.success
+          this.$store.dispatch('setUser', d.user)
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
   },
     methods: {
       logout(){

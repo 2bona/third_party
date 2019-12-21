@@ -1,14 +1,124 @@
 import VueRouter from "vue-router";
+// import store from "./store";
 
 const router = new VueRouter({
   mode: "history",
   routes: [
     {
       path: "/",
-      name: "home",
       component: () =>
         import(/* webpackChunkName: "index" */ "./components/index.vue"),
-      props: true
+      props: true,
+      // meta: {
+      //   requiresAuth: true,
+      //   role: true
+      // },
+      children: [
+        {
+          name: "home",
+          path: "",
+          component: () =>
+            import(/* webpackChunkName: "first" */ "./components/first.vue")
+        },
+        {
+          path: "map",
+          component: () =>
+            import(/* webpackChunkName: "map" */ "./components/map.vue")
+        },
+        {
+          path: "vendor/:name",
+          props: true,
+          component: () =>
+            import(
+              /* webpackChunkName: "vendorpage" */ "./components/vendorpage.vue"
+            )
+        }
+      ]
+    },
+    {
+      path: "/vendoritem/:category/:name",
+      props: true,
+      component: () =>
+        import(
+          /* webpackChunkName: "vendoritem" */
+          "./components/vendoritem.vue"
+        )
+    },
+    {
+      path: "/user",
+      component: () =>
+        import(/* webpackChunkName: "profile" */ "./components/profile.vue")
+      // meta: {
+      //   requiresAuth: true,
+      //   role: true
+      // }
+    },
+    {
+      path: "/selectaddress",
+      component: () =>
+        import(
+          /* webpackChunkName: "selectAddress" */ "./components/selectAddress.vue"
+        )
+    },
+    {
+      path: "/ordersummary",
+      component: () =>
+        import(
+          /* webpackChunkName: "ordersummary" */ "./components/ordersummary.vue"
+        )
+    },
+    {
+      path: "/paychoice",
+      component: () =>
+        import(/* webpackChunkName: "paychoice" */ "./components/paychoice.vue")
+    },
+    {
+      path: "/cart",
+      component: () =>
+        import(/* webpackChunkName: "cart" */ "./components/cart.vue")
+    },
+    {
+      path: "/usercity",
+      name: "city",
+      component: () =>
+        import(/* webpackChunkName: "userCity" */ "./components/userCity.vue")
+    },
+    {
+      path: "/userarea/:id/:name",
+      component: () =>
+        import(/* webpackChunkName: "userArea" */ "./components/userArea.vue")
+    },
+    {
+      path: "/checkout",
+      component: () =>
+        import(/* webpackChunkName: "checkout" */ "./components/checkout.vue")
+    },
+    {
+      //payment pages
+      path: "/pay",
+      component: () =>
+        import(/* webpackChunkName: "pay" */ "./components/pay.vue"),
+      props: true,
+      children: [
+        {
+          path: "/",
+          component: () =>
+            import(/* webpackChunkName: "pay1" */ "./components/pay1.vue"),
+          props: true
+        },
+        {
+          path: "pin",
+          component: () =>
+            import(/* webpackChunkName: "pay2" */ "./components/pay2.vue"),
+          props: true
+        },
+        {
+          path: "success",
+          component: () =>
+            import(/* webpackChunkName: "pay3" */ "./components/pay3.vue"),
+          props: true
+        }
+      ]
     },
     {
       path: "/category/:name",
@@ -21,6 +131,11 @@ const router = new VueRouter({
         import(
           /* webpackChunkName: "searchcomp" */ "./components/searchcomp.vue"
         )
+    },
+    {
+      path: "/address",
+      component: () =>
+        import(/* webpackChunkName: "address" */ "./components/address.vue")
     },
     {
       path: "/city",
@@ -87,67 +202,6 @@ const router = new VueRouter({
         )
     },
     {
-      path: "/user",
-      component: () =>
-        import(/* webpackChunkName: "profile" */ "./components/profile.vue"),
-      meta: {
-        requiresAuth: true,
-        role: true
-      }
-    },
-    {
-      path: "/item",
-      component: () =>
-        import(/* webpackChunkName: "item" */ "./components/item.vue")
-    },
-    {
-      path: "/cart",
-      component: () =>
-        import(/* webpackChunkName: "cart" */ "./components/cart.vue")
-    },
-    {
-      path: "/usercity",
-      component: () =>
-        import(/* webpackChunkName: "userCity" */ "./components/userCity.vue")
-    },
-    {
-      path: "/userarea/:id/:name",
-      component: () =>
-        import(/* webpackChunkName: "userArea" */ "./components/userArea.vue")
-    },
-    {
-      path: "/checkout",
-      component: () =>
-        import(/* webpackChunkName: "checkout" */ "./components/checkout.vue")
-    },
-    {
-      //payment pages
-      path: "/pay",
-      component: () =>
-        import(/* webpackChunkName: "pay" */ "./components/pay.vue"),
-      props: true,
-      children: [
-        {
-          path: "/",
-          component: () =>
-            import(/* webpackChunkName: "pay1" */ "./components/pay1.vue"),
-          props: true
-        },
-        {
-          path: "pin",
-          component: () =>
-            import(/* webpackChunkName: "pay2" */ "./components/pay2.vue"),
-          props: true
-        },
-        {
-          path: "success",
-          component: () =>
-            import(/* webpackChunkName: "pay3" */ "./components/pay3.vue"),
-          props: true
-        }
-      ]
-    },
-    {
       //payment pages
       path: "/vendoradmin",
       component: () =>
@@ -185,6 +239,15 @@ const router = new VueRouter({
           component: () =>
             import(
               /* webpackChunkName: "summary" */ "./components/admin/summary.vue"
+            ),
+          props: true
+        },
+        {
+          path: "adminorder",
+          component: () =>
+            import(
+              /* webpackChunkName: "adminorder" */
+              "./components/admin/adminorder.vue"
             ),
           props: true
         },
@@ -358,6 +421,7 @@ const router = new VueRouter({
         guest: true
       }
     },
+
     {
       path: "/userview",
       name: "userview",
@@ -387,21 +451,23 @@ router.beforeEach((to, from, next) => {
       });
     } else {
       let user = JSON.parse(localStorage.getItem("user"));
+      let area = JSON.parse(localStorage.getItem("userarea"));
       if (to.matched.some(record => record.meta.role)) {
-        if (user.role === "user") {
+        if (user.role === "vendor" && area) {
           next();
         } else {
           next({
-            path: "/vendoradmin",
-            query: {
-              nextUrl: to.fullPath
-            }
+            name: "city"
           });
         }
-      } else {
-        next({
-          name: "home"
-        });
+        // else if (user.role === "vendor") {
+        //   next({
+        //     path: "/vendoradmin",
+        //     query: {
+        //       nextUrl: to.fullPath
+        //     }
+        //   });
+        // }
       }
     }
   } else if (to.matched.some(record => record.meta.guest)) {

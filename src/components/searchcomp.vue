@@ -89,7 +89,7 @@
         <div class="container">
           <v-flex xs12>
             <v-layout row wrap>
-              <v-flex xs6 sm4 v-for="n in 4" :key="n">
+              <v-flex xs6 sm4 v-for="n in 2" :key="n">
                 <v-card flat
                 style=" border-radius:10px 10px 10px 10px"
                  to="/item" class="elevation-2 mx-auto pt-1 mb-5" width="95%" max-width="225" height="">
@@ -291,48 +291,6 @@ export default {
             },
             {
               pic:
-                "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 1,
-              name: "Spaghetti"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 2,
-              name: "Baked Burger,hgdkgkgjgdmjgcmjgcmjgcmjgcmjgcmj"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1485963631004-f2f00b1d6606?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 3,
-              name: "Salad"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1539735776517-befcae86494d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 4,
-              name: "Fried Fritata"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1539735776517-befcae86494d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 5,
-              name: "Fried Fritata"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1539735776517-befcae86494d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 6,
-              name: "Fried Fritata"
-            },
-            {
-              pic:
                 "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
               show: true,
               sn: 7,
@@ -342,37 +300,9 @@ export default {
               pic:
                 "https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
               show: true,
-              sn: 8,
-              name: "Agidi and pepper soup"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 9,
-              name: "Jollof rice and chicken with salad"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
               sn: 10,
               name: "Sea food"
             },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 11,
-              name: "Sea food"
-            },
-            {
-              pic:
-                "https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-              show: true,
-              sn: 12,
-              name: "Sea food"
-            }
           ]
         }
       ]

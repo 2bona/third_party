@@ -114,9 +114,9 @@ export default {
         .then((response) => {
           console.log(response)
           sn.loading = false
-          const d = response.data.success
+          const d = response.data.success.user
           var type = ''
-          if (d.user.email) {
+          if (d.email) {
            var type = d.email
           } else {
              if (d.result.data.SMSMessageData.Recipients[0].status === 'InvalidPhoneNumber') {
@@ -129,7 +129,7 @@ export default {
           sn.$store.dispatch('passcode', d)
           sn.$store.dispatch('snack', {
             color: 'green',
-            text: 'A 5 digit passcode has been sent to '+type  
+            text: `A 5 digit passcode has been sent to ${type}`  
           })
         })
         .catch(function (error) {
