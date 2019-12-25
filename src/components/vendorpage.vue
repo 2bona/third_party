@@ -31,27 +31,29 @@
                 </v-list-item>
             </v-card>
                 </v-card> 
-             </v-container>   
+             </v-container>
                </v-scale-transition>
-          <v-layout v-if="orderso.length" style="position:fixed; bottom:0px;background: linear-gradient(#fff0 0%, #fff 100%);width: 100%; z-index:9" row wrap class="mx-auto pb-2 px-2">
+      <v-layout v-if="orderso.length" style="position:fixed; bottom:0px;background: linear-gradient(#fff0 0%, #fff 100%);width: 100%; z-index:9" row wrap class="mx-auto pb-2 px-2">
       <v-flex xs6 class="px-2">
-      <v-btn block @click="orderStatus ? trayBtn(false) : trayBtn(true)" class="mt-2 elevation-10" rounded="" dark color="orange darken-4" v-html="orderStatus ? 'hide tray': 'show tray'"></v-btn>
+        <v-btn block @click="orderStatus ? trayBtn(false) : trayBtn(true)" class="mt-2 elevation-10" rounded="" dark color="orange darken-4" v-html="orderStatus ? 'hide tray': 'show tray'"></v-btn>
       </v-flex>
-      <v-flex xs6 class="px-2">           
-      <v-btn  block to="/checkout" class="mt-2 elevation-10" rounded="" dark color="primary">checkout</v-btn>
+      <v-flex xs6 class="px-2">       
+        <v-btn  block to="/checkout" class="mt-2 elevation-10" rounded="" dark color="primary">checkout</v-btn>
       </v-flex>
   </v-layout>
           <v-card class="mx-auto" max-width="600" flat tile> 
-            <v-tooltip max-width="125" right>
-              <template v-slot:activator="{ on }">
-            <v-btn @click="dialogVendor = true" style="right: 0;"  icon fab absolute right> <v-icon>mdi-information-outline</v-icon> </v-btn>
+            <v-tooltip max-width="120" left>
+            <template v-slot:activator="{ on }">
+            <v-btn v-on="on" @click="dialogVendor = true" style="right: 0;"  icon fab absolute right> <v-icon>mdi-information-outline</v-icon> </v-btn>
               </template>
+              <p class="pa-2 mb-0 caption font-weight-medium">Vendor info</p>
             </v-tooltip>
-            <v-tooltip max-width="125" right>
-              <template v-slot:activator="{ on }">
-            <v-btn v-on="on" @click="dialogVendor = true" style="left: 0;"  icon fab absolute left> <v-icon>mdi-heart-outline</v-icon> </v-btn>
+            <v-tooltip max-width="130" right>
+                <template v-slot:activator="{ on }">
+            <v-btn v-on="on" @click="isFavourite? deFavourite(vendor.id) : favourite(vendor.id)" style="left: 0;"  icon fab absolute right>
+               <v-icon :color="isFavourite ? 'red accent-4' : 'grey'">{{isFavourite ?  'mdi-heart' : 'mdi-heart-outline'}}</v-icon> </v-btn>
               </template>
-              <span class="pa-2 font-weight-medium">Add to favourites</span>
+              <p class="pa-2 mb-0 caption font-weight-medium">{{isFavourite ?  'Remove from favourites' : 'Add to favourites'}}</p>
             </v-tooltip>
           <v-row  justify="space-around">
            <v-avatar size="100"
@@ -393,8 +395,24 @@ export default {
     grandTotal(){
       return this.total + this.deliveryFee + this.serviceCharge
     },
+    // favourites(){
+    //   return this.$store.getters.getFavourites
+    // },
+    isFavourite(){
+      // const sn = this
+      // return sn.favourites.some((item) => {
+      //  return sn.vendor.id === item.id
+      // })
+      return true
+    }
   },
   methods: {
+    favourite(x){
+      alert(x)
+    },
+    deFavourite(x){
+      alert(x)
+    },
     backBtn(){
       if (this.orderso.length) {
         this.dialogLeave = true
@@ -402,7 +420,7 @@ export default {
         this.$router.push('/')
       }
     },
-     addToCart(x){
+  addToCart(x){
    const sn = this
   sn.$store.dispatch('setOrder', {
     order: { 
