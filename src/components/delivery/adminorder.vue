@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="order">
     <div class="container mt-3" style="margin-bottom: 100px;">
     <v-btn
       fixed @click="$router.go(-1)"
@@ -45,13 +45,13 @@
        </span>
     <v-list-item class="my-1" dense two-line>  
       <v-list-item-content v-if="order.address">
-        <v-list-item-title  class="body-1 grey--text text--darken-1 text-wrap font-weight-bold mt-0 pt-0" v-if="!(order.payment_method === 4)">{{order.address.area.name}}</v-list-item-title>
-        <v-list-item-subtitle v-if="!(order.payment_method === 4)" class="caption grey--text text-wrap font-weight-medium mb-0 pb-0">{{order.address.name}}</v-list-item-subtitle>
-        <v-list-item-subtitle class="caption grey--text font-weight-medium mt-0 pt-0"   v-if="!(order.payment_method === 4)">{{order.address.name_2}}</v-list-item-subtitle>
-        <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="!(order.payment_method === 4)">{{order.address.company}}</v-list-item-subtitle>
-        <v-list-item-subtitle  class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="!(order.payment_method === 4)">{{order.address.instruction}}</v-list-item-subtitle>
-        <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0">{{order.user.phone}} - <span>{{order.user.surname}}</span> <span> {{order.user.middle_name}} </span> <span>{{order.user.first_name}}</span></v-list-item-subtitle>
-        <v-list-item-subtitle v-if="!(order.payment_method === 4)" class="overline text--darken-2 grey--text  font-weight-bold mt-0 pt-0">Order to reach customer in {{order.duration | duration}}</v-list-item-subtitle>
+        <v-list-item-title v-show="!(order.payment_method === 4)" class="body-1 grey--text text--darken-1 text-wrap font-weight-bold mt-0 pt-0" v-if="order.address.area.name">{{order.address.area.name}}</v-list-item-title>
+        <v-list-item-subtitle v-show="!(order.payment_method === 4)" class="caption grey--text text-wrap font-weight-medium mb-0 pb-0">{{order.address.name}}</v-list-item-subtitle>
+        <v-list-item-subtitle class="caption grey--text font-weight-medium mt-0 pt-0" v-show="!(order.payment_method === 4)"  v-if="order.address.name_2">{{order.address.name_2}}</v-list-item-subtitle>
+        <v-list-item-subtitle v-show="!(order.payment_method === 4)" class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="order.address.company">{{order.address.company}}</v-list-item-subtitle>
+        <v-list-item-subtitle v-show="!(order.payment_method === 4)" class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="order.address.instruction">{{order.address.instruction}}</v-list-item-subtitle>
+        <v-list-item-subtitle class="caption grey--text font-weight-medium mt-0 pt-0">{{order.user.phone}} - <span>{{order.user.surname}}</span> <span> {{order.user.middle_name}} </span> <span>{{order.user.first_name}}</span></v-list-item-subtitle>
+        <v-list-item-subtitle v-show="!(order.payment_method === 4)" class="overline text--darken-2 grey--text  font-weight-bold mt-0 pt-0">Order to reach customer in {{order.duration | duration}}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
 
@@ -104,21 +104,11 @@
 </v-row>
  <v-divider></v-divider>
   <div>
-      <v-layout v-if="!(order.status === 4)"  style="position:fixed; bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9" row wrap class=" pb-2 px-2">
-        <v-flex xs6 class="px-2">
-        <v-btn  :loading="loading" block @click="dialog2 = true" class="mt-2 elevation-10" rounded="" dark color="orange darken-4">reject
-             <v-scale-transition origin="center center">
-            <v-icon v-if="(order.status === 5)" color="">mdi-check-decagram</v-icon>
-            </v-scale-transition>
-            </v-btn>
-        </v-flex>
-        <v-flex xs6 class="px-2">
-        <v-btn :loading="loading" block @click="order.payment_method === 4 ? serve() : dialog3 = true" class="mt-2 elevation-10" rounded="" 
-        dark color="primary">
-        {{order.payment_method === 4 ? 'deliver' : 'served' }}
-        <v-scale-transition origin="center center">
-            <v-icon v-if="(order.status === 2) || (order.status === 3)" color="">mdi-check-decagram</v-icon>
-        </v-scale-transition>
+      <v-layout v-if="!(order.status === 5 || order.status === 4)"  style="position:fixed; bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9" row wrap class=" pb-2 px-2">
+        <v-flex xs12 class="px-2">
+        <v-btn :loading="loading" block @click="dialog2 = true" 
+        class="px-4 mx-auto mt-2 elevation-10" rounded="" 
+        dark color="primary">confirm delivery
         </v-btn>
         </v-flex>
       </v-layout>
@@ -166,33 +156,13 @@
     <v-dialog
       v-model="dialog2"
       width="500">
-      <v-card v-if="replys">
+      <v-card>
         <v-card-title
           class="body-1 grey lighten-2"
           primary-title>
-          Reason for cancellation <v-btn class="ml-1" to="/vendoradmin/reviews" text x-small rounded color="grey">add new</v-btn>
+          Has the food been delivered?
         </v-card-title>
-
-        <v-card-text>
-          <v-form ref="form">
-               <v-text-field
-        v-model="replys[slide].content"
-         readonly color="orange darken-4"
-        :rules="[rules.required]">
-        </v-text-field> 
-          </v-form>
-          
-           <v-slider
-           color="grey "
-           :loading="load" track-color="grey lighten-2"
-            thumb-color="orange darken-4"
-          v-model="slide"
-          thumb-label :max="slider"
-        ></v-slider>
-        </v-card-text>
-
         <v-divider></v-divider>
-
         <v-card-actions>
           <div class="flex-grow-1"></div>
           <v-btn
@@ -208,67 +178,8 @@
             class="px-3 font-weight-bold caption"
             rounded text
             dark :loading="loading2"
-            @click="reject()">
-            reject
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog
-      v-model="dialog3"
-      width="500">
-      <v-card  v-if="agents">
-        <v-card-title
-          class="body-1 grey lighten-2"
-          primary-title>
-         Choose delivery agent
-        </v-card-title>
-        <v-card-text class="py-0 px-3 ">
-          <v-form ref="form">
-             <v-list-item class="mt-2 px-0 mb-0" style="max-height: 38px!important">
-          
-
-        <v-list-item-content>
-          <v-list-item-title class="caption grey--text text--darken-1 pb-0"> 
-            <span v-if="order.delivery">
-              <v-icon v-if="disableDelivery" color="orange darken-4">mdi-check-decagram</v-icon>
-              </span>
-            {{agents[slide2].name}}</v-list-item-title>
-        </v-list-item-content>
-                <v-list-item-content style="display: inline;">
-          <a style="text-decoration:none" :href="'tel:'+agents[slide2].phone">
-            <v-btn fab dark icon  x-small color="primary"><v-icon>mdi-phone</v-icon> </v-btn></a>
-          <a style="text-decoration:none" :href="'https://wa.me/+234'+agents[slide2].phone.substring(1)+'?text=Hello,%20this%20is%20'+vendor.name+'%20,%20I%20just%20want%20to%20confirm%20your%20location%20for%20a%20food%20delivery.'" target="_blank">
-          
-          <v-btn fab dark icon x-small color="green">
-            <v-icon>mdi-whatsapp</v-icon>
-             </v-btn>
-             </a>
-        </v-list-item-content>
-           <v-switch :disabled="disableDelivery" color="grey lighten-2"   @change="setDeliveryAgent()"  :loading="load2"  v-model="deliverySwitch" class="pt-3"></v-switch> 
-               </v-list-item>
-          </v-form>
-          
-           <v-slider
-           color="grey"
-           :loading="load2" track-color="grey lighten-2"
-            thumb-color="orange darken-4"
-          v-model="slide2" :disabled="disableDelivery"
-          thumb-label :max="slider2"
-        ></v-slider>
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <div class="flex-grow-1"></div>
-          <v-btn
-           color="grey"
-            class="px-3 font-weight-bold caption"
-            rounded text
-            dark 
-            @click="dialog3 = false">
-            cancel
+            @click="deliver()">
+            sure
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -298,18 +209,15 @@ export default{
  data() {
     return {
       load: false, 
-      load2: false, 
       loading: false, 
       loading2: false, 
       payBtn: false,
       dialog: false,
       dialog2: false,
-      dialog3: false,
       dialogItem: '',
       dialogComp: [],
       dialogOpt: [],
       slide: 0,
-      slide2: 0,
       dialogOptions: [],
       reason: '', 
       rules: {
@@ -318,54 +226,8 @@ export default{
     }
  },
  computed: {
-    replys() {
-      return this.$store.getters.getReplys;
-    },
-    disableDelivery(){
-      const sn = this
-      if (sn.order.payment_method === 4) {
-        return false
-      }else if(sn.order.delivery != null){
-        if(sn.order.delivery.id === sn.agents[sn.slide2].id){
-        return true 
-      }
-      }else {
-        return false
-      }
-    },
-    deliverySwitch: {
-      get(){
-          const sn = this
-      if (!sn.order.delivery) {
-        return false
-      }else{
-        return sn.order.delivery.id === sn.agents[sn.slide2].id
-      }
-      },
-      set(val){
-        return
-      }
-   
-    },
-    vendor() {
-      return this.$store.getters.getVendor;
-    },
-     agents() {
-      return this.$store.getters.getAgents;
-    },
-     slider() {
-      if (this.replys.length) {
-        return (this.replys.length - 1);
-      }
-    },
-     slider2() {
-       if (this.agents.length) {
-         
-         return (this.agents.length - 1);
-       }
-    },
     order() {
-      return this.$store.getters.getOrderFull;
+      return this.$store.getters.getDeliveryOrderFull;
     },
     paymentMethod() {
       let d = ''
@@ -411,91 +273,33 @@ export default{
         sn.dialogOpt = []
       }
      },
-     serve(){
+     empty(){
          const sn = this
-         sn.loading = true
-    if (sn.order.status === 4) {
-        sn.$store.dispatch('snack', {
-          color: 'blue',
-          text: 'Order has already been served'
-        })
-        sn.loading = false
-            return      
-            }
-    else{
-        sn.$store.dispatch('order', {
-            id: sn.order.id,
-            action: 'delivered'
-        })
-        sn.loading = false
-        sn.$store.dispatch('snack', {
-          color: 'green',
-          text: 'Customer has been notified'
-        })
-       sn.$router.go(-1)
-    }
+        
+
      },
-     setDeliveryAgent(){
-         const sn = this
-         sn.load2 = true
-    if (sn.order.status === 3) {
-        sn.$store.dispatch('snack', {
-          color: 'blue',
-          text: 'Order has already been dispatched for delivery'
-        })
-        sn.load2 = false
-        sn.dialog3 = false
-            return      
-            }
-    else{
-      sn.$store.dispatch('order', {
-        id: sn.order.id,
-            delivery_agent_id: sn.agents[sn.slider2].id,
-            action: 'transit'
-          })
-        sn.load2 = false
-        sn.dialog3 = false
-               sn.$store.dispatch('snack', {
-          color: 'green',
-          text: 'Customer has been notified'
-        })
-    }
-     },
-     reject(){
+     deliver(){
        const sn = this
-         if (sn.$refs.form.validate()){
         sn.loading2 = true
-          if (sn.order.status === 5) {
+        sn.$store.dispatch('order', {
+          id: sn.order.id,
+          action: 'delivered',
+        })
+   
         sn.$store.dispatch('snack', {
-          color: 'blue',
-          text: 'Order has already been rejected'
-        })
-        sn.loading2 = false
-        sn.dialog2 = false
-            return  
-          }
-          else{
-            sn.$store.dispatch('order', {
-              id: sn.order.id,
-                action: 'rejected',
-                reason: sn.replys[sn.slide].content
-            })
-                sn.dialog2 = false
-                sn.loading2 = false
-                 sn.$store.dispatch('snack', {
           color: 'green',
-          text: 'Order has been rejected, and customer has been notified '
+          text: 'Order has been delivered to the customer, and the vendor has been notified '
         })
-          }
-         } else{
-           return
-         }
+        sn.dialog2 = false
+        sn.loading2 = false
+        sn.$router.go(-1);
      },
-     rejectBtn(){
+     deliverBtn(){
        this.dialog2 = true
      },
-     
-   
+   back() {
+      this.$router.go("-1");
+    },
  }
 };
 </script>

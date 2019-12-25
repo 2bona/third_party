@@ -2,9 +2,38 @@
 <div>
 <v-row justify="space-start" class="pa-3 px-6">
 <v-flex xs12 class="my-5"> 
-       <v-card>
-         <v-card-title class="title font-weight-bold grey--text">
-           Saved Replys <v-btn class="ml-3" @click="dialog3 = true"  x-small color="">add</v-btn>
+
+        <v-card class=" pb-3"  :loading="load">
+         <v-card-title class="body-1 font-weight-medium grey--text">
+           Delivery agents
+         </v-card-title>
+    <v-simple-table>
+    <template v-slot:default>
+      <thead>
+        <tr>
+          <th class="text-left">Name</th>
+          <th class="text-right"></th>
+          <th class="text-right"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="n in agents" :key="n">
+          <td class="caption ">{{n.name}}</td>
+          <td class="text-right"><a style="text-decoration:none" :href="'tel:'+n.phone"><v-btn fab dark  x-small color="primary"><v-icon>mdi-phone</v-icon> </v-btn></a></td>
+          <td class="text-right"><a style="text-decoration:none" :href="'https://wa.me/+234'+n.phone.substring(1)+'?text=Hello,%20this%20is%20'+vendor.name+'%20,%20I%20just%20want%20to%20confirm%20your%20location%20for%20a%20food%20delivery.'" target="_blank">
+          <v-btn fab dark x-small color="green">
+            <v-icon>mdi-whatsapp</v-icon>
+             </v-btn>
+             </a>
+             </td>
+        </tr>
+      </tbody>
+    </template>
+  </v-simple-table>
+       </v-card>
+       <v-card class=" my-3" :loading="load">
+         <v-card-title class="body-1 font-weight-medium grey--text">
+           Reasons for cancellation  <v-btn class="ml-3" @click="dialog= true"  x-small color="">add</v-btn>
          </v-card-title>
     <v-simple-table>
     <template v-slot:default>
@@ -16,15 +45,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="n in 3" :key="n">
-          <td class="caption">Thank you for patronizing us</td>
-          <td><v-btn @click="dialog3 = true"   x-small color="">edit</v-btn></td>
-          <td><v-btn @click="dialog4 = true"  x-small color="">delete</v-btn></td>
+        <tr v-for="n in replys" :key="n">
+          <td class="caption ">{{n.content}}</td>
+          <td><v-btn @click="editBtn(n.content, n.id)"   x-small color="">edit</v-btn></td>
+          <td><v-btn @click="deleteBtn(n.id)"  x-small color="">delete</v-btn></td>
         </tr>
       </tbody>
     </template>
   </v-simple-table>
        </v-card>
+ 
      </v-flex>
      <v-flex xs12 class="mt-5 mb-4 px-0">
         <h1 class="title mb-5 font-weight-bold grey--text">Reviews</h1>
@@ -54,9 +84,7 @@
                             dense
                             :value="3"
                             color="orange"
-                            style="position: relative;
-
-top: -7px;"
+                            style="position: relative;top: -7px;"
                             background-color="grey lighten-2"
                             v-model="rating"
                           ></v-rating>
@@ -65,48 +93,8 @@ top: -7px;"
                         style="line-height:1.3;"
                           class="text-wrap px-1 caption grey--text text--darken-1"
                         >This was the best Rice i have ever ate This was the best
-                         Rice i e best Rice i have ever ahave ever ate n, i 
-                          loved it and still do.</v-list-item-subtitle>
-                                         <v-expansion-panels>
-    <v-expansion-panel>
-      <v-expansion-panel-header><span><v-icon>mdi-message-reply-text</v-icon></span></v-expansion-panel-header>
-      <v-expansion-panel-content class="px-1">
-        <v-flex d-flex>
-          <span style="line-height: 1;">
-            Select Reply  
-            </span> 
-          
-           <v-btn color="blue" @click="dialog=!dialog"  text x-small>add more</v-btn>
-
-        </v-flex>
-         <v-radio-group v-model="radios" :mandatory="false">
-      <v-radio label="Thank you for your kind comments" value="Thank you for your kind comments"></v-radio>
-      <v-radio label="I'm sorry for the inconviniences" value="I'm sorry for the inconviniences"></v-radio>
-    </v-radio-group>
-   <v-textarea
-                  class="mx-2 mt-4"
-                  style="max-width:400px"
-                  solo
-                  single-line
-                  rounded
-                  outline
-                  rows="3"
-                  :value="radios"
-                ></v-textarea>
-
-                <div class="text-center mb-3">
-                  <v-btn
-                    dark
-                    rounded
-                    elevation="5"
-                    color="orange"
-                    class=" mx-auto"
-                  >Reply</v-btn>
-                </div>
-
-      </v-expansion-panel-content>
-    </v-expansion-panel>
-  </v-expansion-panels>
+                         Rice i e best Rice.</v-list-item-subtitle>
+    
                       </v-list-item-content>
 
                       <v-list-item-icon-text></v-list-item-icon-text>
@@ -116,10 +104,6 @@ top: -7px;"
                   </v-list>
                        </div>
      </v-flex>
-                  <v-row class="mt-0 mb-12" justify="space-around">
-            <v-btn fab color="white"><v-icon>mdi-chevron-left</v-icon></v-btn>
-            <v-btn to="/vendorreviews" fab color="white"><v-icon>mdi-chevron-right</v-icon></v-btn>
-        </v-row>
     <v-flex xs12 class="my-3 px-0">
         
         <v-card flat tile color="transparent">
@@ -131,85 +115,78 @@ top: -7px;"
           <div class="text-center">
     <v-dialog
       v-model="dialog"
-      width="500"
-    >
-  
-
+      width="500">
       <v-card>
         <v-card-title
           class="headline grey lighten-2"
-          primary-title
-        >
-          Add Reply
+          primary-title>
+          Add message
         </v-card-title>
 
         <v-card-text>
-  <v-textarea
-
-    label="Add new reply message"
-          ></v-textarea>       
-           </v-card-text>
+          <v-form ref="form">
+               <v-text-field
+        v-model="reply"
+        :rules="[rules.required]"
+        label="Type here">
+        </v-text-field> 
+          </v-form>
+           
+        </v-card-text>
 
         <v-divider></v-divider>
 
         <v-card-actions>
           <div class="flex-grow-1"></div>
           <v-btn
-            color="orange"
-            class="px-3"
-            rounded
-            dark
-            @click="dialog=false"
-          >
+           color="primary"
+            class="px-3 font-weight-bold caption"
+            rounded text
+            dark :loading="loading"
+            @click="saveReply()">
             submit
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
        <v-dialog
-      v-model="dialog2"
-      width="500"
-      :persistent="LoadStatus == 1"
-    >
-  
-
+      v-model="dialog3"
+      width="500">
       <v-card>
         <v-card-title
           class="headline grey lighten-2"
           primary-title
         >
-          Add Category
+          Delete message
         </v-card-title>
-
-        <v-card-text>
-    <v-form ref="form" v-model="valid">
-  <v-text-field
-  v-model="content"
-  :rules="[rules.required]"
-    label="Add new category"
-          ></v-text-field>
-    </v-form>       
-           </v-card-text>
-
         <v-divider></v-divider>
 
         <v-card-actions>
           <div class="flex-grow-1"></div>
           <v-btn
-            color="orange"
-            class="px-3"
+            color="grey" text
+            class="px-3 font-weight-bold caption"
             rounded
             dark
-            :loading="LoadStatus == 1"
-            @click="addCategory()"
+            @click="dialog3 = false"
           >
-            submit
+            cancel
+          </v-btn>
+          <v-btn
+            color="primary"
+            class="px-3 font-weight-bold caption"
+            rounded text
+            dark
+            :loading="loading3"
+            @click="deleteReply()"
+          >
+            sure
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog
-      v-model="dialog3"
+      v-model="dialog2"
       width="500"
     >
   
@@ -219,28 +196,28 @@ top: -7px;"
           class="headline grey lighten-2"
           primary-title
         >
-          Edit section        </v-card-title>
+          Edit message </v-card-title>
 
         <v-card-text>
-          <v-form>
+          <v-form ref="form2">
            <v-text-field
   :rules="[rules.required]"
-    label="Edit section"
+    label="Type here"
+    v-model="replyEdit"
           ></v-text-field>   
           </v-form>
-       
            </v-card-text>
-
         <v-divider></v-divider>
 
         <v-card-actions>
           <div class="flex-grow-1"></div>
-          <v-btn
-            color="orange"
-            class="px-3"
+          <v-btn 
+          color="primary"
+            class="px-3 font-weight-bold caption"
             rounded
-            dark
-            @click="dialog3=false"
+            dark text
+            :loading="loading2"
+            @click="editReply"
           >
             submit
           </v-btn>
@@ -272,30 +249,170 @@ let http = wrapper(axios, {
 export default {
   data() {
     return {
-      dialog: false,
       content: '',
+      load: false,
+      loading: false,
+      loading2: false,
+      loading3: false,
+      dialog: false,
       dialog2: false,
       dialog3: false,
       valid: true,
       deleteId: '',
+      reply: '',
+      replyEdit: '',
+      replyEditId: '',
+      replyDeleteId: '',
       dialog4: false,
-        rules: {
+      rules: {
         required: value => !!value || "Required.",
-        },
-              radios: 'Thank you soo much, we will keep improving',
-
+      },
+        radios: 'Thank you soo much, we will keep improving',
     }
   },
   computed: {
   vendor() {
       return this.$store.getters.getVendor;
     },
-  user() {
-      return this.$store.getters.getUser;
+  replys() {
+      return this.$store.getters.getReplys;
+    },
+  agents() {
+      return this.$store.getters.getAgents;
     },
   },
-  methods: {
-    
+  mounted(){
+    this.navb()
+    this.getAgents()
+  },
+   methods: {
+    saveReply(){
+       const sn = this
+  if (sn.$refs.form.validate()){
+      sn.loading = true
+     let url = "/reply/save"
+      http({
+      url: url,
+      method: 'post',
+      params: {
+        content: sn.reply,
+        type: 'reply'
+      }
+    })
+      .then((response) => {
+        sn.navb()
+        sn.dialog = false
+        sn.loading = false
+      })
+      .catch(function (error) {
+        sn.dialog = false
+        sn.loading = false
+        console.log(error)
+      })
+  } else{
+    return
+  }
+    },
+    editBtn(x, y){
+      const sn = this
+      sn.replyEdit = x 
+      sn.replyEditId = y
+      sn.dialog2 = true
+    },
+    deleteBtn(x){
+      const sn = this
+      sn.replyDeleteId = x 
+      sn.dialog3 = true
+    },
+    editReply(){
+       const sn = this
+  if (sn.$refs.form2.validate()){
+      sn.loading2 = true
+     let url = "/reply/edit"
+      http({
+      url: url,
+      method: 'post',
+      params: {
+        content: sn.replyEdit,
+        type: 'reply',
+        id: sn.replyEditId
+      }
+    })
+      .then((response) => {
+        sn.navb()
+        sn.dialog2 = false
+        sn.loading2 = false
+      })
+      .catch(function (error) {
+        sn.dialog2 = false
+        sn.loading2 = false
+        console.log(error)
+      })
+  } else{
+    return
+  }
+    },
+    deleteReply(){
+       const sn = this
+      sn.loading3 = true
+     let url = "/reply/delete"
+      http({
+      url: url,
+      method: 'get',
+      params: {
+        id: sn.replyDeleteId
+      }
+    })
+      .then((response) => {
+        sn.navb()
+        sn.dialog3 = false
+        sn.loading3 = false
+      })
+      .catch(function (error) {
+        sn.dialog3 = false
+        sn.loading3 = false
+        console.log(error)
+      })
+ 
+    },
+    navb(){
+      const sn = this
+      sn.load = true
+     let url = "/reply/all"
+      http({
+      url: url,
+      method: 'get'
+    })
+      .then((response) => {
+        sn.load = false
+        sn.$store.dispatch('setReplys', {
+          replys: response.data.replys
+      })
+      })
+      .catch(function (error) {
+        sn.load = false
+        console.log(error)
+      })
+    },
+    getAgents(){
+      const sn = this
+      sn.load = true
+     let url = "/delivery/agents"
+      http({
+      url: url,
+      method: 'get'
+    })
+      .then((response) => {
+        sn.load = false
+        sn.$store.dispatch('setAgents', {
+          agents: response.data.agents
+      })
+      })
+      .catch(function (error) {
+        sn.load = false
+        console.log(error)
+      })
+    },
   },
   
 };

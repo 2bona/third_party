@@ -3,7 +3,13 @@
 import router from "../router";
 import NProgress from "nprogress";
 const axios = require("axios");
+import wrapper from 'axios-cache-plugin'
 
+const http = wrapper(axios, {
+  maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
+  ttl: 60000, // time to live. if you set this option the cached item will be auto deleted after ttl(ms).
+  excludeHeaders: true // should headers be ignored in cache key, helpful for ignoring tracking headers
+})
 import {
   AXIOS_CONFIG
 } from "./../config.js";
@@ -11,6 +17,8 @@ export const vendor = {
   state: {
     vendors: [],
     tags: [],
+    replys: [],
+    agents: [],
     orderList: [],
     vendor: JSON.parse(localStorage.getItem("vendor")) || "",
     mainOptions: JSON.parse(localStorage.getItem("mainOptions")) || "",
@@ -20,7 +28,8 @@ export const vendor = {
     items: JSON.parse(localStorage.getItem("items")) || '',
     options: JSON.parse(localStorage.getItem("options")) || '',
     orderFull:  {},
-    vendorLoadStatus: 0
+    vendorOrderListPage: {},
+    vendorLoadStatus: false
   },
   actions: {
      addVendor({
@@ -75,20 +84,73 @@ export const vendor = {
         }).catch(function (error) {
         })
     },
-    orderList({
+  async orderList({
       commit,
       state,
       dispatch
     }, data) {
-      let url = "/order/all"
-      axios.get(AXIOS_CONFIG.API_URL + url)
+      commit("setVendorOrderListLoading", true)
+      var url = ''
+      var d = state.vendorOrderListPage
+      if (d.nextPage) {
+        if (d.lastPage === d.currentPage) {
+          commit("setVendorOrderListLoading", false)
+          return
+        } else {
+          url = d.nextPage
+        }
+      } else if (d.nextPage === null) {
+        commit("setVendorOrderListLoading", false)
+        return
+      } else {
+        url = "/order/all?page=1"
+      }
+      http({
+          url: url,
+          method: 'get'
+        })
         .then(function (response) {
           var orderList = response.data.orders;
-          commit("setOrderList", orderList)
+          var next = ''
+          if (orderList.next_page_url !== null) {
+            next = orderList.next_page_url.substring(29)
+          } else {
+            next = null
+          }
+          return dispatch("vendorOrderPage", {
+              nextPage: next,
+              lastPage: orderList.last_page,
+              currentPage: orderList.current_page,
+            })
+            .then(() => {
+              dispatch("setVendorOrderList", orderList.data)
+              commit("setVendorOrderListLoading", false)
+            })
         }).catch(function (error) {
           console.log(error)
+          commit("setVendorOrderListLoading", false)
         })
     },
+    vendorOrderPage({
+      commit,
+      state,
+      dispatch
+    }, data) {
+      return new Promise((resolve, reject) => {
+        commit("setVendorOrderListPage", data)
+        resolve()
+      })
+      },
+      setVendorOrderList({
+        commit,
+        state,
+        dispatch
+      }, data) {
+        return new Promise((resolve, reject) => {
+          commit("setOrderList", data)
+          resolve()
+        })
+      },
     getOrder({
       commit,
       state,
@@ -109,22 +171,32 @@ export const vendor = {
       state,
       dispatch
     }, data) {
+      var url = ''
       if (data.action === null) {
          dispatch("getOrder", {
            id: data.id
          })
-      } else{
-      let url = "/order/"+data.action+"?id=" + data.id
-      axios.get(AXIOS_CONFIG.API_URL + url)
-        .then(function (response) {
-          console.log(response.data.message)
-          dispatch("getOrder", {
-            id: data.id
-          })
-        }).catch(function (error) {
-          console.log(error)
-        })
       }
+      else{
+         if(data.reason){
+          url = "/order/"+data.action+"?id=" + data.id+"&reason="+data.reason
+       } 
+        else if (data.delivery_agent_id) {
+          url = "/order/" + data.action + "?id=" + data.id + "&delivery_agent_id=" + data.delivery_agent_id
+       } 
+        else if (data.action) {
+          url = "/order/" + data.action + "?id=" + data.id
+       } 
+      axios.get(AXIOS_CONFIG.API_URL + url)
+         .then(function (response) {
+           dispatch("getOrder", {
+             id: data.id
+           })
+         }).catch(function (error) {
+           console.log(error)
+         })
+      }
+      
     },
     loadMainOptions({
       commit,
@@ -150,6 +222,20 @@ export const vendor = {
     }, data) {
           localStorage.setItem("items", JSON.stringify(data.data));
           commit("setItems", data.data);
+    },
+    setReplys({
+      commit,
+      state,
+      dispatch
+    }, data) {
+          commit("setReplys", data.replys);
+    },
+    setAgents({
+      commit,
+      state,
+      dispatch
+    }, data) {
+          commit("setAgents", data.agents);
     },
 loadOptions({
       commit,
@@ -203,8 +289,23 @@ loadOptions({
     setVendor(state, data) {
       state.vendor = data
     },
-    setOrderList(state, data) {
-      state.orderList = data
+      setOrderList(state, vendorOrder) {
+        if (vendorOrder === null) {
+          state.orderList = []
+        } else {
+          vendorOrder.forEach(item => {
+            state.orderList.push(item)
+          })
+        }
+      },
+    setVendorOrderListPage(state, data) {
+      state.vendorOrderListPage = data
+    },
+    setReplys(state, data) {
+      state.replys = data
+    },
+    setAgents(state, data) {
+      state.agents = data
     },
     setMenu(state, menu) {
       state.menu = menu
@@ -230,13 +331,19 @@ loadOptions({
     setItems(state, items) {
       state.items = items
     },
-    setVendorLoadStatus(state, status) {
-      state.VendorLoadStatus = status
+    setVendorOrderListLoading(state, status) {
+      state.vendorLoadStatus = status
     },
   },
   getters: {
     getMenu(state) {
       return state.menu
+    },
+    getReplys(state) {
+      return state.replys
+    },
+    getAgents(state) {
+      return state.agents
     },
     getOrderList(state) {
       return state.orderList

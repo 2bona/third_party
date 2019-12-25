@@ -1,10 +1,17 @@
 <template>
   <div>
-    <div>           
+    <div>
+    <v-btn
+      fixed @click="backBtn()"
+      bottom
+      right fab
+      color="white" style="z-index:10;margin-bottom: 60px;">
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
         <v-scale-transition origin="center">
-                  <v-container v-if="orderStatus && orders.length" style="position:fixed;z-index:9" class="px-2 pt-0">
+                  <v-container v-if="orderStatus && orderso.length" style="position:fixed;z-index:9" class="px-2 pt-0">
         <v-card class="mx-auto" style="position:relative;display:flex;justify-content: center;" flat tile  color="transparent" max-width="600px"  height="125px">
-          <v-card v-if="orders.length" 
+          <v-card v-if="orderso.length" 
               width="100%"
               height="auto"
               max-width="450px"
@@ -16,7 +23,7 @@
               class="elevation-20 mb-2 px-2 pr-4 pt-2 pb-2 mx-auto">
                 <v-list-item three-line class="pa-0">
 
-              <v-list-item-avatar v-for="(n, i) in orders" :key="i"
+              <v-list-item-avatar v-for="(n, i) in orderso" :key="i"
         size="70"
         v-ripple @click="dialogBtn(i)"
         class="my-auto elevation-7 mr-2">
@@ -26,20 +33,31 @@
                 </v-card> 
              </v-container>   
                </v-scale-transition>
-          <v-layout v-if="orders.length" style="position:fixed; bottom:0px;background: linear-gradient(#fff0 0%, #fff 100%);width: 100%; z-index:9" row wrap class="mx-auto pb-2 px-2">
+          <v-layout v-if="orderso.length" style="position:fixed; bottom:0px;background: linear-gradient(#fff0 0%, #fff 100%);width: 100%; z-index:9" row wrap class="mx-auto pb-2 px-2">
       <v-flex xs6 class="px-2">
-      <v-btn block @click="orderStatus ? trayBtn(false) : trayBtn(true)" class="mt-2 elevation-10" rounded="" dark color="orange" v-html="orderStatus ? 'hide tray': 'show tray'"></v-btn>
+      <v-btn block @click="orderStatus ? trayBtn(false) : trayBtn(true)" class="mt-2 elevation-10" rounded="" dark color="orange darken-4" v-html="orderStatus ? 'hide tray': 'show tray'"></v-btn>
       </v-flex>
       <v-flex xs6 class="px-2">           
       <v-btn  block to="/checkout" class="mt-2 elevation-10" rounded="" dark color="primary">checkout</v-btn>
       </v-flex>
   </v-layout>
           <v-card class="mx-auto" max-width="600" flat tile> 
+            <v-tooltip max-width="125" right>
+              <template v-slot:activator="{ on }">
+            <v-btn @click="dialogVendor = true" style="right: 0;"  icon fab absolute right> <v-icon>mdi-information-outline</v-icon> </v-btn>
+              </template>
+            </v-tooltip>
+            <v-tooltip max-width="125" right>
+              <template v-slot:activator="{ on }">
+            <v-btn v-on="on" @click="dialogVendor = true" style="left: 0;"  icon fab absolute left> <v-icon>mdi-heart-outline</v-icon> </v-btn>
+              </template>
+              <span class="pa-2 font-weight-medium">Add to favourites</span>
+            </v-tooltip>
           <v-row  justify="space-around">
            <v-avatar size="100"
                color="transparent"
                class="mt-6 mb-2 elevation-10">
-               <v-img  :src="vendor.image"  alt="profile"></v-img>
+               <v-img :src="vendor.image" alt="profile"></v-img>
            </v-avatar>
         <v-flex xs12 class="mb-2">
         <h2 class="text-center mb-0 text-capitalize grey--text text--darken-1 font-weight-bold">{{vendor.name}}</h2>
@@ -112,7 +130,7 @@
         tile
       ></v-skeleton-loader>  
         </v-tab-item>
-        <v-tab-item class="pt-2" style="padding-bottom:120px" v-for="d in items" :key="d.id">
+        <v-tab-item class="pt-2 mb-12" style="padding-bottom:120px" v-for="d in items" :key="d.id">
         <div v-for="item in d.items"
              v-show="!loadingItems"
               :key="item.id">
@@ -145,11 +163,11 @@
             v-model="dialog" 
             max-width="500px" persistent
             transition="dialog-transition">
-      <v-card color="white" v-if="orders.length >= 0">      
-      <div  v-for="(l, p) in orders" :key="l.item.id">
+      <v-card color="white" v-if="orderso.length">      
+      <div  v-for="(l, p) in orderso" :key="p">
       <div v-show="p === dialogItem">
         <v-card-title class="pb-1 elevation-10" primary-title>
-          <span class="grey--text pr-1" v-show="l.item[0].qty > 1">{{l.item[0].qty +'x'}} </span> {{l.item[0].name +' '}} <span class="pl-1 pb-2 caption grey--text"> <v-icon size="11" color="grey" style="padding-bottom:3px">mdi-currency-ngn</v-icon>{{l.total | price}}</span>
+          <span class="grey--text pr-1" v-if="l.item[0].qty > 1">{{l.item[0].qty +'x'}} </span> {{l.item[0].name +' '}} <span class="pl-1 pb-2 caption grey--text"> <v-icon size="11" color="grey" style="padding-bottom:3px">mdi-currency-ngn</v-icon>{{l.total | price}}</span>
           <v-btn @click="dialog3=true" style="right:3px; top:3px" class="" absolute right x-small icon color="grey lighten-2"><v-icon size="18">mdi-trash-can-outline</v-icon></v-btn>
        <div v-if="l.compulsory.length" class="px-0 pb-2">
        <v-chip class="mx-1"  small v-for="n in l.compulsory" :key="p+n.id">{{n.name}}</v-chip>
@@ -183,7 +201,7 @@
         </v-btn>
         </div>
           <div class="flex-grow-1"></div>
-          <v-btn  color="grey lighten-1" text @click="dialog = false">close</v-btn>
+          <v-btn  color="grey lighten-1" text @click="dialog = false">save</v-btn>
           <!-- <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn> -->
         </v-card-actions>
       </div>
@@ -218,8 +236,7 @@
     </v-dialog>
 <v-dialog
       v-model="dialog3"
-      max-width="290"
-    >
+      max-width="290">
       <v-card>
         <v-card-title class="headline">Delete item from tray</v-card-title>
         <v-card-actions>
@@ -242,6 +259,81 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+ 
+    <v-dialog v-model="dialogVendor" fullscreen hide-overlay transition="dialog-bottom-transition">
+      <v-card tile flat class="">
+        <v-toolbar dark color="orange darken-4">
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+              <v-btn fab icon dark @click="dialogVendor = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <div class="px-3 pt-3">
+      <span class="overline pt-3 grey--text  text--darken-1 font-weight-bold">
+       Description
+      </span>
+    <v-list-item  class="my-1 " dense>
+      <v-list-item-content>
+        <v-list-item-subtitle  class=" text-wrap caption grey--text  font-weight-medium mt-0 pt-0">
+          {{vendor.bio}}
+          </v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+        </div>
+  <v-divider></v-divider>
+    <div class="px-3 pt-3">
+      <span class="overline pt-3 grey--text  text--darken-1 font-weight-bold">
+       Payment methods
+      </span>
+    <v-list-item  class="my-1 " dense>
+      <v-list-item-content>
+        <v-list-item-subtitle  class=" text-wrap caption grey--text  font-weight-medium mt-0 pt-0">
+          Card payment online
+          </v-list-item-subtitle>
+        <v-list-item-subtitle v-if="vendor.card_on_delivery" class=" text-wrap caption grey--text  font-weight-medium mt-0 pt-0">
+          Mobile / USSD Transfer on delivery  
+          </v-list-item-subtitle>
+        <v-list-item-subtitle v-if="vendor.cash_on_delivery" class=" text-wrap caption grey--text  font-weight-medium mt-0 pt-0">
+          Cash Payment on delivery  
+          </v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+    </div>
+    <v-divider></v-divider>
+              <div class="px-3 pt-3">
+
+        <span class="overline pt-3 grey--text  text--darken-1 font-weight-bold">
+       Opening hours
+      </span>
+    <v-list-item  class="my-1 " dense>
+      <v-list-item-content>
+        <v-list-item-subtitle  class=" text-wrap caption grey--text  font-weight-medium mt-0 pt-0">
+          {{vendor.bio}}
+          </v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+              </div>
+<v-divider></v-divider>
+                      <div class="px-3 pt-3">
+
+      <span class="overline pt-3 grey--text  text--darken-1 font-weight-bold">
+       Address
+      </span>
+    <v-list-item  class="my-1 " dense>
+      <v-list-item-content>
+        <v-list-item-subtitle class=" text-wrap caption grey--text  font-weight-medium mt-0 pt-0">
+          {{vendor.address}}  
+          </v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+        
+        </div>
+    
+
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <style>
@@ -262,11 +354,12 @@ export default {
   data() {
     return {
       vendor:{},
-      items:{},
+      items:[],
       estTime: '',
       deliveryFee: '',
       total: Number,
       dialogLeave: false,
+      dialogVendor: false,
       leave: false,
       dialog: false,
       dialog3: false,
@@ -274,22 +367,21 @@ export default {
       loadingItems: true
     }
   },
-  mounted () {
+  created () {
       this.navb()
-     
   },
   computed: {
      userArea() {
-      return this.$store.getters.getUserArea;
+      return this.$store.getters.getUserArea
     },
-    orders() {
-      return this.$store.getters.getOrder;
+    orderso() {
+      return this.$store.getters.getOrder
     },
     orderStatus() {
-      return this.$store.getters.getOrderStatus.status;
+      return this.$store.getters.getOrderStatus.status
     },
     dialogItem() {
-      return this.$store.getters.getOrderStatus.item;
+      return this.$store.getters.getOrderStatus.item
     },
     serviceCharge(){
      if (this.total < 2500) {
@@ -302,28 +394,13 @@ export default {
       return this.total + this.deliveryFee + this.serviceCharge
     },
   },
-  beforeRouteLeave (to, from, next) {
-    const sn = this
-    console.log(from.path)
-    if (!sn.orders.length) {
-      next()
-    }
-    else{
-    if (to.path === '/' && sn.leave) {
-      next()
-      console.log(sn.leave)
-    }
-     else if(to.path !== '/'){
-      next()
-    } else{
-      sn.dialogLeave = true
-      return
-    }
-  }
-  },
   methods: {
-    back(){
-      return
+    backBtn(){
+      if (this.orderso.length) {
+        this.dialogLeave = true
+      } else {
+        this.$router.push('/')
+      }
     },
      addToCart(x){
    const sn = this
@@ -389,12 +466,12 @@ export default {
   },
   getTotal(x){
     const sn = this
-  var item = sn.orders[x].item[0]
-      var sum = sn.orders[x].optional.reduce((currentTotal, item) => {
+  var item = sn.orderso[x].item[0]
+      var sum = sn.orderso[x].optional.reduce((currentTotal, item) => {
         return item.price + currentTotal
       }, 0)
       sn.total = (item.price * item.qty) + sum
-  }, 
+  },
   removeOrder(){
   const sn = this
     sn.$store.dispatch('removeOrder', {
@@ -409,54 +486,57 @@ export default {
         this.$router.push('/vendoritem/'+y+'/'+z)
       })
       },
-      navb(){
-        const sn = this
-      sn.$store.dispatch('mapNav', false)
-      let url = "/vendorpage?name="+sn.$route.params.name
-      http({
-        url: url,
-        method: 'get'
+  navb(){
+    const sn = this
+    sn.$store.dispatch('mapNav', false)
+    let url = "/vendorpage?name="+sn.$route.params.name
+    http({
+      url: url,
+      method: 'get'
+    })
+    .then((response) => {
+      sn.loading = false
+      var m = response.data.vendor
+      sn.vendor = m
+      var r = m.area.find((i)=>{
+        return i.name === sn.userArea.name
       })
-      .then((response) => {
-        sn.loading = false
-        var m = response.data.vendor
-        sn.vendor = m
-       var r = m.area.find((i)=>{
-          return i.name === sn.userArea.name
-        })
-        var d = {}
-        d.fee = r.pivot.fee
-        sn.estTime = r.pivot.duration
-        d.duration = r.pivot.duration
-        d.distance = r.pivot.distance
-        d.vendor_id = sn.vendor.id
-        d.payOnDelivery = m.cash_on_delivery 
-        d.transferOnDelivery = m.card_on_delivery 
-        sn.deliveryFee = d.fee
-        sn.$store.dispatch('setDeliveryParams', d)
-      let url = "/vendoritems?name="+sn.$route.params.name
-      http({
-        url: url,
-        method: 'get'
-      })
-      .then((response) => {
-        sn.items = response.data.items
-      }).then(()=>{
-        sn.loadingItems = false
-      })
-      .catch((err)=>{
-        console.log(err)
-        sn.loadingItems = false
-      })
-      })
-      .catch((err)=>{
-        console.log(err)
-        sn.loading = false
-      })
+    var d = {}
+    d.fee = r.pivot.fee
+    sn.estTime = r.pivot.duration
+    d.duration = r.pivot.duration
+    d.distance = r.pivot.distance
+    d.vendor_id = sn.vendor.id
+    d.payOnDelivery = m.cash_on_delivery 
+    d.transferOnDelivery = m.card_on_delivery 
+    d.account_name = m.account_name 
+    d.account_number = m.account_number 
+    d.bank_name = m.bank_name 
+    sn.deliveryFee = d.fee
+    sn.$store.dispatch('setDeliveryParams', d)
+    let url = "/vendoritems?name="+sn.$route.params.name
+    http({
+      url: url,
+      method: 'get'
+    })
+    .then((response) => {
+      sn.items = response.data.items
+    }).then(()=>{
+      sn.loadingItems = false
+    })
+    .catch((err)=>{
+      console.log(err)
+      sn.loadingItems = false
+    })
+    })
+    .catch((err)=>{
+      console.log(err)
+      sn.loading = false
+    })
     },
       back() {
       this.$router.go(-1)
     }
   }
-};
+}
 </script>

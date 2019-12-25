@@ -14,7 +14,7 @@
     @click="payChoice(n.value)"
       width="95%" outlined
       height="auto" v-if="n.available"
-       flat tile :disabled="n.points > userpoints"
+       flat tile :disabled="n.points > userorders"
       style=" border-radius:10px 10px 10px 10px"
       class="mx-2 mb-1 px-1 pt-1 pb-1">
   <v-list-item  class="pa-0">
@@ -27,10 +27,11 @@
       </v-list-item-avatar>
     <v-list-item-title style="overflow-y: visible;" class="py-0">
             <h2
-              stsyle="line-height:1;text-decoration: none;"
               class="body-2 grey--text text-truncate text--darken-1 font-weight-medium"
             >{{n.name}}</h2>
-            <p style="font-size: 10px" v-show="(n.points > userpoints) || (n.value === 4)" class="orange--text my-0">{{n.hint}} <v-icon color="orange" v-if="(n.value === 4)" size="9" style="padding-bottom: 2px">mdi-currency-ngn</v-icon>{{(grandTotal - (serviceCharge + deliveryFee)) | price}}</p>
+            <p style="font-size: 10px" v-show="(n.points > userorders) || (n.value === 4)" class="orange--text my-0">{{n.hint}} 
+              <v-icon color="orange" v-if="(n.value === 4)" size="9" style="padding-bottom: 2px">mdi-currency-ngn</v-icon>
+              {{(grandTotal - (serviceCharge + deliveryFee)) | price}}</p>
  </v-list-item-title>
             </v-list-item>
           </v-card>
@@ -88,8 +89,8 @@ import axios from 'axios'
     }
     },
     computed: {
-        userpoints() {
-            return this.$store.getters.getUser.points
+        userorders() {
+            return this.$store.getters.getUser.orders
         },
         orders() {
             return this.$store.getters.getOrder;
@@ -136,7 +137,7 @@ import axios from 'axios'
                 icon: 'mdi-cash-marker',
                 name: 'Pay Cash On Delivery',
                 value: 3,
-                points: 20,
+                points: 2,
                 available: this.$store.getters.getDeliveryParams.payOnDelivery,
                 hint: 'You need atleast 2 orders to qualify'
             },
@@ -144,7 +145,7 @@ import axios from 'axios'
                 icon: 'mdi-bank',
                 name: 'Mobile/USSD Transfer On Delivery',
                 value: 2,
-                points: 20,
+                points: 2,
                 available: this.$store.getters.getDeliveryParams.transferOnDelivery,  
                 hint: 'You need atleast 2 orders to qualify'
             },
@@ -152,7 +153,7 @@ import axios from 'axios'
                 icon: 'mdi-table-chair',
                 name: 'I am in the Restaurant',
                 value: 4,
-                points: 20,
+                points: 0,
                 available: true,
                 hint: 'All charges are removed, you will now pay '
             },

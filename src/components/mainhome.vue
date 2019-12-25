@@ -97,8 +97,8 @@ export default {
     },
     data() {
         return {
-          vendor: 'chuks world kitchen',
-            flickityOptions: {
+        vendor: 'chuks world kitchen',
+        flickityOptions: {
         contain: true,
         pageDots: false,
         percentPosition: false,

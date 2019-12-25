@@ -1,34 +1,36 @@
 <template>
   <div>
     <v-scale-transition>
-           <v-btn
-              fixed @click="nav ? $router.push('/map') : $router.go(-1)"
-              fab :disabled="mapBtn"
-              bottom 
-              right :size="nav ? '20px' : '10px'"
-              color="white" style="z-index:10;margin-bottom: 60px;">
-              <v-icon>{{nav ? 'mdi-map-search-outline' : 'mdi-arrow-left'}}</v-icon>
-            </v-btn>
+    <v-btn
+      fixed @click="nav ? $router.push('/map') : $router.go(-1)"
+      fab :disabled="mapBtn"
+      bottom  :dark="nav ? true : false"
+      right :size="nav ? '20px' : '10px'"
+      :color="nav ? 'orange darken-4' : 'white'" style="z-index:10;margin-bottom: 60px;">
+      <v-icon>{{nav ? 'mdi-map-search-outline' : 'mdi-arrow-left'}}</v-icon>
+    </v-btn>
     </v-scale-transition>
     <v-expand-transition>
-    <v-app-bar v-show="nav" fixed dense background-color="white" extension-height="55">
+    <v-app-bar v-show="nav" fixed dense color="orange darken-4" extension-height="55">
       <v-menu max-height="300" nudge-bottom="5" allow-overflow max-width="200" offset-y>
       <template  v-slot:activator="{ on }">
         <v-btn   v-show="nav"
         :disabled="loadingAreaList && load"
-          color="white" x-small
-          class="text-capitalize font-weight-medium grey--text text--darken-1 elevation-0"
-          v-on="on"
-        >
+          color="white"
+          x-small dark
+          class="text-capitalize font-weight-medium orange--text elevation-9"
+          v-on="on">
+          <span class="padding-bottom:3px">
           {{userArea.name | name}}<v-icon>mdi-menu-down</v-icon>
+          </span>
         </v-btn>
       </template>
       <v-list>
-        <v-list-item-group active-class="orange--text" color="orange">
+        <v-list-item-group active-class="orange--text" color="orange darken-4">
              <v-list-item dense 
              @click="$router.push('/usercity')"
          >
-          <v-list-item-title class="blue--text text--lighten-2">Choose a different city</v-list-item-title>
+          <v-list-item-title class="primary--text text--lighten-2">Choose a different city</v-list-item-title>
         </v-list-item>
         <v-list-item dense 
           v-for="item in areas"
@@ -37,12 +39,10 @@
         </v-list-item>
          </v-list-item-group>
       </v-list>
-
-  
-        
-
     </v-menu>
-      <div class="flex-grow-1"></div>
+          <div class="flex-grow-1"></div>
+
+
       
      
     </v-app-bar>
@@ -50,7 +50,7 @@
 <v-fade-transition>
     <router-view></router-view>
 </v-fade-transition>
-    <navbottom v-if="!orders.length"></navbottom>
+    <navbottom></navbottom>
   </div>
 </template>
 <style></style>
@@ -74,6 +74,7 @@ export default {
       rating: 3,
       loadingAreaList: true,
       mapBtn: false,
+      
     }
   },
 computed: {
@@ -89,6 +90,9 @@ computed: {
       orders() {
       return this.$store.getters.getOrder;
     },
+      vendors() {
+      return this.$store.getters.getVendorList;
+    },
     navBottomStatus() {
       return this.$store.getters.getNavBottomStatus;
     },
@@ -98,9 +102,6 @@ computed: {
   },
 mounted(){
   this.navb()
-       this.$nextTick(() => {  document.addEventListener("backbutton", function (e) {
-            e.preventDefault();
-        }, false)})
  },
   created () {
     const sn = this

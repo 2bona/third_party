@@ -9,7 +9,7 @@
       </v-btn>
 
       <v-btn to="/vendoradmin/orders" icon class="mx-auto">
-        <v-icon>mdi-cart-outline</v-icon>
+        <v-icon>mdi-cart</v-icon>
       </v-btn>
 
       <v-btn to="/vendoradmin/summary" icon class="mx-auto">
@@ -19,7 +19,7 @@
         <v-icon>mdi-message-reply</v-icon>
       </v-btn>
       <v-btn to="/vendoradmin/adminedit" icon class="mx-auto">
-        <v-icon>mdi-account-outline</v-icon>
+        <v-icon>mdi-account</v-icon>
       </v-btn>
      
     

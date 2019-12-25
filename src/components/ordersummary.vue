@@ -43,7 +43,7 @@
        </span>
     <v-list-item v-if="!(choice === 4)" class="my-1" dense two-line>  
       <v-list-item-content>
-        <v-list-item-title class="body-1 grey--text text--darken-1 text-wrap font-weight-bold mb-0 pb-0">{{address.name}}</v-list-item-title>
+        <v-list-item-title class="body-2 grey--text text--darken-1 text-wrap font-weight-bold mb-0 pb-0">{{address.name}}</v-list-item-title>
         <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="address.area.name">{{address.area.name}}</v-list-item-subtitle>
         <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="address.name_2">{{address.name_2}}</v-list-item-subtitle>
         <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="address.company">{{address.company}}</v-list-item-subtitle>

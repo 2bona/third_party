@@ -5,6 +5,13 @@ import router from "../router"
 
 import { AXIOS_CONFIG } from "./../config.js"
 const axios = require("axios")
+import wrapper from 'axios-cache-plugin'
+
+const http = wrapper(axios, {
+  maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
+  ttl: 60000, // time to live. if you set this option the cached item will be auto deleted after ttl(ms).
+  excludeHeaders: true // should headers be ignored in cache key, helpful for ignoring tracking headers
+})
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest"
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*"
 axios.defaults.headers.post["Content-Type"] =
@@ -24,6 +31,8 @@ export const user = {
     LoadStatus: 0,
     areaList: {},
     item: [],
+    userOrder: {},
+    userOrderList: [],
     addresses: {},
     vendorList: [],
     userAddStatus: 0,
@@ -37,6 +46,8 @@ export const user = {
     loginError: "",
     loginStatus: isLoggesIn,
     registerError: "",
+    orderListPage: {},
+    userOrderListLoading: false,
     snackbar: {
       status: 0,
       color: 'green',
@@ -103,6 +114,114 @@ export const user = {
       }, data) {
       commit("setVendorList", data.items)
     },
+    async userOrderList({
+        commit,
+        state,
+        dispatch
+      }, data) {
+        commit("setUserOrderListLoading", true)
+        var url = ''
+        var d = state.orderListPage
+        if (d.nextPage) {
+          if (d.lastPage === d.currentPage) {
+            commit("setUserOrderListLoading", false)
+            return
+          } else {
+            url = d.nextPage
+        }
+        }
+        else if (d.nextPage === null) {
+          commit("setUserOrderListLoading", false)
+          return
+        } else{
+           url = "/userorder/all?page=1"
+        }
+        http({
+              url: url,
+              method: 'get'})
+          .then(function (response) {
+            var orderList = response.data.orders;
+              var next = ''
+            if (orderList.next_page_url !== null) {
+            next = orderList.next_page_url.substring(29)
+            } else {
+              next = null
+            }
+            
+            return dispatch("orderPage",
+            {
+              nextPage:next,
+              lastPage: orderList.last_page,
+              currentPage: orderList.current_page,
+            })
+            .then(()=>{
+              dispatch("setUserOrderList", orderList.data)
+              commit("setUserOrderListLoading", false)
+            })
+
+
+          }).catch(function (error) {
+            console.log(error)
+            commit("setUserOrderListLoading", false)
+          })
+      },
+      orderPage({
+        commit,
+        state,
+        dispatch
+      }, data){
+        return new Promise((resolve, reject) => {
+        commit("setUserOrderListPage", data)
+        resolve()
+        })
+      },
+      setUserOrderList({
+        commit,
+        state,
+        dispatch
+      }, data){
+        return new Promise((resolve, reject) => {
+        commit("setUserOrderList", data)
+        resolve()
+        })
+      },
+      getUserOrder({
+        commit,
+        state,
+        dispatch
+      }, data) {
+        
+        let url = "/userorder/find?id=" + data.id
+        axios.get(AXIOS_CONFIG.API_URL + url)
+          .then(function (response) {
+            var order = response.data.order;
+            commit("setUserOrder", order)
+          }).catch(function (error) {
+            console.log(error)
+          })
+      },
+      userOrder({
+        commit,
+        state,
+        dispatch
+      }, data) {
+        if (data.action === null) {
+          dispatch("getUserOrder", {
+            id: data.id
+          })
+        } else {
+          let url = "/userorder/" + data.action + "?id=" + data.id
+          axios.get(AXIOS_CONFIG.API_URL + url)
+            .then(function (response) {
+              console.log(response.data.message)
+              dispatch("getUserOrder", {
+                id: data.id
+              })
+            }).catch(function (error) {
+              console.log(error)
+            })
+        }
+      },
     setItem({
         commit,
         state,
@@ -166,6 +285,25 @@ export const user = {
     setItem(state, item) {
       state.item = item
     },
+    setUserOrder(state, userOrderList) {
+      state.userOrder = userOrderList
+    },
+    setUserOrderList(state, userOrder) {
+      if (userOrder === null) {
+        state.userOrderList = []
+      } else{
+         userOrder.forEach(item => {
+         state.userOrderList.push(item)
+      })
+      }
+    
+    },
+    setUserOrderListPage(state, orderListPage){
+      state.orderListPage = orderListPage
+    },
+    setUserOrderListLoading(state, orderListPage) {
+      state.userOrderListLoading = orderListPage
+    },
     setVendorLoading(state, data) {
       state.vendorLoading = data
     },
@@ -223,6 +361,12 @@ export const user = {
     getUserAddresses(state) {
       return state.addresses
     },
+    getUserOrder(state) {
+        return state.userOrder
+      },
+    getUserOrderList(state) {
+        return state.userOrderList
+    },
     getVendorList(state) {
       return state.vendorList
     },
@@ -234,6 +378,9 @@ export const user = {
     },
     getUserAddStatus(state) {
       return state.userAddStatus
+    },
+    getUserOrderListLoading(state) {
+      return state.userOrderListLoading
     },
     getSnackbar(state) {
       return state.snackbar

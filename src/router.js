@@ -24,16 +24,30 @@ const router = new VueRouter({
           path: "map",
           component: () =>
             import(/* webpackChunkName: "map" */ "./components/map.vue")
-        },
-        {
-          path: "vendor/:name",
-          props: true,
-          component: () =>
-            import(
-              /* webpackChunkName: "vendorpage" */ "./components/vendorpage.vue"
-            )
         }
       ]
+    },
+    {
+      path: "/vendor/:name",
+      props: true,
+      component: () =>
+        import(
+          /* webpackChunkName: "vendorpage" */ "./components/vendorpage.vue"
+        )
+    },
+    {
+      path: "/cart",
+      component: () =>
+        import(/* webpackChunkName: "cart" */ "./components/cart.vue")
+    },
+    {
+      path: "/userorder",
+      props: true,
+      component: () =>
+        import(
+          /* webpackChunkName: "userorder" */
+          "./components/userorder.vue"
+        )
     },
     {
       path: "/vendoritem/:category/:name",
@@ -72,11 +86,7 @@ const router = new VueRouter({
       component: () =>
         import(/* webpackChunkName: "paychoice" */ "./components/paychoice.vue")
     },
-    {
-      path: "/cart",
-      component: () =>
-        import(/* webpackChunkName: "cart" */ "./components/cart.vue")
-    },
+
     {
       path: "/usercity",
       name: "city",
@@ -202,7 +212,7 @@ const router = new VueRouter({
         )
     },
     {
-      //payment pages
+      //vendor pages
       path: "/vendoradmin",
       component: () =>
         import(
@@ -272,6 +282,42 @@ const router = new VueRouter({
           component: () =>
             import(
               /* webpackChunkName: "adminedit" */ "./components/admin/adminedit.vue"
+            ),
+          props: true
+        }
+      ]
+    },
+    {
+      //vendor pages
+      path: "/delivery",
+      component: () =>
+        import(
+          /* webpackChunkName: "deliveryadmin" */ "./components/deliveryadmin.vue"
+        ),
+      props: true,
+      children: [
+        {
+          path: "/",
+          component: () =>
+            import(
+              /* webpackChunkName: "items" */ "./components/delivery/orders.vue"
+            ),
+          props: true
+        },
+        {
+          path: "adminorder",
+          component: () =>
+            import(
+              /* webpackChunkName: "adminorder" */
+              "./components/delivery/adminorder.vue"
+            ),
+          props: true
+        },
+        {
+          path: "adminedit",
+          component: () =>
+            import(
+              /* webpackChunkName: "adminedit" */ "./components/delivery/adminedit.vue"
             ),
           props: true
         }

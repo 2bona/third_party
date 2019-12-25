@@ -255,17 +255,11 @@ export default {
        return Math.round((this.total * 0.015) + 200)
      }
     },
-    grandTotal(){
-      return this.total + this.deliveryFee + this.serviceCharge
-    },
     orderStatus() {
       return this.$store.getters.getOrderStatus.status;
     },
     dialogItem() {
       return this.$store.getters.getOrderStatus.item;
-    },
-    deliveryFee() {
-      return this.$store.getters.getDeliveryParams.fee;
     },
   },
     methods: {

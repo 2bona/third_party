@@ -5,14 +5,13 @@
   
     <v-flex xs12 class="my-3 px-0">
         <h1 class="title overline mb-3 font-weight-bold grey--text">Orders</h1>
-            <v-card>
+            <v-card class="pb-4">
     <v-card-title>
       <v-text-field
         v-model="search" dense
         append-icon="mdi-magnify"
         label="Search by order id"
         single-line
-        
         hide-details
       ></v-text-field>
     </v-card-title>
@@ -20,8 +19,8 @@
       :headers="headers" v-model="selected"
       :items="orders" @click:row="clicker($event)"
       :expanded.sync="expanded"
-      :loading="loading"
       :search="search"
+      disable-pagination hide-default-footer
     >
      
       <template v-slot:item.status="{ item }">
@@ -36,12 +35,12 @@
       >{{item.created_at | nowDate}}</span>
     </template>
       <template v-slot:item.id="{ item }">
-      <span  class="overline"
+      <span  class="overline d-flex"
       :class="(item.status === 1) ? 'blue--text' : (item.status === 2) ? 'green--text' : (item.status === 3) ? 'orange--text' : (item.status === 4) ? 'grey--text' : (item.status === 5) ? 'red--text':''" 
-      >{{item.id}}</span>
+      ><v-icon v-if="item.status === 3 || item.status === 1" size="8" class=" mr-2" :color="item.status === 3 ? 'green' : 'orange'">mdi-circle</v-icon>{{item.id}}</span>
     </template>
       <template v-slot:item.tracking_id="{ item }">
-      <span  class="overline"
+      <span  class=" overline"
       :class="(item.status === 1) ? 'blue--text' : (item.status === 2) ? 'green--text' : (item.status === 3) ? 'orange--text' : (item.status === 4) ? 'grey--text' : (item.status === 5) ? 'red--text':''" 
       >{{item.tracking_id}}</span>
     </template>
@@ -75,11 +74,8 @@
       <td :colspan="headers.length">{{item}}</td>
     </template>
     </v-data-table>
+    <v-progress-linear color="orange" v-show="loading" :indeterminate="loading"></v-progress-linear>
   </v-card>
-       <v-row class="mt-3" >
-            <v-btn fab class="mx-auto" color="white"><v-icon>mdi-chevron-left</v-icon></v-btn>
-            <v-btn to="/vendorreviews" fab class="mx-auto" color="white"><v-icon>mdi-chevron-right</v-icon></v-btn>
-        </v-row>
     </v-flex>
 </v-row>
 </div>
@@ -106,7 +102,6 @@ export default {
       dialog2: false,
       selected: [],
       dialog3: false,
-      loading: true,
       valid: true,
       deleteId: '',
       intervalId: null,
@@ -132,27 +127,99 @@ export default {
   computed: {
   orders() {
       return this.$store.getters.getOrderList;
-    }
+    },
+  loading() {
+      return this.$store.getters.getVendorLoadStatus;
+    },
+  agents() {
+      return this.$store.getters.getAgents;
+    },
+  replys() {
+      return this.$store.getters.getReplys;
+    },
   },
   beforeDestroy(){
     clearInterval(this.intervalId);
   },
   mounted(){
     const sn = this
-    sn.navb()
-    sn.intervalId = setInterval(() => {
-                        sn.navb()
-                      }, 90000)
+    sn.navb2()
+    sn.getAgents()
+         sn.$store.dispatch("vendorOrderPage", {})
+      .then(()=>{
+       sn.$store.dispatch("setVendorOrderList", null)
+      })
+      .then(()=>{
+      sn.$store.dispatch('orderList')
+      sn.navb() 
+      }) 
+      sn.intervalId = setInterval(() => {
+       sn.$store.dispatch("vendorOrderPage", {})
+      .then(()=>{
+        sn.$store.dispatch("setVendorOrderList", null)
+      })
+      .then(()=>{
+        sn.$store.dispatch('orderList')
+        sn.navb() 
+      }) 
+      }, 90000)
   },
   methods: {
+      scrollTop() {
+      window.scrollTo(0, 0);
+    },
     navb(){
-      const sn = this
-    sn.loading = true
-    this.$store.dispatch('orderList')
-    .then(()=>{
-    sn.loading = false
-    })
+     window.onscroll = () => {
+      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
 
+      if (bottomOfWindow && !this.loading) {
+      this.$store.dispatch('orderList')
+      }
+     }
+    },
+     navb2(){
+    const sn = this
+    if (sn.replys.length) {
+      return
+    } else{
+    let url = "/reply/all"
+    http({
+      url: url,
+      method: 'get'
+    })
+    .then((response) => {
+      sn.load = false
+      sn.$store.dispatch('setReplys', {
+        replys: response.data.replys
+    })
+    })
+      .catch(function (error) {
+        sn.load = false
+        console.log(error)
+      })
+    }
+    
+    },
+    getAgents(){
+      const sn = this
+    if (sn.agents.length) {
+      return
+    }else{
+     let url = "/delivery/agents"
+      http({
+      url: url,
+      method: 'get'
+    })
+      .then((response) => {
+        sn.$store.dispatch('setAgents', {
+          agents: response.data.agents
+      })
+      sn.slide2 = 1
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    }
     },
     clicker(e){
       if (!e.status) {

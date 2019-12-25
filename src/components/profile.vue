@@ -297,7 +297,7 @@
                  <v-list-item-title class="subtitle-2">
               </v-list-item-title>
               <v-list-item-action>
-                <v-btn dark @click="logout"  text color="red"  class=" font-weight-regular text-capitalize red--text ">Logout</v-btn>
+                <v-btn dark @click="logout"  text rounded  color="red" small >Logout</v-btn>
               </v-list-item-action> 
             </v-list-item>
           </v-list> 

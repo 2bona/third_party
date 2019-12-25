@@ -2,7 +2,7 @@
   <v-card tile flat style="overflow:hidden; height: calc(100vh - 48px)" width="100vw">
 <div id="map" style="width: 100%; height: 100%;"></div>
             <div id="infowindow-content" >
-                   <v-card flat tile  width="250" height="auto">
+                   <v-card :ripple="false" :to="'/vendor/'+vendorList[info].name" flat tile  width="250" height="auto">
         <!-- remove class and set height auto -->
          <v-list class="py-0" avatar>
          <v-list-item class="px-1">
@@ -29,7 +29,7 @@
            <div v-for="n in vendorList[info].area" :key="n.id">
       <p v-if="n.name === userArea" class="mb-1 overline font-weight-medium grey--text text-capitalize">delivery: <v-icon style="padding-bottom: 1px" size="10px">mdi-currency-ngn</v-icon>{{n.pivot.fee}} - {{n.pivot.distance | distance}} - {{n.pivot.duration | duration}}</p>
            </div>
-      <p v-if="vendorList[info].cash_on_delivery || vendorList[info].cash_on_delivery" class="overline mb-1 font-weight-medium grey--text text-capitalize">options: <v-icon v-if="vendorList[info].cash_on_delivery"  size="23px">mdi-cash-marker</v-icon><v-icon v-if="vendorList[info].card_on_delivery" size="20px">mdi-credit-card-marker-outline</v-icon></p>
+      <p v-if="vendorList[info].cash_on_delivery || vendorList[info].cash_on_delivery" class="overline mb-1 font-weight-medium grey--text text-capitalize">options: <v-icon v-if="vendorList[info].cash_on_delivery"  size="23px">mdi-cash-marker</v-icon><v-icon v-if="vendorList[info].card_on_delivery" size="18px">mdi-cellphone-wireless</v-icon></p>
       <v-chip class="mr-1 mb-1" x-small v-for="tag in vendorList[info].tags" :key="tag.tag">{{tag.tag}}</v-chip>
          </div>
       </v-card>
@@ -38,7 +38,7 @@
       style="position: absolute;z-index: 9;
         bottom: 0;background: transparent"
       absolute
-      height="209px"
+      height="225px"
       width="100%"
      flat tile class="">   
      <p style="position: absolute;text-shadow: -1px 3px 18px black; top:-19px" class="overline mt-6 mb-4 pl-4 grey--text  text--darken-1 font-weight-bold">
@@ -185,7 +185,6 @@ initMap(){
       zoom: 14,
       mapTypeControl: false,
       fullscreenControl: false,
-      gestureHandling: 'none',
       zoomControl: false,
       center: new google.maps.LatLng(6.222004300000001, 7.082116199999973),
       styles: [
@@ -385,13 +384,14 @@ initMap(){
           infowindow.setOptions(infoOptions)
           infowindow.open(map, marker);
           map.panTo(marker.getPosition())
+          map.setZoom(16);
         }
       })(marker, i));
       sn.markers.push(marker);
     }
     map.fitBounds(bounds);
       var listener = google.maps.event.addListener(map, "idle", function () {
-        map.setZoom(15);
+        map.setZoom(12);
         google.maps.event.removeListener(listener);
       });
       },

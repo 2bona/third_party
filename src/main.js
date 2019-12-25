@@ -50,8 +50,8 @@ Vue.filter("nowDate", function(created) {
     .fromNow();
 });
 Vue.filter("name", function(text) {
-  if (text.length >= 15) {
-    return text.slice(0, 15) + "...";
+  if (text.length >= 10) {
+    return text.slice(0, 10);
   } else {
     return text;
   }
