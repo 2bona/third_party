@@ -1,7 +1,7 @@
 <template>
   <div>
      <v-card flat min-height="100vh" tile class=" pb-12 pt-2 px-3">
-              <v-btn
+          <v-btn
           fixed @click="$router.go(-1)"
           bottom
           right fab
@@ -22,8 +22,8 @@
    <span class="overline grey--text  text--darken-1 font-weight-bold">
        Tray
        </span>
-             <v-layout row wrap class="mt- mx-0" style="overflow-x:hidden; ">
-              <v-container v-if="orders.length"  class=" px-0 pt-0">
+    <v-layout row wrap class="mt- mx-0" style="overflow-x:hidden; ">
+      <v-container v-if="orders.length"  class=" px-0 pt-0">
         <v-card class="mx-auto" style="position:relative;display:flex;justify-content: center;" flat tile  color="transparent" max-width="600px"  height="135px">
           <v-card v-if="orders.length" 
               width="100%"
@@ -34,13 +34,12 @@
               color="transparent"
                flat
               style="position:absolute; bottom: 0px; border-radius:0px; overflow-x:scroll;"
-              class=" mb-2 px-2  pt-2 pb-2 mx-auto">
-                <v-list-item three-line class="pa-0">
-
-              <v-list-item-avatar v-for="(n, i) in orders" :key="i"
-                size="70"
-                v-ripple @click="dialogBtn(i)"
-                class="my-auto elevation-5 mx-2">
+              class="mb-2 px-2  pt-2 pb-2 mx-auto">
+        <v-list-item three-line class="pa-0">
+        <v-list-item-avatar v-for="(n, i) in orders" :key="i"
+          size="70"
+          v-ripple @click="dialogBtn(i)"
+          class="my-auto elevation-5 mr-2">
         <v-img :src="n.item[0].image">
         </v-img>
          <p class="caption grey--text font-weight-bold" style="position:absolute; top: -19px">{{n.item[0].qty}}x</p>
@@ -202,6 +201,10 @@
 </template>
 
 <style>
+.v-list-item__avatar:last-of-type:not(:only-child) {
+    margin-left: 0px!important;
+    margin-right: 10px!important;
+}
 .v-tooltip__content{
     padding: 0px 0px!important;
     width: 90%;

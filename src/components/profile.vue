@@ -46,35 +46,30 @@
            </v-row>    
        </v-row>
 <v-tabs slider-color="orange" class="grey--text text--lighten-1" active-class="orange--text" color="orange" grow mobile-break-point="90">
-        <v-tab class=" text-capitalize">favourites</v-tab>
-        <v-tab class=" text-capitalize">Account</v-tab>
+        <v-tab class="caption  font-weight-bold ">favourites</v-tab>
+        <v-tab class="caption  font-weight-bold">Account</v-tab>
         <v-tab-item>
     <div class="container">
           <v-flex xs12>
             <v-layout row wrap>
-              <v-flex xs6 sm4 v-for="n in 4" :key="n">
+              <v-flex xs6 sm4 v-for="(n, i) in favourites" :key="i">
                 <v-card flat
                   style=" border-radius:10px 10px 10px 10px"
-                  class="elevation-2 mx-auto pt-1 mb-5" width="95%" max-width="225" height="">
+                  class="elevation-2 pb-3 mx-auto pt-1 mb-5" width="95%" max-width="225" height="">
+                  <router-link :to="'/vendor/'+n.name">
                   <v-img width="95%"
                     style="border-radius: 5px;"
                     class=" elevation-9 mx-auto"
-                    height="150"
-                    src="https://images.unsplash.com/photo-1501959915551-4e8d30928317?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-                  >
-                    <v-btn x-small color="white" fab absolute right style="right:2px" class="ma-1">
-                      <v-icon small color="grey lighten-1" class>mdi-heart</v-icon>
-                    </v-btn>
+                    height="100"
+                    :src="n.image">
                   </v-img>
+                  </router-link>
                   <v-card-text class="mx-0 py-1 px-5">
                     <v-layout row wrap>
                       <v-flex xs12>
                         <p
-                          class=" body-2 grey--text text-truncate text--darken-1 font-weight-regular my-0"
-                        >Roasted Bread and tea</p>
-                      </v-flex>
-                      <v-flex xs12>
-                        <p class="caption font-weight-regular  my-0" style>N1000</p>
+                          class=" body-2 grey--text text-truncate text--darken-1 font-weight-bold my-0"
+                        >{{n.name}}</p>
                       </v-flex>
                     </v-layout>
                   </v-card-text>
@@ -94,31 +89,14 @@
                           background-color="grey"
                           class="  pa-0"
                           style="
-    line-height: 0;
-"
+                                    line-height: 0;
+                                "
                         ></v-rating>
 
                         <span class="grey--text overline mt-0">(64)</span>
                       </v-card-title>
                     </v-flex>
-                    <v-flex xs1>
-                       <p class="mb-0 text-right">
-                          <span style=";margin-top:;" class=" "><v-icon small color="green" class="pb-3">mdi-network-strength-4</v-icon></span>
-                      </p>
-                    </v-flex>
                   </v-row>
-                  <v-card-text class="mx-0 mb-0  mt-0 pt-0 pb-2 px-1">
-                    <v-layout>
-                      <v-flex xs12>
-                        <v-chip
-                          x-small
-                          color="white"
-                          class="elevation-1 mb-1 grey--text text--darken-1 text-truncate"
-                        ><v-icon color="green" size="7" class="mr-1">mdi-circle-slice-8</v-icon> mummy's pot filterthis</v-chip>
-                      </v-flex>
-                      
-                    </v-layout>
-                  </v-card-text>
                 </v-card>
               </v-flex>
             </v-layout>
@@ -353,17 +331,28 @@ export default {
       computed: {
     user() {
       return this.$store.getters.getUser
-    }
+    },
+    favourites() {
+      return this.$store.getters.getUserFavourites
+    },
   },
   mounted(){
+    const sn = this
      axios.get('/load')
-        .then(res => {
-          var d = res.data.success
-          this.$store.dispatch('setUser', d.user)
-        })
-        .catch((err)=>{
-          console.log(err)
-        })
+    .then(res => {
+      var d = res.data.success
+      sn.$store.dispatch('setUser', d.user)
+      .then(()=>{
+        if (sn.favourites.length) {
+          return
+        }else{
+          sn.$store.dispatch('getUserFavourites')
+        }
+      })
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   },
     methods: {
       logout(){

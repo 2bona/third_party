@@ -48,9 +48,9 @@
               </template>
               <p class="pa-2 mb-0 caption font-weight-medium">Vendor info</p>
             </v-tooltip>
-            <v-tooltip max-width="130" right>
+            <v-tooltip v-if="vendor.id" max-width="130" right>
                 <template v-slot:activator="{ on }">
-            <v-btn v-on="on" @click="isFavourite? deFavourite(vendor.id) : favourite(vendor.id)" style="left: 0;"  icon fab absolute right>
+            <v-btn :loading="loadFav" v-on="on" @click="favourite(vendor.id)" style="left: 0;"  icon fab absolute right>
                <v-icon :color="isFavourite ? 'red accent-4' : 'grey'">{{isFavourite ?  'mdi-heart' : 'mdi-heart-outline'}}</v-icon> </v-btn>
               </template>
               <p class="pa-2 mb-0 caption font-weight-medium">{{isFavourite ?  'Remove from favourites' : 'Add to favourites'}}</p>
@@ -365,6 +365,7 @@ export default {
       leave: false,
       dialog: false,
       dialog3: false,
+      loadFav: false,
       loading: true,
       loadingItems: true
     }
@@ -381,6 +382,9 @@ export default {
     },
     orderStatus() {
       return this.$store.getters.getOrderStatus.status
+    },
+    favourites() {
+      return this.$store.getters.getUserFavourites
     },
     dialogItem() {
       return this.$store.getters.getOrderStatus.item
@@ -399,19 +403,25 @@ export default {
     //   return this.$store.getters.getFavourites
     // },
     isFavourite(){
-      // const sn = this
-      // return sn.favourites.some((item) => {
-      //  return sn.vendor.id === item.id
-      // })
-      return true
+      const sn = this
+      return sn.favourites.some((item) => {
+       return sn.vendor.id === item.id
+      })
+     
     }
   },
   methods: {
     favourite(x){
-      alert(x)
-    },
-    deFavourite(x){
-      alert(x)
+      const sn = this
+      sn.loadFav = true
+        axios
+       .get("/favourite?id="+sn.vendor.id)
+       .then(function (response) {
+           console.log(response.data)
+           sn.loadFav = false
+       })
+       sn.$store.dispatch('getUserFavourites')
+      
     },
     backBtn(){
       if (this.orderso.length) {
@@ -505,6 +515,7 @@ export default {
       })
       },
   navb(){
+
     const sn = this
     sn.$store.dispatch('mapNav', false)
     let url = "/vendorpage?name="+sn.$route.params.name

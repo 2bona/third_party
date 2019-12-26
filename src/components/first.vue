@@ -16,8 +16,8 @@
           x-small dark
           class="text-capitalize font-weight-medium orange--text elevation-5"
           v-on="on">
-          <span class="padding-top:2px">
-          {{filter}}<v-icon class="pb-1">mdi-menu-down</v-icon>
+          <span class="padding-bottom:3px">
+            {{filter}}<v-icon class="pb-1">mdi-menu-down</v-icon>
           </span>
         </v-btn>
       </template>

@@ -31,6 +31,7 @@ export const user = {
     LoadStatus: 0,
     areaList: {},
     item: [],
+    favourites: [],
     userOrder: {},
     userOrderList: [],
     addresses: {},
@@ -200,6 +201,21 @@ export const user = {
             console.log(error)
           })
       },
+      getUserFavourites({
+        commit,
+        state,
+        dispatch
+      }, data) {
+        
+        let url = "/load_favourites"
+        axios.get(AXIOS_CONFIG.API_URL + url)
+          .then(function (response) {
+            var favourites = response.data.success.favourites.vendors;
+            commit("setUserFavourites", favourites)
+          }).catch(function (error) {
+            console.log(error)
+          })
+      },
       userOrder({
         commit,
         state,
@@ -285,6 +301,9 @@ export const user = {
     setItem(state, item) {
       state.item = item
     },
+    setUserFavourites(state, item) {
+      state.favourites = item
+    },
     setUserOrder(state, userOrderList) {
       state.userOrder = userOrderList
     },
@@ -360,6 +379,9 @@ export const user = {
     },
     getUserAddresses(state) {
       return state.addresses
+    },
+    getUserFavourites(state) {
+      return state.favourites
     },
     getUserOrder(state) {
         return state.userOrder
