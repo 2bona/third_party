@@ -1,11 +1,20 @@
 <template>
   <div>
+             <v-scale-transition>
+           <v-btn v-show="btn"
+          fixed @click="$router.go(-1)"
+          bottom
+          right fab
+          color="white" style="z-index:10" class="mb-12">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
+    </v-scale-transition>
     <v-card-text class="">
       <v-form
           onSubmit="return false;" ref="form">
-      <v-container class="px-0">
+      <v-container class="px-0 pb-0">
       <v-row>
-        <v-col cols="12">
+        <v-col cols="12" class="pb-1">
         <v-text-field
           color="orange darken-3"
           label="Phone number"
@@ -15,7 +24,7 @@
            validate-on-blur
           @keyup.enter.native="reset"
           :error-messages='error.phone'
-          autofocus v-model="phone"
+           v-model="phone"
           v-if="!choice"
           hint="A verification code will be sent to this number."
           required
@@ -25,7 +34,7 @@
           label="Email"
           type="email" style="width:320px" class="ma-auto px-8"
           v-if="choice"
-          autofocus
+          
           :rules="[rules.required, rules.email]"
           validate-on-blur
           @keyup.enter.native="reset"
@@ -40,7 +49,14 @@
       </v-row>
           </v-container>
             <v-card color="transparent" flat tile class="ma-auto text-center" width="290px">
-          <v-switch class="px-5 mt-0 mx-auto" v-model="choice" color="orange" :label="!choice? 'Use email for verification' : 'Use phone for verification'"></v-switch>
+          <v-switch class="px-5 grey--text mt-0 mx-auto" v-model="choice" color="grey" >
+<template v-slot:label>
+  <span class="caption" v-if="!choice">Use <strong>email</strong> for verification</span>
+  <span class="caption" v-if="choice">Use <strong>phone</strong> for verification</span>
+        
+      </template>
+
+          </v-switch>
 
         <v-btn
           :loading="loading"
@@ -48,7 +64,7 @@
           dark
           rounded
           color="white"
-          class="px-5 mt-2 orange--text"
+        class="caption font-weight-black text--darken-4 mx-2 orange--text"
         >next</v-btn>
             </v-card>
       </v-form>
@@ -73,6 +89,7 @@ export default {
       name: "",
       email: "",
       loading: false,
+      btn: false,
       phone: '',
       choice: false,
       error: {
@@ -97,6 +114,17 @@ export default {
       ]
     } //08164691026
   },
+    mounted(){
+    setTimeout(() => {
+      this.btn=true
+    }, 500);
+  },
+    beforeRouteLeave (to, from, next) {
+  this.btn = false
+     setTimeout(() => {
+      next()
+    }, 50);
+},
   methods: {
   reset() {
     if (this.$refs.form.validate()) {
@@ -140,7 +168,7 @@ export default {
           sn.loading = false
           sn.$store.dispatch('snack', {
             color: 'red',
-            text: 'User does not exist'  
+            text: 'An error occured'  
           })
         })
       } else {

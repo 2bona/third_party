@@ -1,12 +1,14 @@
 <template>
     <div class="container mt-0">
+          <v-scale-transition>
           <v-btn
           fixed @click="$router.go(-1)"
-          bottom
+          bottom v-if="btn"
           right fab
-          color="white" style="z-index:10" class="mb-12">
+          color="white" style="z-index:10;margin-bottom: 60px;">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
+         </v-scale-transition>
     <p class="overline pt-3 font-weight-bold grey--text text--darken-1">Payment method</p>
     <v-row>
     <v-flex v-for="(n, i) in payment" :key="i" class="my-1" xs12 sm6 md6 lg6 >
@@ -81,12 +83,24 @@ import axios from 'axios'
     return {
         loading: true,
         dialog: false,
+        btn: false,
         change: 0,
         error: '',
         hint: '',
         choice: 3,
  
     }
+    },
+ beforeRouteLeave (to, from, next) {
+  this.btn = false
+     setTimeout(() => {
+      next()
+    }, 50)
+    },
+    mounted(){
+      setTimeout(() => {
+      this.btn=true
+    }, 50)
     },
     computed: {
         userorders() {
@@ -164,12 +178,20 @@ import axios from 'axios'
         if (x === 3) {
             this.choice = x
             this.dialog = true
-        } else { 
+        } else if(x === 4){ 
         var d ={}
         d.choice = x  
         this.$store.dispatch("payChoice", d)
         .then(()=>{
             this.$router.push("/ordersummary")
+        })
+        }
+         else { 
+        var d ={}
+        d.choice = x  
+        this.$store.dispatch("payChoice", d)
+        .then(()=>{
+            this.$router.push("/selectaddress")
         })
         }
         },
@@ -180,7 +202,7 @@ import axios from 'axios'
         d.choice = sn.choice
         sn.$store.dispatch("payChoice", d)
         .then(()=>{
-            sn.$router.push("/ordersummary")
+            sn.$router.push("/selectaddress")
         })
     },
     changeReg(){
@@ -192,7 +214,7 @@ if (sn.$refs.form.validate()) {
         d.choice = sn.choice
         sn.$store.dispatch("payChoice", d)
         .then(()=>{
-            sn.$router.push("/ordersummary")
+            sn.$router.push("/selectaddress")
         })
         } else {
             return

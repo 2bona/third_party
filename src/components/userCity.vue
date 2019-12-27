@@ -10,11 +10,11 @@
             <v-list-item-group color="primary">
               <div  v-for="(item, i) in items"
                     :key="i">
-            <v-list-item @click="setCity(item.id, item.name)" :to="'/userarea/'+item.id+'/'+item.name">
+            <v-list-item dense @click="setCity(item.id, item.name)" :to="'/userarea/'+item.id+'/'+item.name">
                 <v-list-item-icon>
-                <v-icon color="grey lighten-2">mdi-city</v-icon>
+                <v-icon size="15px" color="grey lighten-2">mdi-city</v-icon>
                 </v-list-item-icon>
-                <v-list-item-content>
+                <v-list-item-content class="caption">
                   <v-list-item-title v-text="item.name"></v-list-item-title>
                 </v-list-item-content>
             </v-list-item>

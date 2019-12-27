@@ -9,10 +9,10 @@ const router = new VueRouter({
       component: () =>
         import(/* webpackChunkName: "index" */ "./components/index.vue"),
       props: true,
-      // meta: {
-      //   requiresAuth: true,
-      //   role: true
-      // },
+      meta: {
+        requiresAuth: true,
+        role: true
+      },
       children: [
         {
           name: "home",

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card-text class="px-6" min-height="100vh" style="overflow-y: auto">
+    <v-card-text class="px-6 mb-4" min-height="100vh" style="overflow-y: auto">
       <v-form @submit="register" onSubmit="return false;" ref="form">
         <v-text-field
           autofocus
@@ -61,8 +61,8 @@
           :loading="loading"
           @click.prevent="register()"
           rounded dark
-          color="orange"
-          class=" my-6"
+          color="orange darken-4"
+        class="mx-2 my-4 caption font-weight-black orange--text text--lighten-4"
         >next</v-btn>
       </v-form>
     </v-card-text>

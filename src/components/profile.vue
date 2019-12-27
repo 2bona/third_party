@@ -45,64 +45,10 @@
            </v-flex>   
            </v-row>    
        </v-row>
-<v-tabs slider-color="orange" class="grey--text text--lighten-1" active-class="orange--text" color="orange" grow mobile-break-point="90">
+<v-tabs slider-color="orange" active-class="orange--text" color="orange" grow mobile-break-point="90">
+        <v-tab  class="caption  font-weight-bold">Account</v-tab>
         <v-tab class="caption  font-weight-bold ">favourites</v-tab>
-        <v-tab class="caption  font-weight-bold">Account</v-tab>
-        <v-tab-item>
-    <div class="container">
-          <v-flex xs12>
-            <v-layout row wrap>
-              <v-flex xs6 sm4 v-for="(n, i) in favourites" :key="i">
-                <v-card flat
-                  style=" border-radius:10px 10px 10px 10px"
-                  class="elevation-2 pb-3 mx-auto pt-1 mb-5" width="95%" max-width="225" height="">
-                  <router-link :to="'/vendor/'+n.name">
-                  <v-img width="95%"
-                    style="border-radius: 5px;"
-                    class=" elevation-9 mx-auto"
-                    height="100"
-                    :src="n.image">
-                  </v-img>
-                  </router-link>
-                  <v-card-text class="mx-0 py-1 px-5">
-                    <v-layout row wrap>
-                      <v-flex xs12>
-                        <p
-                          class=" body-2 grey--text text-truncate text--darken-1 font-weight-bold my-0"
-                        >{{n.name}}</p>
-                      </v-flex>
-                    </v-layout>
-                  </v-card-text>
-                  <v-row class="mb-0 px-5" justify="space-between">
-                    <v-flex xs11>
-                      <v-card-title
-                        style="height: 10px;
-    align-items: self-start;"
-                        class="py-0 px-0"
-                      >
-                        <v-rating
-                          size="12"
-                          :value="4"
-                          dense
-                          color="orange"
-                          hover
-                          background-color="grey"
-                          class="  pa-0"
-                          style="
-                                    line-height: 0;
-                                "
-                        ></v-rating>
-
-                        <span class="grey--text overline mt-0">(64)</span>
-                      </v-card-title>
-                    </v-flex>
-                  </v-row>
-                </v-card>
-              </v-flex>
-            </v-layout>
-          </v-flex>
-        </div>
-        </v-tab-item>
+       
         <v-tab-item class="px-4 pt-4 pb-8">
   <v-expansion-panels>
     <v-expansion-panel>
@@ -281,6 +227,61 @@
           </v-list> 
 </v-card> 
         </v-tab-item>
+         <v-tab-item>
+    <div class="container">
+          <v-flex xs12>
+            <v-layout row wrap>
+              <v-flex xs6 sm4 v-for="(n, i) in favourites" :key="i">
+                <v-card flat
+                  style=" border-radius:10px 10px 10px 10px"
+                  class="elevation-2 pb-3 mx-auto pt-1 mb-5" width="95%" max-width="225" height="">
+                  <router-link :to="'/vendor/'+n.name">
+                  <v-img width="95%"
+                    style="border-radius: 5px;"
+                    class=" elevation-9 mx-auto"
+                    height="100"
+                    :src="n.image">
+                  </v-img>
+                  </router-link>
+                  <v-card-text class="mx-0 py-1 px-5">
+                    <v-layout row wrap>
+                      <v-flex xs12>
+                        <p
+                          class=" body-2 grey--text text-truncate text--darken-1 font-weight-bold my-0"
+                        >{{n.name}}</p>
+                      </v-flex>
+                    </v-layout>
+                  </v-card-text>
+                  <v-row class="mb-0 px-5" justify="space-between">
+                    <v-flex xs11>
+                      <v-card-title
+                        style="height: 10px;
+    align-items: self-start;"
+                        class="py-0 px-0"
+                      >
+                        <v-rating
+                          size="12"
+                          :value="4"
+                          dense
+                          color="orange"
+                          hover
+                          background-color="grey"
+                          class="  pa-0"
+                          style="
+                                    line-height: 0;
+                                "
+                        ></v-rating>
+
+                        <span class="grey--text overline mt-0">(64)</span>
+                      </v-card-title>
+                    </v-flex>
+                  </v-row>
+                </v-card>
+              </v-flex>
+            </v-layout>
+          </v-flex>
+        </div>
+        </v-tab-item>
       </v-tabs>
     <navbottom></navbottom>
    </v-card>
@@ -307,6 +308,7 @@ export default {
   },
     data: () => ({
       loading: false,
+      model: 'tab-2',
       loading2: false,
     attachments: [],
     overlay: true,
@@ -346,7 +348,11 @@ export default {
         if (sn.favourites.length) {
           return
         }else{
-          sn.$store.dispatch('getUserFavourites')
+            if (sn.favourites.length) {
+              return
+            }else{
+              sn.$store.dispatch('getUserFavourites')
+            } 
         }
       })
     })

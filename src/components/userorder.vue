@@ -1,13 +1,15 @@
 <template>
   <div>
     <div class="container mt-3" style="margin-bottom: 100px;">
-    <v-btn
-      fixed @click="$router.go(-1)"
-      bottom
-      right fab
-      color="white" style="z-index:10;margin-bottom: 60px;">
-      <v-icon>mdi-arrow-left</v-icon>
-    </v-btn>
+        <v-scale-transition>
+          <v-btn
+          fixed @click="$router.go(-1)"
+          bottom v-if="btn"
+          right fab
+          color="white" style="z-index:10;margin-bottom: 60px;">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
+         </v-scale-transition>
 
     <p class="overline mb-2  font-weight-bold grey--text text--darken-1">order ID: {{order.tracking_id}}</p>
                       <v-layout width="100%" class=" mx-0" style="overflow-x:hidden; ">
@@ -249,6 +251,7 @@ export default{
       loading: false, 
       payBtn: false,
       dialog: false,
+      btn: false,
       dialogItem: '',
       dialogComp: [],
       dialogOpt: [],
@@ -256,6 +259,20 @@ export default{
       reason: '',    
     }
  }, 
+   beforeDestroy(){
+    clearInterval(this.intervalId);
+  },
+    beforeRouteLeave (to, from, next) {
+  this.btn = false
+     setTimeout(() => {
+      next()
+    }, 50);
+    },
+  mounted(){
+    setTimeout(() => {
+      this.btn=true
+    }, 400);
+  },
  computed: {
     order() {
       return this.$store.getters.getUserOrder;

@@ -43,13 +43,15 @@
   </v-card>
     </v-flex>
 </v-row>
+    <v-scale-transition>
     <v-btn
       fixed to="/"
-      bottom
+      bottom  v-if="btn"
       right fab
       color="white" style="z-index:10;margin-bottom: 60px;">
       <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
+    </v-scale-transition>
 </div>
 </template>
 <style>
@@ -74,6 +76,7 @@ export default {
       dialog2: false,
       selected: [],
       dialog3: false,
+      btn: false,
       valid: true,
       deleteId: '',
       intervalId: null,
@@ -102,7 +105,16 @@ export default {
   beforeDestroy(){
     clearInterval(this.intervalId);
   },
+    beforeRouteLeave (to, from, next) {
+  this.btn = false
+     setTimeout(() => {
+      next()
+    }, 50);
+    },
   mounted(){
+    setTimeout(() => {
+      this.btn=true
+    }, 400);
     const sn = this
        sn.$store.dispatch("orderPage", {})
       .then(()=>{

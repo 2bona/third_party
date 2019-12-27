@@ -29,7 +29,7 @@ export const user = {
   state: {
     user: JSON.parse(localStorage.getItem("user"))|| '',
     LoadStatus: 0,
-    areaList: {},
+    areaList: [],
     item: [],
     favourites: [],
     userOrder: {},
@@ -278,17 +278,17 @@ export const user = {
          })
     },
     logout({ commit, state, dispatch }, data) {
-           localStorage.removeItem("token")
-        localStorage.removeItem("user")
-        localStorage.removeItem("usercity")
-        localStorage.removeItem("userarea")
-        delete axios.defaults.headers.common["Authorization"]
-      axios.get(AXIOS_CONFIG.API_URL + "/logout").then(function(response) {
+        axios.get(AXIOS_CONFIG.API_URL + "/logout")
+        .then(function(response) {
+          localStorage.removeItem("token")
+          localStorage.removeItem("user")
+          localStorage.removeItem("usercity")
+          localStorage.removeItem("userarea")
+          delete axios.defaults.headers.common["Authorization"]
         router.push("/auth/login")
       }).catch(()=>{
-        
         router.push("/auth/login")
-      })
+      })   
     }
   },
   mutations: {

@@ -33,7 +33,7 @@
         validate-on-blur
         rounded
         color="white"
-        class="mt-4  orange--text"
+        class="caption font-weight-black text--darken-4 mx-2 orange--text"
       >
         <span class>proceed</span>
       </v-btn>

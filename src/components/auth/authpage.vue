@@ -1,22 +1,26 @@
 <template>
-  <v-layout row wrap justify-space-around style="overflow:hidden; overflow-y: auto">
-    <v-flex xs12 md5 class="d-flex align-center">
+  <v-layout row wrap justify-space-around style="overflow:hidden; overflow-y: hidden;min-height:100vh">
+    <v-flex xs12 md5 class=" align-center">
               <v-card
-              height="100vh"
+              height="auto"
               width="100%"
-              max-width="800px"
-                class=" d-flex ma-auto text-center elevation-0"
+              max-width="800px" style="overflow:hidden;"
+                class=" d-flex ma-auto pt-6 text-center elevation-0"
                 color="transparent"
               >
-                <div style="min-width:300px; width:100%; min-height:600px" class="ma-auto pt-3 align-self-center">
-                  <v-avatar size="100px" class="elevation-24 mb-9">
-                    <img
-                      src="https://images.unsplash.com/photo-1555580399-49e780f216b7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=667&q=80"
-                      alt="alt"
-                    />
+                <div style="min-width:300px; width:100%;" class="ma-auto mb-3 pt-3 align-self-center">
+                  <v-avatar size="180px"  flat   class="elevation-20 mb-3">
+                    <v-img
+                      src="https://res.cloudinary.com/dnqw7x4bp/image/upload/v1577381765/food_republic.png"
+                      alt="alt" width="300px" contain
+                    > </v-img>
                   </v-avatar>
-                <router-view></router-view>
-                </div>
+                <v-slide-x-reverse-transition leave-absolute>
+                  <router-view></router-view>
+                </v-slide-x-reverse-transition>
+                
+               
+                </div>   
               </v-card>
     </v-flex>
   </v-layout>

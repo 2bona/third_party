@@ -1,23 +1,28 @@
 <template>
   <div>
      <v-card flat min-height="100vh" tile class=" pb-12 pt-2 px-3">
+           <v-scale-transition>
           <v-btn
           fixed @click="$router.go(-1)"
-          bottom
+          bottom v-if="btn"
           right fab
           color="white" style="z-index:10;margin-bottom: 60px;">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <div>
+         </v-scale-transition>
+        
      <v-layout  style="position:fixed; bottom:0px;background: linear-gradient(#fff0 0%, #fff 100%);width: 100%; z-index:9" row wrap class=" pb-2 px-2">
       <v-flex xs6 class="px-2">
-      <v-btn @click="$router.go(-1)" rounded color="orange darken-4" class="mt-2 elevation-10" dark block>add more</v-btn>
+         <v-scale-transition>
+      <v-btn v-if="btn" @click="$router.go(-1)" rounded color="orange darken-4" class="mt-2  caption font-weight-black  orange--text text--lighten-4 elevation-10" dark block>add more</v-btn>
+         </v-scale-transition>
       </v-flex>
       <v-flex xs6 class="px-2">           
-      <v-btn block to="/selectaddress" class="mt-2 elevation-10" rounded="" dark color="primary">proceed</v-btn>
+         <v-scale-transition>
+      <v-btn  v-if="btn" block to="/paychoice" class="mt-2  caption font-weight-black  blue--text text--lighten-4 elevation-10" rounded dark color="primary">proceed</v-btn>
+         </v-scale-transition>
       </v-flex>
   </v-layout>
-        </div>
 
    <span class="overline grey--text  text--darken-1 font-weight-bold">
        Tray
@@ -220,6 +225,7 @@ export default {
       dialogLeave: false,
       leave: false,
       dialog: false,
+      btn: false,
       dialog3: false,      
       reviews: false,
       popular: true,
@@ -265,6 +271,17 @@ export default {
       return this.$store.getters.getOrderStatus.item;
     },
   },
+    mounted () {
+        setTimeout(() => {
+      this.btn=true
+    }, 50);
+  },
+    beforeRouteLeave (to, from, next) {
+  this.btn = false
+     setTimeout(() => {
+      next()
+    }, 50);
+},
     methods: {
         addItem(){
     const sn = this

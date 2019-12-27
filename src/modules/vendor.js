@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import router from "../router";

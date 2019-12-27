@@ -1,27 +1,40 @@
    <template>
     <div class="">
-             <v-btn
+           <v-scale-transition>
+          <v-btn
           fixed @click="$router.go(-1)"
-          bottom
+          bottom v-if="btn"
           right fab
-          color="white" style="z-index:10" class="mb-12">
+          color="white" style="z-index:10;margin-bottom: 60px;">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
+         </v-scale-transition>
      <v-card flat tile class=" pb-12 pt-2 px-3">
        <p class="overline pt-4 grey--text text--darken-1 font-weight-bold">
        select address
        </p> 
       <v-card :loading="loading" style="margin-bottom:90px" width="100%">
-      <v-list-item to="/address">
-      <v-list-item-content>
-        <v-list-item-title class="caption orange--text" ><v-icon color="orange">mdi-plus</v-icon> Add new address</v-list-item-title>
-      </v-list-item-content>
+      <v-list-item class="pr-0" to="/address">
+     
+        <v-list-item-title class="caption orange--text">
+       Add new address
+       </v-list-item-title>
+        <v-list-item-avatar>
+        <v-icon color="orange">mdi-plus</v-icon>
+      </v-list-item-avatar>
     </v-list-item>
+    <v-divider></v-divider>
         <div v-for="(n, i) in addresses" :key="n.area.name + n.id + i">
-        <v-list-item @click="orderAddress(n)" v-if="n.area.name === userArea">
-          <v-list-item-content>
-            <v-list-item-title class="caption mb-0 font-weight-medium mt-0 pt-0">{{n.name }}</v-list-item-title>
+        <v-list-item class="pr-0"  v-if="n.area.name === userArea">
+          <v-list-item-content @click="orderAddress(n)">
+            <v-list-item-title  class="caption mb-0 font-weight-medium mt-0 pt-0">{{n.name }}</v-list-item-title>
           </v-list-item-content>
+          <v-list-item-avatar>
+            <v-icon color="grey lighten-2">mdi-pencil-outline</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-avatar class="mr-1">
+            <v-icon color="grey lighten-2">mdi-trash-can-outline</v-icon>
+          </v-list-item-avatar>
         </v-list-item>
         </div>
         <div v-for="(n, i) in addresses" :key="i">
@@ -50,6 +63,7 @@ let http = wrapper(axios, {
     return {
         addresses: [],
         loading: true,   
+        btn: false,   
     }
     },
       computed: {
@@ -60,7 +74,19 @@ let http = wrapper(axios, {
       return this.$store.getters.getUserArea.name;
     },
       },
+        beforeDestroy(){
+    clearInterval(this.intervalId);
+  },
+    beforeRouteLeave (to, from, next) {
+  this.btn = false
+     setTimeout(() => {
+      next()
+    }, 50);
+    },
     mounted(){
+      setTimeout(() => {
+      this.btn=true
+    }, 50);
         const sn = this
         let url = "/address/all?area_id="+sn.$store.getters.getUserArea.id
       http({
@@ -79,7 +105,7 @@ let http = wrapper(axios, {
           orderAddress(x){
             this.$store.dispatch("setAddresses", x)
             .then(()=>{
-              this.$router.push('/paychoice')
+              this.$router.push('/ordersummary')
             })
           }
         }

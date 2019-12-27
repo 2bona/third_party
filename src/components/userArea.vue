@@ -1,5 +1,14 @@
 <template>
   <div class="px-3">
+     <v-scale-transition>
+    <v-btn
+      fixed @click="$router.go(-1)"
+      bottom v-if="btn"
+      right fab
+      color="white" style="z-index:10;margin-bottom: 60px;">
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
+       </v-scale-transition>
     <v-card
       class=" my-5 mx-auto"
       max-width="400" width="100%"
@@ -12,15 +21,15 @@
           placeholder="Type here" :loading="loading"
         ></v-text-field>
             <v-list-item-group color="orange">
-                  <v-list-item
+                  <v-list-item dense
                   @click="setUserArea(item.value, item.text)"
                     v-for="(item, i) in filteredItems"
                     :key="i">
-                       <v-list-item-icon>
-            <v-icon color="grey lighten-2">mdi-map-marker-outline</v-icon>
+                       <v-list-item-icon class="mr-1">
+            <v-icon size="15px" color="grey lighten-2">mdi-map-marker-outline</v-icon>
           </v-list-item-icon>
-                         <v-list-item-content>
-            <v-list-item-title v-text="item.text"></v-list-item-title>
+            <v-list-item-content>
+            <v-list-item-title class="caption" v-text="item.text"></v-list-item-title>
           </v-list-item-content>
                   </v-list-item>
             </v-list-item-group>
@@ -51,6 +60,7 @@ export default {
       search: "",
       display: false,
       loading: true,
+      btn: false,
       items:[],
       rules: {
         required: value => !!value || "Required.",
@@ -76,6 +86,17 @@ export default {
       place_id: "",
     }
   },
+    mounted () {
+        setTimeout(() => {
+      this.btn=true
+    }, 400);
+  },
+    beforeRouteLeave (to, from, next) {
+  this.btn = false
+     setTimeout(() => {
+      next()
+    }, 50);
+},
   created() {
       var sn = this;
       axios

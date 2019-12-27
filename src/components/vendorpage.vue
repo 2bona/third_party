@@ -1,46 +1,50 @@
 <template>
   <div>
     <div>
+    <v-scale-transition>
     <v-btn
       fixed @click="backBtn()"
-      bottom
+      bottom v-if="btn"
       right fab
       color="white" style="z-index:10;margin-bottom: 60px;">
       <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
+       </v-scale-transition>
         <v-scale-transition origin="center">
                   <v-container v-if="orderStatus && orderso.length" style="position:fixed;z-index:9" class="px-2 pt-0">
         <v-card class="mx-auto" style="position:relative;display:flex;justify-content: center;" flat tile  color="transparent" max-width="600px"  height="125px">
           <v-card v-if="orderso.length" 
               width="100%"
-              height="auto"
+              height="90px"
               max-width="450px"
               min-height=""
               tile
               color="grey lighten-3"
               hover
-              style="position:absolute; bottom: 0px; border-radius:100px; overflow-x:scroll;"
-              class="elevation-20 mb-2 px-2 pr-4 pt-2 pb-2 mx-auto">
-                <v-list-item three-line class="pa-0">
+              style="position:absolute; top: 8px; border-radius:100px; overflow-x:scroll;"
+              class="elevation-20 mb-2 px-2 pr-4 pt-0 pb-2 mx-auto">
+                <v-list-item style="z-index:999" three-line class="pa-0 pr-2">
 
               <v-list-item-avatar v-for="(n, i) in orderso" :key="i"
-        size="70"
-        v-ripple @click="dialogBtn(i)"
-        class="my-auto elevation-7 mr-2">
-        <v-img :src="n.item[0].image"></v-img> </v-list-item-avatar>
+                size="70"
+                 @click="dialogBtn(i)"
+                class="my-auto elevation-7 mr-2">
+                <v-img :src="n.item[0].image"></v-img> </v-list-item-avatar>
                 </v-list-item>
             </v-card>
                 </v-card> 
              </v-container>
                </v-scale-transition>
-      <v-layout v-if="orderso.length" style="position:fixed; bottom:0px;background: linear-gradient(#fff0 0%, #fff 100%);width: 100%; z-index:9" row wrap class="mx-auto pb-2 px-2">
+    <v-scale-transition>
+      <v-layout v-if="orderso.length && btn" style="position:fixed; bottom:0px;background: linear-gradient(#fff0 0%, #fff 100%);width: 100%; z-index:9" row wrap class="mx-auto pb-2 px-2">
       <v-flex xs6 class="px-2">
-        <v-btn block @click="orderStatus ? trayBtn(false) : trayBtn(true)" class="mt-2 elevation-10" rounded="" dark color="orange darken-4" v-html="orderStatus ? 'hide tray': 'show tray'"></v-btn>
+        <v-btn block @click="orderStatus ? trayBtn(false) : trayBtn(true)" class="mt-2 caption font-weight-black  orange--text text--lighten-4  elevation-10" rounded dark color="orange darken-4" v-html="orderStatus ? 'hide tray': 'show tray'"></v-btn>
       </v-flex>
       <v-flex xs6 class="px-2">       
-        <v-btn  block to="/checkout" class="mt-2 elevation-10" rounded="" dark color="primary">checkout</v-btn>
+        <v-btn  block to="/checkout" class="mt-2 caption font-weight-black blue--text text--lighten-4 elevation-10" rounded="" dark color="primary">checkout</v-btn>
       </v-flex>
   </v-layout>
+               </v-scale-transition>
           <v-card class="mx-auto" max-width="600" flat tile> 
             <v-tooltip max-width="120" left>
             <template v-slot:activator="{ on }">
@@ -137,7 +141,7 @@
              v-show="!loadingItems"
               :key="item.id">
         <v-list-item :ripple="false" @click="item.main_option.length ? openItem(item, item.category_id, item.name) : item.status = !item.status">
-          <v-list-item-avatar :size="item.status ? '40' : '50'" style="align-self: flex-start; top: 8px;border-radius:5px;" class="elevation-5 mr-3" tile>
+          <v-list-item-avatar :size="item.status ? '40' : '50'" style="align-self: flex-start; top: 8px;border-radius:5px;" class="elevation-2 mr-3" tile>
             <v-img :src="item.image"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
@@ -145,7 +149,9 @@
             <v-list-item-subtitle :class="!item.status ? 'text-wrap' : ''" class="grey--text caption " v-html="item.description"></v-list-item-subtitle>
             <v-list-item-subtitle :class="!item.status ? 'body-1 font-weight-bold pb-2' : 'caption'" class=" grey--text text--darken-1">
               <span><v-icon :size="!item.status ? '15' : '11'" color="grey darken-1" style="padding-bottom:3px">mdi-currency-ngn</v-icon></span>{{item.price | price}}
-            <v-btn @click="addToCart(item)" v-if="!item.status" class="mr-4 elevation-3" absolute right small color="primary" rounded>add</v-btn>
+            <v-scale-transition>
+            <v-btn @click="addToCart(item)" v-if="!item.status" class="mr-1 elevation-3 caption font-weight-black blue--text text--lighten-4" absolute right small color="primary" rounded>add</v-btn>
+            </v-scale-transition>
             </v-list-item-subtitle>
           </v-list-item-content>
           
@@ -168,7 +174,7 @@
       <v-card color="white" v-if="orderso.length">      
       <div  v-for="(l, p) in orderso" :key="p">
       <div v-show="p === dialogItem">
-        <v-card-title class="pb-1 elevation-10" primary-title>
+        <v-card-title class="pb-1 body-1 elevation-10" primary-title>
           <span class="grey--text pr-1" v-if="l.item[0].qty > 1">{{l.item[0].qty +'x'}} </span> {{l.item[0].name +' '}} <span class="pl-1 pb-2 caption grey--text"> <v-icon size="11" color="grey" style="padding-bottom:3px">mdi-currency-ngn</v-icon>{{l.total | price}}</span>
           <v-btn @click="dialog3=true" style="right:3px; top:3px" class="" absolute right x-small icon color="grey lighten-2"><v-icon size="18">mdi-trash-can-outline</v-icon></v-btn>
        <div v-if="l.compulsory.length" class="px-0 pb-2">
@@ -203,7 +209,7 @@
         </v-btn>
         </div>
           <div class="flex-grow-1"></div>
-          <v-btn  color="grey lighten-1" text @click="dialog = false">save</v-btn>
+          <v-btn  color="primary lighten-1" rounded text small dark depressed @click="dialog = false">save</v-btn>
           <!-- <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn> -->
         </v-card-actions>
       </div>
@@ -215,13 +221,13 @@
       max-width="290"
     >
       <v-card>
-        <v-card-title class="headline">Empty your tray?</v-card-title>
+        <v-card-title class="body-1">Empty your tray?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
 
           <v-btn
             color="grey lighten-1"
-            text
+            text rounded small
             @click="dialogLeave = false"
           >
             cancel
@@ -229,7 +235,7 @@
 
           <v-btn
             color="blue darken-1"
-            text
+            text rounded small
             @click="leaveRoute">
             sure
           </v-btn>
@@ -240,13 +246,13 @@
       v-model="dialog3"
       max-width="290">
       <v-card>
-        <v-card-title class="headline">Delete item from tray</v-card-title>
+        <v-card-title class="body-2">Delete item from tray</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
 
           <v-btn
             color="grey lighten-1"
-            text
+            text small rounded
             @click="dialog3 = false"
           >
             cancel
@@ -254,7 +260,7 @@
 
           <v-btn
             color="blue darken-1"
-            text
+            text small rounded
             @click="removeOrder()">
             sure
           </v-btn>
@@ -363,6 +369,7 @@ export default {
       dialogLeave: false,
       dialogVendor: false,
       leave: false,
+      btn: false,
       dialog: false,
       dialog3: false,
       loadFav: false,
@@ -370,9 +377,18 @@ export default {
       loadingItems: true
     }
   },
-  created () {
+  mounted () {
       this.navb()
+        setTimeout(() => {
+      this.btn=true
+    }, 50);
   },
+    beforeRouteLeave (to, from, next) {
+  this.btn = false
+     setTimeout(() => {
+      next()
+    }, 50);
+},
   computed: {
      userArea() {
       return this.$store.getters.getUserArea
@@ -517,6 +533,9 @@ export default {
   navb(){
 
     const sn = this
+  if (!sn.favourites.length) {
+    sn.$store.dispatch('getUserFavourites')
+    } 
     sn.$store.dispatch('mapNav', false)
     let url = "/vendorpage?name="+sn.$route.params.name
     http({

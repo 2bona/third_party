@@ -3,8 +3,8 @@
     <v-scale-transition>
     <v-btn
       fixed @click="nav ? $router.push('/map') : $router.go(-1)"
-      fab :disabled="mapBtn"
-      bottom  :dark="nav ? true : false"
+      fab :disabled="mapBtn || load"
+      bottom v-if="btn" :dark="nav ? true : false"
       right :size="nav ? '20px' : '10px'"
       :color="nav ? 'orange darken-4' : 'white'" style="z-index:10;margin-bottom: 60px;">
       <v-icon>{{nav ? 'mdi-map-search-outline' : 'mdi-arrow-left'}}</v-icon>
@@ -26,13 +26,13 @@
         </v-btn>
       </template>
       <v-list>
-        <v-list-item-group active-class="orange--text" color="orange darken-4">
+        <v-list-item-group v-if="!loadingAreaList" active-class="orange--text" color="orange darken-4">
              <v-list-item dense 
              @click="$router.push('/usercity')"
          >
           <v-list-item-title class="primary--text text--lighten-2">Choose a different city</v-list-item-title>
         </v-list-item>
-        <v-list-item dense 
+        <v-list-item  dense 
           v-for="item in areas"
           :key="item.text" @click="changeArea(item.value, item.text)">
           <v-list-item-title>{{ item.text }}</v-list-item-title>
@@ -41,10 +41,6 @@
       </v-list>
     </v-menu>
           <div class="flex-grow-1"></div>
-
-
-      
-     
     </v-app-bar>
     </v-expand-transition>
 <v-fade-transition>
@@ -74,6 +70,7 @@ export default {
       rating: 3,
       loadingAreaList: true,
       mapBtn: false,
+      btn: false,
       
     }
   },
@@ -86,6 +83,9 @@ computed: {
     },
     load() {
       return this.$store.getters.getVendorLoading;
+    },
+    favourites() {
+      return this.$store.getters.getUserFavourites
     },
       orders() {
       return this.$store.getters.getOrder;
@@ -100,8 +100,17 @@ computed: {
       return this.$store.getters.getMapNav;
     }
   },
+  beforeRouteLeave (to, from, next) {
+  this.btn = false
+     setTimeout(() => {
+      next()
+    }, 50);
+},
 mounted(){
   this.navb()
+      setTimeout(() => {
+      this.btn=true
+    }, 50);
  },
   created () {
     const sn = this
@@ -131,7 +140,6 @@ mounted(){
         sn.$router.push('/usercity')
       })
     }
-
   },
   methods: {
     navb(){
@@ -146,9 +154,16 @@ mounted(){
           items: response.data.items
       })
         sn.$store.dispatch('vendorLoading', false)
+        .then(()=>{
+        if (sn.favourites.length) {
+          return
+        }else{
+          sn.$store.dispatch('getUserFavourites')
+        }
+        })
       })
       .catch(function (error) {
-        alert(error)
+        console.log(error)
          sn.$store.dispatch('vendorLoading', false)
         sn.$router.push('/usercity')
       })

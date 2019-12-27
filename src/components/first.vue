@@ -11,7 +11,8 @@
     <v-flex xs6 class="text-right pr-6 mt-4">
       <v-menu max-height="300" nudge-bottom="5" allow-overflow max-width="200" offset-y>
       <template  v-slot:activator="{ on }">
-        <v-btn  
+        <v-btn 
+        :disabled="load" 
           color="white"
           x-small dark
           class="text-capitalize font-weight-medium orange--text elevation-5"
@@ -73,7 +74,7 @@
                 :src="n.image">
               <v-fade-transition>
             <v-overlay
-            v-if="hover === n.id"
+            v-show="hover === n.id"
             absolute>
             <div  class="pa-1 text-left" >
             <p class="overline font-weight-medium mb-0"> Delivery fee: <v-icon color="grey lighten-5" style="padding-bottom: 3px" size="11px">mdi-currency-ngn</v-icon>{{n.area[0].pivot.fee}} </p>
@@ -146,7 +147,6 @@
     width: 100%!important;
     height: 100%!important;
     padding: 8px!important;
-    background: linear-gradient(to right, rgba(255, 30, 22, 0.4) 0%, rgba(46, 141, 89, 0.3) 100%);
 }
 </style>
 <script>
