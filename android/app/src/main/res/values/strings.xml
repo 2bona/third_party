@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">foodrepublic</string>
+    <string name="title_activity_main">foodrepublic</string>
+    <string name="package_name">com.redape.foodrepublic</string>
+    <string name="custom_url_scheme">com.redape.foodrepublic</string>
+</resources>

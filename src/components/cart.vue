@@ -77,9 +77,10 @@ export default {
       selected: [],
       dialog3: false,
       btn: false,
+      pageClose: false,
+      btn: false,
       valid: true,
       deleteId: '',
-      intervalId: null,
       search: '',
       headers: [
           { align: 'left', text: 'Order ID', value: 'tracking_id' },
@@ -103,18 +104,20 @@ export default {
     }
   },
   beforeDestroy(){
-    clearInterval(this.intervalId);
+    this.pageClose = false
   },
     beforeRouteLeave (to, from, next) {
   this.btn = false
+  this.pageClose = false
      setTimeout(() => {
       next()
     }, 50);
     },
   mounted(){
+    this.pageClose = true
     setTimeout(() => {
       this.btn=true
-    }, 400);
+    }, 50);
     const sn = this
        sn.$store.dispatch("orderPage", {})
       .then(()=>{
@@ -124,11 +127,6 @@ export default {
       sn.$store.dispatch('userOrderList')
       sn.navb() 
       })
-   
-    
-    // sn.intervalId = setInterval(() => {
-    //                     sn.navb()
-    //                   }, 90000)
   },
   methods: {
      scrollTop() {
@@ -138,7 +136,7 @@ export default {
       window.onscroll = () => {
       let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
 
-      if (bottomOfWindow && !this.loading) {
+      if (bottomOfWindow && !this.loading && this.pageClose) {
       this.$store.dispatch('userOrderList')
       }
       }

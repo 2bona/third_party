@@ -104,21 +104,20 @@
   <div>
       <v-layout  style="position:fixed; bottom:0px;background: linear-gradient(#fff0 0%, #fff 100%);width: 100%; z-index:9" row wrap class=" pb-2 px-2">
         <v-flex xs12 class="px-2">
-        <v-btn v-show="!payBtn" :loading="loading" block @click="proceed()" class="mt-2 elevation-10" rounded="" dark color="primary">proceed</v-btn>
+        <v-btn v-if="!(choice === 1)" :loading="loading" block @click="proceed()" class="mt-2 elevation-10" rounded="" dark color="primary">proceed</v-btn>
         <paystack
-        v-if="payBtn"
-        :amount="total"
-        :email="shipInfo.contact"
-        :paystackkey="paystackkeys"
-        :reference="shipInfo.id.toString()"
+        v-if="choice === 1"
+        :amount="grandTotal"
+        :email="user.email"
+        :paystackkey="paystackKey"
+        :reference="Date.now().toString()"
         :callback="callback"
-        :metadata="metadata"
-        :close="close"
-        :embed="false"
+        :metadata="metadata" :loading="payLoad"
+        :close="close" 
         style="border-radius: 50px;"
-        class="q-btn q-btn--push q-pa-md bg-white rounded-borders q-my-md shadow-20 "
+        class="mt-2 elevation-10 v-btn v-btn--block v-btn--contained v-btn--rounded theme--dark v-size--default white"
         >
-       <img style="width:90%" src="https://3.bp.blogspot.com/-1tMgWz_Jzws/W8Wz82rcGDI/AAAAAAAAB20/H0VaEJBvOXkahf8FUyRRsaCX_tYpPxwowCLcBGAs/s1600/Paystack%2Blogo.png">
+       <img style="width:40%" src="https://3.bp.blogspot.com/-1tMgWz_Jzws/W8Wz82rcGDI/AAAAAAAAB20/H0VaEJBvOXkahf8FUyRRsaCX_tYpPxwowCLcBGAs/s1600/Paystack%2Blogo.png">
     </paystack>
         </v-flex>
       </v-layout>
@@ -148,7 +147,8 @@ paystack
  data() {
     return {
       loading: false, 
-      payBtn: false     
+      payLoad: false, 
+      paystackKey: ''    
     }
  }, 
  computed: {
@@ -158,32 +158,47 @@ paystack
           {
             display_name: 'Mobile Number',
             variable_name: 'mobile_number',
-            value: this.shipInfo.receiver
+            value: this.user.receiver
           },
           {
             display_name: 'Address',
             variable_name: 'address',
-            value: this.shipInfo.address
+            value: this.user.address
           },
           {
             display_name: 'First Name',
             variable_name: 'first_name',
-            value: this.shipInfo.firstname
+            value: this.user.firstname
           },
           {
             display_name: 'Last Name',
             variable_name: 'last_name',
-            value: this.shipInfo.lastname
+            value: this.user.lastname
           },
           {
             display_name: 'Invoice ID',
             variable_name: 'invoice_id',
-            value: this.shipInfo.id
+            value: this.user.id
+          },
+          {
+            display_name: 'Change',
+            variable_name: 'change',
+            value: this.change
+          },
+          {
+            display_name: 'Payment Method',
+            variable_name: 'pay_method',
+            value: this.paymentMethod
           },
           {
             display_name: 'Cart Items',
             variable_name: 'cart_items',
-            value: this.payCart
+            value: this.orders
+          },
+          {
+            display_name: 'Total',
+            variable_name: 'total',
+            value: this.grandTotal
           }
         ]
       }
@@ -257,6 +272,12 @@ paystack
       return this.$store.getters.getDeliveryParams.fee;
     },
  },
+ mounted(){
+    axios.get('/settings?name=paystackKey')
+    .then((res)=>{
+      this.paystackKey = res.data.settings[0].name
+    })
+ },
  methods: {
    back() {
       this.$router.go("-1");
@@ -283,24 +304,31 @@ paystack
           service_charge: sn.serviceCharge
       })
         .then(res => {
-          sn.loading = false
+            sn.$store.dispatch('snack', {
+            color: 'primary',
+            text: 'Transaction complete, thank you!',
+          })
+          sn.$store.dispatch('emptyOrder')
         })
         .then(() => {
           sn.loading = false
-          if (d === 1) {
-            sn.$router.push('/pay')
-          }
-          else if (d === 2) {
-            sn.$router.push('/')
-          }
-          else if (d === 3) {
-            sn.$router.push('/')
-          } 
+          sn.payLoad = false
+            sn.$router.push('/cart')
       })
       .catch((err)=>{
         console.log(err)
         sn.loading = false
         })
+    },
+        callback () {
+          this.payLoad = true
+          this.proceed()
+    },
+    close () {
+         this.$store.dispatch('snack', {
+            color: 'red',
+            text: 'Transaction Closed!',
+          })
     }
  }
 };

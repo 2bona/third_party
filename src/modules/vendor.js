@@ -114,7 +114,7 @@ export const vendor = {
           var orderList = response.data.orders;
           var next = ''
           if (orderList.next_page_url !== null) {
-            next = orderList.next_page_url.substring(29)
+            next = orderList.next_page_url.substring(38)
           } else {
             next = null
           }

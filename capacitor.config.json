@@ -1,0 +1,8 @@
+{
+  "appId": "com.redape.foodrepublic",
+  "appName": "foodrepublic",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist",
+  "cordova": {}
+}

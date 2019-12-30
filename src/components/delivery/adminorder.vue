@@ -10,8 +10,14 @@
     </v-btn>
 
     
+    <v-layout row wrap class="px-3">
+       <v-flex xs6>
     <p class="overline mb-2  font-weight-bold grey--text text--darken-1">order ID: {{order.tracking_id}}</p>
-                      <v-layout width="100%" class=" mx-0" style="overflow-x:hidden; ">
+       </v-flex>
+       <v-flex xs6>
+    <p class="overline mb-2 text-right font-weight-bold grey--text text--darken-1">{{order.created_at | myDate}}</p>
+       </v-flex>
+    </v-layout>                      <v-layout width="100%" class=" mx-0" style="overflow-x:hidden; ">
               <v-container  class=" px-0 pt-0">
         <v-card class="mx-auto" style="position:relative;display:flex;justify-content: center;" flat tile  color="transparent" max-width="600px"  min-height="116px">
     <v-card  

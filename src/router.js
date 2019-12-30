@@ -4,30 +4,36 @@ import VueRouter from "vue-router";
 const router = new VueRouter({
   mode: "history",
   routes: [
-    {
-      path: "/",
-      component: () =>
-        import(/* webpackChunkName: "index" */ "./components/index.vue"),
-      props: true,
-      meta: {
-        requiresAuth: true,
-        role: true
-      },
-      children: [
+          {
+            path: "/user",
+            component: () =>
+              import( /* webpackChunkName: "profile" */ "./components/profile.vue"),
+            meta: {
+              requiresAuth: true,
+              role: true
+            }
+          },
+    
         {
-          name: "home",
+          name: "",
           path: "",
           component: () =>
-            import(/* webpackChunkName: "first" */ "./components/first.vue")
-        },
-        {
-          path: "map",
-          component: () =>
-            import(/* webpackChunkName: "map" */ "./components/map.vue")
-        }
-      ]
-    },
-    {
+            import(/* webpackChunkName: "index" */ "./components/index.vue"),
+          children: [
+                {
+                  name: "home",
+                  path: "",
+                  component: () =>
+                    import(/* webpackChunkName: "first" */ "./components/first.vue")
+                },
+                {
+                  path: "map",
+                  component: () =>
+                    import(/* webpackChunkName: "map" */ "./components/map.vue")
+                },
+             ]
+             },
+              {
       path: "/vendor/:name",
       props: true,
       component: () =>
@@ -59,15 +65,6 @@ const router = new VueRouter({
         )
     },
     {
-      path: "/user",
-      component: () =>
-        import(/* webpackChunkName: "profile" */ "./components/profile.vue")
-      // meta: {
-      //   requiresAuth: true,
-      //   role: true
-      // }
-    },
-    {
       path: "/selectaddress",
       component: () =>
         import(
@@ -79,6 +76,13 @@ const router = new VueRouter({
       component: () =>
         import(
           /* webpackChunkName: "ordersummary" */ "./components/ordersummary.vue"
+        )
+    },
+    {
+      path: "/offlinepage",
+      component: () =>
+        import(
+          /* webpackChunkName: "offlinepage" */ "./components/offlinepage.vue"
         )
     },
     {
@@ -103,6 +107,7 @@ const router = new VueRouter({
       component: () =>
         import(/* webpackChunkName: "checkout" */ "./components/checkout.vue")
     },
+
     {
       //payment pages
       path: "/pay",
@@ -496,10 +501,9 @@ router.beforeEach((to, from, next) => {
         }
       });
     } else {
-      let user = JSON.parse(localStorage.getItem("user"));
       let area = JSON.parse(localStorage.getItem("userarea"));
       if (to.matched.some(record => record.meta.role)) {
-        if (user.role === "vendor" && area) {
+        if (area) {
           next();
         } else {
           next({

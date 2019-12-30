@@ -11,9 +11,9 @@
     </v-btn>
        </v-scale-transition>
         <v-scale-transition origin="center">
-                  <v-container v-if="orderStatus && orderso.length" style="position:fixed;z-index:9" class="px-2 pt-0">
+                  <v-container v-show="orderStatus && orderso.length" style="position:fixed;z-index:9" class="px-2 pt-0">
         <v-card class="mx-auto" style="position:relative;display:flex;justify-content: center;" flat tile  color="transparent" max-width="600px"  height="125px">
-          <v-card v-if="orderso.length" 
+          <v-card v-show="orderso.length" 
               width="100%"
               height="90px"
               max-width="450px"
@@ -60,13 +60,26 @@
               <p class="pa-2 mb-0 caption font-weight-medium">{{isFavourite ?  'Remove from favourites' : 'Add to favourites'}}</p>
             </v-tooltip>
           <v-row  justify="space-around">
-           <v-avatar size="100"
+            <v-scale-transition origin="center center">
+
+           <v-avatar v-if="vendorLoad" size="100"
                color="transparent"
                class="mt-6 mb-2 elevation-10">
                <v-img :src="vendor.image" alt="profile"></v-img>
            </v-avatar>
-        <v-flex xs12 class="mb-2">
-        <h2 class="text-center mb-0 text-capitalize grey--text text--darken-1 font-weight-bold">{{vendor.name}}</h2>
+            </v-scale-transition>
+           <v-avatar v-if="!vendorLoad" size="100"
+               color="grey lighten-3"
+               class="mt-6 mb-2 elevation-10">
+           </v-avatar>
+        <v-flex xs12 class="mb-2 text-center">
+        <h2 v-if="vendorLoad" class="text-center mb-0 text-capitalize grey--text text--darken-1 font-weight-bold">{{vendor.name}}</h2>
+        <v-row  justify="space-around" >
+            <v-skeleton-loader
+        type="chip" class=" mt-2 mx-auto"
+        v-if="!vendorLoad"
+      ></v-skeleton-loader>
+        </v-row>
         </v-flex>
         <v-row class="px-12" justify="space-around" >
           <v-flex xs3>
@@ -99,36 +112,22 @@
         <v-tab v-if="loading" class="caption font-weight-medium">
         <v-skeleton-loader
         type="chip"
-        tile
+        
       ></v-skeleton-loader>  
         </v-tab>
         <v-tab v-if="loading" class="caption font-weight-medium">
         <v-skeleton-loader
         type="chip"
-        tile
+        
       ></v-skeleton-loader>
         </v-tab>
         <v-tab v-if="loading" class="caption font-weight-medium">
         <v-skeleton-loader
         type="chip"
-        tile
+        
       ></v-skeleton-loader>
         </v-tab>
         <v-tab  v-for="n in vendor.categories" :key="n.name" v-text="n.name" class="caption  font-weight-bold"></v-tab>
-            <v-tab-item v-if="loadingItems" class="pt-3">
-        <v-skeleton-loader v-for="n in 4" :key="n" 
-        ref="skeleton" width="100%"
-        type="list-item-avatar-three-line"
-        tile
-      ></v-skeleton-loader>  
-        </v-tab-item>
-            <v-tab-item v-if="loadingItems" class="pt-3">
-        <v-skeleton-loader v-for="n in 4" :key="n" 
-        ref="skeleton" width="100%"
-        type="list-item-avatar-three-line"
-        tile
-      ></v-skeleton-loader>  
-        </v-tab-item>
             <v-tab-item v-if="loadingItems" class="pt-3">
         <v-skeleton-loader v-for="n in 4" :key="n" 
         ref="skeleton" width="100%"
@@ -371,6 +370,7 @@ export default {
       leave: false,
       btn: false,
       dialog: false,
+      vendorLoad: false,
       dialog3: false,
       loadFav: false,
       loading: true,
@@ -544,6 +544,9 @@ export default {
     })
     .then((response) => {
       sn.loading = false
+      setTimeout(() => {
+        this.vendorLoad = true
+      }, 50);
       var m = response.data.vendor
       sn.vendor = m
       var r = m.area.find((i)=>{

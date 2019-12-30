@@ -19,14 +19,32 @@ import store from "./store.js";
 import axios from "axios";
 import moment from "moment";
 
-// import "./stylus/main.styl";
-// axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-// axios.defaults.headers.post['Accept'] = 'application/json';
+document.cookie = 'cross-site-cookie=image; SameSite=None; Secure';
 
-// axios.defaults.headers.common['Authorization'] = 'Bearer' + apitoken;
-axios.defaults.baseURL = "http://192.168.0.100:8000/api";
+axios.defaults.baseURL = "https://foodrepublic.herokuapp.com/api";
+    axios.interceptors.response.use(function (response) {
+      // Do something with response data
+      return response;
+    }, function (error) {
+      if (error === "Error: Network Error") {
+        router.push('/auth/login')
+        
+      } else{
+            switch (error.response.status) {
+        case 401:
+          router.push('/auth/login') //we will redirect user into 503 page 
+          break
+        case 500:
+          router.push('/usercity') //we will redirect user into 503 page 
+          break
+        default:
+          break
+      }
+      }
+  
+      // Do something with response error
+      return Promise.reject(error);
+    });
 Vue.use(axios);
 
 Vue.config.productionTip = false;
@@ -74,15 +92,15 @@ Vue.filter("duration", function(value) {
   if (value != null && val != 0) {
     var val = Math.floor((value % 3600) / 60);
 
-    if (val <= 5) {
+    if ((val <= 5) && (val > 0 )) {
       return "15mins";
-    } else if (val <= 10) {
+    } else if (val <= 10 && (val > 5)) {
       return "20mins";
-    } else if (val <= 15) {
+    } else if (val <= 15 && (val > 10)) {
       return "30mins";
-    } else if (val <= 20) {
+    } else if (val <= 20 && (val > 15)) {
       return "40mins";
-    } else if (val <= 30) {
+    } else if (val <= 30 && (val > 20)) {
       return "45mins";
     } else if (val > 30) {
       return "55mins";

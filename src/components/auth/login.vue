@@ -2,6 +2,15 @@
 <template>
   <div class="">
     <v-card-text class="px-6 mt-6">
+         <v-scale-transition>
+           <v-btn v-show="btn"
+          fixed @click="$router.push('/auth')"
+          bottom color="white"
+          right fab
+           style="z-index:10" class="elevation-20 mb-12">
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
+    </v-scale-transition>
       <v-form ref="form">
         <v-text-field
           class="ma-auto px-8"
@@ -48,15 +57,7 @@
         >forgot password</v-btn
       >
     </v-card-text>
-    <v-scale-transition>
-           <v-btn v-show="btn"
-          fixed to="/auth"
-          bottom
-          right fab
-          color="white" style="z-index:10" class="mb-12">
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
-    </v-scale-transition>
+ 
         
   </div>
 </template>

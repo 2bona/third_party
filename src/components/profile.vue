@@ -1,5 +1,5 @@
 <template>
-   <v-card style="overflow-x: hidden;" flat tile class="pb-9">
+   <v-card style="overflow-x: hidden;margin-bottom:100px" flat tile class="pb-9">
        <v-row  justify="space-around">
            <v-avatar
                size="80"
@@ -50,9 +50,9 @@
         <v-tab class="caption  font-weight-bold ">favourites</v-tab>
        
         <v-tab-item class="px-4 pt-4 pb-8">
-  <v-expansion-panels>
+  <v-expansion-panels style="border-radius: 25px 25px 0 0 ;">
     <v-expansion-panel>
-      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-regular  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-account</v-icon> Account Information</p> </v-expansion-panel-header>
+      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-bold  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-account</v-icon> Account Information</p> </v-expansion-panel-header>
   <v-expansion-panel-content style="position: relative" class="px-4 py-2">
          <v-form  
           onSubmit="return false;" ref="form">
@@ -120,7 +120,7 @@
   </v-expansion-panel-content>
     </v-expansion-panel>
     <v-expansion-panel>
-      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-regular  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-map-marker</v-icon> Locations</p> </v-expansion-panel-header>
+      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-bold  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-map-marker</v-icon> Locations</p> </v-expansion-panel-header>
   <v-expansion-panel-content class="px-0 py-2">
          <v-carousel show-arrows-on-hover
  height="290px" :show-arrows="false">
@@ -145,7 +145,7 @@
       </v-expansion-panel-content>
     </v-expansion-panel>
     <v-expansion-panel>
-      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-regular  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-credit-card</v-icon> Payment</p> </v-expansion-panel-header>
+      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-bold  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-credit-card</v-icon> Payment</p> </v-expansion-panel-header>
           <v-expansion-panel-content class="px-0 py-2 pb-1">
    <v-carousel show-arrows-on-hover
  height="250px" :show-arrows="false">
@@ -196,32 +196,24 @@
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
-  <v-card>
+  <v-card style="border-radius: 0 0 25px 25px;"  tile>
  
           <v-list>
-            <v-list-item class="px-4 pr-6">
-                 <v-list-item-title class=" pl-0 subtitle-2 grey--text  font-weight-regular  text--darken-2">
-                Location Tracking
-                <span class="caption"></span>
-              </v-list-item-title>
-              <v-list-item-action>
-                <v-switch  color="orange"></v-switch>
-              </v-list-item-action>
-             
-            </v-list-item>
-                <v-list-item>
-                 <v-list-item-title class="subtitle-2 grey--text  font-weight-regular  text--darken-2">
+            
+                <v-list-item class="px-3">
+                 <v-list-item-title class="subtitle-2 grey--text  font-weight-bold  text--darken-2">
+                <v-icon size="30" color="grey lighten-3">mdi-cash</v-icon>
                 Fund your wallet
               </v-list-item-title>
               <v-list-item-action>
-                <v-btn dark small color="green" rounded class="px-8 font-weight-bold green--text text--lighten-4"><v-icon size="15" class="px-2 mt-0">mdi-cash-refund</v-icon></v-btn>
+                <v-btn dark small color="primary" rounded class=" caption px-8 font-weight-bold blue--text text--lighten-3">add</v-btn>
               </v-list-item-action>
             </v-list-item>
-            <v-list-item>
+            <v-list-item class="px-2 pt-3">
                  <v-list-item-title class="subtitle-2">
               </v-list-item-title>
               <v-list-item-action>
-                <v-btn dark @click="logout"  text rounded  color="red" small >Logout</v-btn>
+                <v-btn dark @click="logout" depressed class="caption font-weight-bold px-8 red--text text--lighten-1" rounded  color="red lighten-5" small >Logout</v-btn>
               </v-list-item-action> 
             </v-list-item>
           </v-list> 
@@ -283,7 +275,15 @@
         </div>
         </v-tab-item>
       </v-tabs>
-    <navbottom></navbottom>
+         <v-scale-transition>
+    <v-btn
+      fixed to="/"
+      bottom  v-if="btn"
+      right fab
+      color="white" style="z-index:10;margin-bottom: 60px;">
+      <v-icon>mdi-arrow-left</v-icon>
+    </v-btn>
+    </v-scale-transition>
    </v-card>
 </template>
 
@@ -303,9 +303,6 @@ let http = wrapper(axios, {
 })
 
 export default {
-  components: {
-    navbottom: () => import('./navbottom'),
-  },
     data: () => ({
       loading: false,
       model: 'tab-2',
@@ -313,6 +310,7 @@ export default {
     attachments: [],
     overlay: true,
     visible: true,
+    btn: false,
      rules: {
         required: value => !!value || "Required.",
         min: value => value.length >= 3 || "Min 3 characters",
@@ -338,8 +336,19 @@ export default {
       return this.$store.getters.getUserFavourites
     },
   },
+  beforeRouteLeave (to, from, next) {
+  this.btn = false
+  this.pageClose = false
+     setTimeout(() => {
+      next()
+    }, 50);
+    },
   mounted(){
+      setTimeout(() => {
+      this.btn=true
+    }, 50);
     const sn = this
+    sn.$store.dispatch('mapNav', false)
      axios.get('/load')
     .then(res => {
       var d = res.data.success
@@ -401,7 +410,7 @@ export default {
           sn.attachments = []
           sn.$store.dispatch('snack', {
             color: 'red',
-            text: err
+            text: 'File size must be lower than 2mb'
           })
           sn.loading2 = false
         })

@@ -2,7 +2,7 @@
 <div> 
 <v-card class="pt-1 px-2" style="padding-bottom:140px" flat tile min-height="100vh">
         <v-list-item>
-        <v-list-item-avatar  color="grey lighten-3" style="border-radius:5px;align-self: flex-start; top: 11px;" :class="loading ? 'elevation-0 mr-2' : 'elevation-10 mr-3'" size="80" tile>
+        <v-list-item-avatar  color="grey lighten-3" style="align-self: flex-start; top: 11px;" :class="loading ? 'elevation-0 mr-2' : 'elevation-10 mr-3'" size="80">
           <v-img :src="item.image"></v-img>
         </v-list-item-avatar>
         <v-list-item-content class="pb-0" v-if="loading">
@@ -91,7 +91,7 @@
               </v-flex>
               <v-flex xs6 class="pr-3">
                 
- <v-btn block :disabled="!(order.compulsory.length === compulsoryCount.length)" @click="addToCart" :class="(order.compulsory.length === compulsoryCount.length) ? 'mt-2 elevation-10' : 'mt-2'" rounded="" dark color="primary">add to cart</v-btn>
+ <v-btn block :disabled="!(order.compulsory.length === compulsoryCount.length)" @click="addToCart" :class="(order.compulsory.length === compulsoryCount.length) ? 'mt-2 elevation-10 caption font-weight-black blue--text text--lighten-4' : 'mt-2'"  color="primary" rounded="" dark>add to cart</v-btn>
               </v-flex>
           </v-layout>
        <div v-if="loading" class="mt-8 px-1">

@@ -2,7 +2,8 @@
 <template>
     <v-app dark>               
     <v-container fluid class="pa-0">
-      
+      <Offline @detected-condition="handleConnectivityChange">
+        </Offline>
     <v-snackbar
       :value="snackbar.status"
       :timeout="6000"
@@ -39,10 +40,12 @@ body, html{
 }
 </style>
 <script>
+import Offline from  'v-offline'
+
 export default {
     name: "App",
     components: {
-        
+        Offline
     },
     data() {
         return {
@@ -54,6 +57,13 @@ export default {
       snackbar(){return this.$store.getters.getSnackbar},
     },
     methods: {
+         handleConnectivityChange (status) {
+            if (!status) { this.$router.push('/offlinepage') } else {
+             setTimeout(() => {
+               this.$router.push('/usercity')
+             }, 2000);
+            }
+        },
     }
 
 }

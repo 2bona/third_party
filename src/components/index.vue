@@ -43,10 +43,9 @@
           <div class="flex-grow-1"></div>
     </v-app-bar>
     </v-expand-transition>
-<v-fade-transition>
-    <router-view></router-view>
-</v-fade-transition>
-    <navbottom></navbottom>
+    <v-slide-x-transition> 
+          <router-view></router-view>
+</v-slide-x-transition>     <navbottom></navbottom>
   </div>
 </template>
 <style></style>
