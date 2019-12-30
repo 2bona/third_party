@@ -74,25 +74,14 @@
                   class="my-0 elevation-7 mr-2">
                   <v-img :src="n.image"></v-img>
                 </v-list-item-avatar>
-              <v-list-item-title style="overflow-y: visible;" class="py-0">
-                <v-layout>
-                  <v-flex xs9>
+              <v-list-item-title >
+             
                       <h2
                         style="line-height:1;text-decoration: none;"
-                        class="body-1 grey--text text-truncate text--darken-3 font-weight-regular"
+                        class="body-1 grey--text text-truncate text--darken-3 font-weight-medium"
                       >{{n.name}}</h2>
-                  </v-flex>
-                  <v-flex style="
-    position: absolute;
-    right: -9px;
-    margin-top: -11px;
-">
-                    <v-btn icon class="ma-1">
-                      <v-icon small color="grey lighten-1">mdi-heart</v-icon>
-                    </v-btn>
-                  </v-flex>
-                </v-layout>
-                <v-card-title style="height: 12px;" class="mb-0 py-0 px-0">
+                 
+                <v-card-title class="mb-0 py-0 px-0">
                   <v-rating
                     :value="4"
                     dense
@@ -105,18 +94,8 @@
                   ></v-rating>
                   <span class="grey--text overline my-0">(64)</span>
                 </v-card-title>
-                <p class="mb-1 my-0 px-1">
-                  <v-icon small color="orange" class="pb-0">mdi-network-strength-2</v-icon>
-                  <span class="ml-2 overline font-weight-medium grey--text"></span>
-                </p> 
-                <v-chip
-                  x-small
-                  color="white"
-                  class="elevation-1 mb-1 grey--text text--darken-1 text-truncate"
-                >
-                  <v-icon color="green" size="7" class="mr-1">
-                    mdi-circle-slice-8</v-icon>mummy's pot filterthis
-                </v-chip>
+                
+             
               </v-list-item-title>
             </v-list-item>
           </v-card>

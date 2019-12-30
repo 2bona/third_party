@@ -52,7 +52,7 @@
         <v-tab-item class="px-4 pt-4 pb-8">
   <v-expansion-panels style="border-radius: 25px 25px 0 0 ;">
     <v-expansion-panel>
-      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-bold  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-account</v-icon> Account Information</p> </v-expansion-panel-header>
+      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-medium  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-account</v-icon> Account Information</p> </v-expansion-panel-header>
   <v-expansion-panel-content style="position: relative" class="px-4 py-2">
          <v-form  
           onSubmit="return false;" ref="form">
@@ -120,7 +120,7 @@
   </v-expansion-panel-content>
     </v-expansion-panel>
     <v-expansion-panel>
-      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-bold  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-map-marker</v-icon> Locations</p> </v-expansion-panel-header>
+      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-medium  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-map-marker</v-icon> Locations</p> </v-expansion-panel-header>
   <v-expansion-panel-content class="px-0 py-2">
          <v-carousel show-arrows-on-hover
  height="290px" :show-arrows="false">
@@ -145,7 +145,7 @@
       </v-expansion-panel-content>
     </v-expansion-panel>
     <v-expansion-panel>
-      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-bold  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-credit-card</v-icon> Payment</p> </v-expansion-panel-header>
+      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-medium  text--darken-2 mb-0 subtitle-2"><v-icon color="grey lighten-3">mdi-credit-card</v-icon> Payment</p> </v-expansion-panel-header>
           <v-expansion-panel-content class="px-0 py-2 pb-1">
    <v-carousel show-arrows-on-hover
  height="250px" :show-arrows="false">
@@ -201,7 +201,7 @@
           <v-list>
             
                 <v-list-item class="px-3">
-                 <v-list-item-title class="subtitle-2 grey--text  font-weight-bold  text--darken-2">
+                 <v-list-item-title class="subtitle-2 grey--text  font-weight-medium  text--darken-2">
                 <v-icon size="30" color="grey lighten-3">mdi-cash</v-icon>
                 Fund your wallet
               </v-list-item-title>
@@ -239,7 +239,7 @@
                     <v-layout row wrap>
                       <v-flex xs12>
                         <p
-                          class=" body-2 grey--text text-truncate text--darken-1 font-weight-bold my-0"
+                          class=" body-2 grey--text text-truncate text--darken-1 font-weight-medium my-0"
                         >{{n.name}}</p>
                       </v-flex>
                     </v-layout>

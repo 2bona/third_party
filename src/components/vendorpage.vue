@@ -35,8 +35,8 @@
                 </v-card> 
              </v-container>
                </v-scale-transition>
-    <v-scale-transition>
-      <v-layout v-if="orderso.length && btn" style="position:fixed; bottom:0px;background: linear-gradient(#fff0 0%, #fff 100%);width: 100%; z-index:9" row wrap class="mx-auto pb-2 px-2">
+    
+      <v-layout v-show="orderso.length && btn" style="position:fixed; bottom:0px;background: linear-gradient(#fff0 0%, #fff 100%);width: 100%; z-index:9" row wrap class="mx-auto pb-2 px-2">
       <v-flex xs6 class="px-2">
         <v-btn block @click="orderStatus ? trayBtn(false) : trayBtn(true)" class="mt-2 caption font-weight-black  orange--text text--lighten-4  elevation-10" rounded dark color="orange darken-4" v-html="orderStatus ? 'hide tray': 'show tray'"></v-btn>
       </v-flex>
@@ -44,7 +44,6 @@
         <v-btn  block to="/checkout" class="mt-2 caption font-weight-black blue--text text--lighten-4 elevation-10" rounded="" dark color="primary">checkout</v-btn>
       </v-flex>
   </v-layout>
-               </v-scale-transition>
           <v-card class="mx-auto" max-width="600" flat tile> 
             <v-tooltip max-width="120" left>
             <template v-slot:activator="{ on }">
@@ -75,40 +74,62 @@
         <v-flex xs12 class="mb-2 text-center">
         <h2 v-if="vendorLoad" class="text-center mb-0 text-capitalize grey--text text--darken-1 font-weight-bold">{{vendor.name}}</h2>
         <v-row  justify="space-around" >
-            <v-skeleton-loader
-        type="chip" class=" mt-2 mx-auto"
+        <v-flex xs7 d-flex>
+        <v-row  justify="space-around" >
+             <v-skeleton-loader
+        type="chip" class=" mt-2 mx-1"
         v-if="!vendorLoad"
       ></v-skeleton-loader>
+            <v-skeleton-loader
+        type="chip" class=" mt-2 mx-1"
+        v-if="!vendorLoad"
+      ></v-skeleton-loader>
+        </v-row>
+        </v-flex>
+         
         </v-row>
         </v-flex>
         <v-row class="px-12" justify="space-around" >
           <v-flex xs3>
               <h5 class="grey--text text--darken-1 font-weight-regular  text-center mb-0">
-              <span><v-icon size="12" style="padding-bottom:1.2px">mdi-currency-ngn</v-icon></span>{{vendor.minimum_order | price}}
+                 <v-skeleton-loader
+        type="text" width="50px" class=" mt-0 mx-auto"
+        v-show="!vendorLoad"
+      ></v-skeleton-loader>
+              <span class=" mt-1" v-show="vendorLoad"><v-icon size="12" style="padding-bottom:1.2px">mdi-currency-ngn</v-icon>{{vendor.minimum_order | price}}</span>
               </h5>
-              <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
+              <p class=" mt-0 mb-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
                   Min Order
               </p>
         </v-flex>   
           <v-flex xs3>
               <h5 class="grey--text text--darken-1 font-weight-regular  text-center mb-0">
-                  {{estTime | duration}}
+    <v-skeleton-loader
+        type="text" width="50px" class=" mt-0 mx-auto"
+        v-show="!vendorLoad"
+      ></v-skeleton-loader>
+      <span class=" mt-1"  v-show="vendorLoad"><v-icon size="12" style="padding-bottom:1.2px">mdi-clock</v-icon>{{estTime | duration}}</span> 
+
               </h5> 
-              <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
+              <p class=" mt-0 mb-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
                   Est. time
               </p>
         </v-flex>   
           <v-flex xs3>
                 <h5 class="grey--text text--darken-1 font-weight-regular  text-center mb-0">
-                  <span><v-icon size="12" style="padding-bottom:1.2px">mdi-currency-ngn</v-icon></span>{{deliveryFee | price}}
+                     <v-skeleton-loader
+        type="text" width="50px" class="mt-0 mx-auto"
+        v-show="!vendorLoad"
+      ></v-skeleton-loader>
+                  <span class=" mt-1" v-show="vendorLoad"><v-icon size="12" style="padding-bottom:1.2px">mdi-currency-ngn</v-icon>{{deliveryFee | price}}</span>
                 </h5>
-              <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
+              <p class=" mt-0 mb-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
                   Delivery
               </p>
         </v-flex>  
         </v-row>    
        </v-row>
-      <v-tabs  slider-color="orange" active-class="orange--text" color="orange">
+      <v-tabs center-active grow mobile-break-point="2000"  slider-color="orange" active-class="orange--text" color="orange">
         <v-tab v-if="loading" class="caption font-weight-medium">
         <v-skeleton-loader
         type="chip"
@@ -128,33 +149,37 @@
       ></v-skeleton-loader>
         </v-tab>
         <v-tab  v-for="n in vendor.categories" :key="n.name" v-text="n.name" class="caption  font-weight-bold"></v-tab>
-            <v-tab-item v-if="loadingItems" class="pt-3">
+   
+        <v-tab-item class="pt-1 mb-12" style="padding-bottom:120px;min-height:50vh" v-for="d in items" :key="d.id">
+        <div style="overflow: hidden" v-if="loadingItems">
         <v-skeleton-loader v-for="n in 4" :key="n" 
         ref="skeleton" width="100%"
         type="list-item-avatar-three-line"
-        tile
-      ></v-skeleton-loader>  
-        </v-tab-item>
-        <v-tab-item class="pt-2 mb-12" style="padding-bottom:120px" v-for="d in items" :key="d.id">
-        <div v-for="item in d.items"
-             v-show="!loadingItems"
+        
+      ></v-skeleton-loader> 
+        </div>
+        
+
+        <div class="pt-0" v-for="item in d.items"
+             v-show="!loadingItemsMain"
               :key="item.id">
-        <v-list-item :ripple="false" @click="item.main_option.length ? openItem(item, item.category_id, item.name) : item.status = !item.status">
-          <v-list-item-avatar :size="item.status ? '40' : '50'" style="align-self: flex-start; top: 8px;border-radius:5px;" class="elevation-2 mr-3" tile>
+              <v-fade-transition origin="center center">
+        <v-list-item v-show="!loadingItemsMain" class="py-1" :ripple="false" @click="item.main_option.length ? openItem(item, item.category_id, item.name) : item.status = !item.status">
+          <v-list-item-avatar :size="item.status ? '40' : '60'" class="elevation-2 mr-3">
             <v-img :src="item.image"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title :class="!item.status ? 'body-1 font-weight-bold' : ''" class="body-2 mb-0 grey--text text--darken-1 text-capitalize font-weight-medium" v-html="item.name"></v-list-item-title>
-            <v-list-item-subtitle :class="!item.status ? 'text-wrap' : ''" class="grey--text caption " v-html="item.description"></v-list-item-subtitle>
-            <v-list-item-subtitle :class="!item.status ? 'body-1 font-weight-bold pb-2' : 'caption'" class=" grey--text text--darken-1">
-              <span><v-icon :size="!item.status ? '15' : '11'" color="grey darken-1" style="padding-bottom:3px">mdi-currency-ngn</v-icon></span>{{item.price | price}}
+            <v-list-item-title :class="!item.status ? 'headline font-weight-bold' : ''" class="body-1 mb-0 grey--text text--darken-1 text-capitalize font-weight-medium" v-html="item.name"></v-list-item-title>
+            <v-list-item-subtitle :class="!item.status ? 'text-wrap' : ''" class="grey--text  caption " v-html="item.description"></v-list-item-subtitle>
+            <v-list-item-subtitle :class="!item.status ? 'body-1 font-weight-bold pb-2' : 'body-2'" class=" grey--text">
+              <span><v-icon :size="!item.status ? '15' : '11'" color="grey" style="padding-bottom:3px">mdi-currency-ngn</v-icon></span>{{item.price | price}}
             <v-scale-transition>
             <v-btn @click="addToCart(item)" v-if="!item.status" class="mr-1 elevation-3 caption font-weight-black blue--text text--lighten-4" absolute right small color="primary" rounded>add</v-btn>
             </v-scale-transition>
             </v-list-item-subtitle>
           </v-list-item-content>
-          
         </v-list-item>
+        </v-fade-transition>
         <v-divider></v-divider>
          </div>
 
@@ -347,7 +372,11 @@
 .v-list-item__avatar:last-of-type:not(:only-child) {
     margin-left: 0px!important;
     margin-right: 10px!important;
-}</style>
+}
+.v-tabs-bar.v-slide-group--is-overflowing.v-tabs-bar--is-mobile:not(.v-tabs-bar--show-arrows):not(.v-slide-group--has-affixes) .v-slide-group__prev {
+    display: none;
+}
+</style>
 <script>
   import axios from 'axios'
   import wrapper from 'axios-cache-plugin'
@@ -361,7 +390,7 @@ export default {
   data() {
     return {
       vendor:{},
-      items:[],
+      items:[1],
       estTime: '',
       deliveryFee: '',
       total: Number,
@@ -374,20 +403,21 @@ export default {
       dialog3: false,
       loadFav: false,
       loading: true,
-      loadingItems: true
+      loadingItems: true,
+      loadingItemsMain: true
     }
   },
   mounted () {
       this.navb()
         setTimeout(() => {
       this.btn=true
-    }, 50);
+    }, 10);
   },
     beforeRouteLeave (to, from, next) {
   this.btn = false
      setTimeout(() => {
       next()
-    }, 50);
+    }, 40);
 },
   computed: {
      userArea() {
@@ -574,10 +604,16 @@ export default {
       sn.items = response.data.items
     }).then(()=>{
       sn.loadingItems = false
+      setTimeout(() => {
+      sn.loadingItemsMain = false
+      }, 100);
     })
     .catch((err)=>{
       console.log(err)
-      sn.loadingItems = false
+      setTimeout(() => {
+        sn.loadingItemsMain = false
+      }, 100);
+        sn.loadingItems = false
     })
     })
     .catch((err)=>{

@@ -107,7 +107,7 @@
         <v-btn v-if="!(choice === 1)" :loading="loading" block @click="proceed()" class="mt-2 elevation-10" rounded="" dark color="primary">proceed</v-btn>
         <paystack
         v-if="choice === 1"
-        :amount="grandTotal"
+        :amount="grandTotal * 100"
         :email="user.email"
         :paystackkey="paystackKey"
         :reference="Date.now().toString()"

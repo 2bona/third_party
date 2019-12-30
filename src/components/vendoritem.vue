@@ -2,7 +2,7 @@
 <div> 
 <v-card class="pt-1 px-2" style="padding-bottom:140px" flat tile min-height="100vh">
         <v-list-item>
-        <v-list-item-avatar  color="grey lighten-3" style="align-self: flex-start; top: 11px;" :class="loading ? 'elevation-0 mr-2' : 'elevation-10 mr-3'" size="80">
+        <v-list-item-avatar  color="grey lighten-3"  :class="loading ? 'elevation-0 mr-2' : 'elevation-15 mr-3'" size="80">
           <v-img :src="item.image"></v-img>
         </v-list-item-avatar>
         <v-list-item-content class="pb-0" v-if="loading">
@@ -30,7 +30,7 @@
 
 <div v-for="(o, p) in n.option" :key="o.name">
       <v-list-item>
-          <v-list-item-avatar style="border-radius:5px" class="elevation-5 mr-3" size="30" tile>
+          <v-list-item-avatar class="elevation-3 mr-3" size="50">
             <v-img :src="o.image"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
@@ -52,7 +52,7 @@
         </v-list-item>
 <div v-for="(o, p) in n.option" :key="o.name">
       <v-list-item>
-          <v-list-item-avatar class="elevation-5 mr-3" size="30" tile>
+          <v-list-item-avatar class="elevation-3 mr-3" size="50">
             <v-img :src="o.image"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
@@ -103,30 +103,55 @@
         <v-skeleton-loader v-for="n in ['e', 'g', 'r', 'l']" :key="n" 
         ref="skeleton" width="100%"
         type="list-item-avatar-two-line"
-        tile
+        
       ></v-skeleton-loader>
              <v-skeleton-loader  
         ref="skeleton" width="100%"
         type="sentences"
-        tile class="px-4 mt-4 mb-3"
+         class="px-4 mt-4 mb-3"
       ></v-skeleton-loader>
         <v-skeleton-loader v-for="n in ['q', 'w', 'z', 'p']" :key="n" 
         ref="skeleton" width="100%"
         type="list-item-avatar-two-line"
-        tile class="px-4 mt-0 mb-3"
+         class="px-4 mt-0 mb-3"
       ></v-skeleton-loader>
 
              </div> 
            <v-btn
-              fixed @click="$router.go(-1)"
+              fixed @click="back()"
               fab 
               bottom 
               right
-              color="white" style="z-index:999; margin-bottom: 60px;">
+              color="white" style="z-index:9; margin-bottom: 60px;">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
           </v-card> 
-  
+  <v-dialog
+      v-model="dialogLeave"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="body-1">Clear options for {{item.name}}?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="grey lighten-1"
+            text rounded small
+            @click="dialogLeave = false"
+          >
+            cancel
+          </v-btn>
+
+          <v-btn
+            color="blue darken-1"
+            text rounded small
+            @click="$router.go(-1)">
+            sure
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -147,6 +172,7 @@ export default {
   },
   data() {
     return {
+      dialogLeave: false,
         loading: true,
         totalAmt: 0,
         order:{
@@ -179,6 +205,14 @@ mounted(){
   created () {
   },
   methods: {
+    back(){
+      const sn = this
+      if (!sn.order.compulsory.length && !sn.order.compulsory.length) {
+        sn.$router.go(-1)
+      } else{
+        sn.dialogLeave = true
+      }
+    },
   getTotal(){
     const sn = this
     var main = sn.order.item[0]

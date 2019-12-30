@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="min-height: 90vh">
     <v-flex xs12 lg9 class style="margin: 2.4rem 0px 6rem 0px">
       <v-card style="overflow-x:hidden;" flat tile color="transparent">
     <v-layout row wrap class="pl-2 pt-2 mb-1">
@@ -48,14 +48,69 @@
     <div class="container pt-0 pb-0 mb-0">
       <v-flex xs12>
         <v-layout row wrap>
-        <v-flex v-show="load" xs12 sm4 v-for="n in 2" :key="'nb'+n">
-        <v-fade-transition>
-          <v-skeleton-loader v-show="load"
-            ref="skeleton" width="90%" 
-            type="card" class=" mx-auto pt-1 pb-2 mb-5">
-          </v-skeleton-loader> 
-        </v-fade-transition>
-              </v-flex>
+     <v-flex v-show="load" xs12 sm4 v-for="n in 2" :key="'nb'+n">
+              <v-fade-transition>
+                <v-card 
+                  color="" :ripple="false"
+                  style=" border-radius:20px 20px 20px 20px"
+                  class=" mx-auto pt-2 pb-2 mb-5"
+                  width="90%" 
+              >
+                 <v-skeleton-loader
+            ref="skeleton"   width="94%"
+                style="border-radius: 10px;"
+                class="elevation-15 mx-2"
+                height="150" 
+            type="image" >
+          </v-skeleton-loader>
+             
+                  <v-card-text class="mx-0 pt-2 py-0 px-6">
+                    <v-layout row wrap>
+                      <v-flex xs10 d-flex class="mt-2">
+                         <v-skeleton-loader
+            ref="skeleton" width="600"  
+            type="heading">
+          </v-skeleton-loader>
+                      </v-flex>
+                      <v-flex  xs2 class="text-right">
+                        <v-icon class="mt-2" color="grey lighten-2">
+                         mdi-network-strength-outline
+                        </v-icon>
+                      </v-flex>
+                    </v-layout>
+                  </v-card-text>
+                  <v-row style="height:" class="mb-0 pt-1 px-6" justify="space-between">
+                    <v-flex xs11>
+                      <v-card-title
+                        style="height:;
+                        align-items:self-start;"
+                        class="py-0 mb-1 px-0"
+                      >
+                         <v-rating
+                          size="12"
+                          
+                          dense
+                          color="grey lighten-2"
+                          hover
+                          background-color="grey lighten-2"
+                          class="pa-0"
+                          style="
+                              line-height: 0;
+                          "
+                        ></v-rating>
+                        </v-card-title>
+                    </v-flex>
+                  </v-row>
+                  <v-card-text class="mx-0 mb-0 mt-0 pt-0 pb-1 px-1">
+                    <v-layout>
+                      <v-flex xs12 class="px-1">
+                              <v-chip color="grey lighten-3" class="mx-1 px-9 mb-1" x-small v-for="n in 5" :key="n"></v-chip>
+                      </v-flex>
+                    </v-layout>
+                  </v-card-text>
+                </v-card>
+          </v-fade-transition>
+          </v-flex>
               <v-flex v-show="!load" xs12 sm4 v-for="(n) in vendors" :key="n.id">
               <v-fade-transition>
                 <v-card 
@@ -134,6 +189,7 @@
                   </v-card-text>
                 </v-card>
           </v-fade-transition>
+      
               </v-flex>
             </v-layout>
           </v-flex>

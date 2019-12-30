@@ -29,7 +29,8 @@ axios.defaults.baseURL = "https://foodrepublic.herokuapp.com/api";
       if (error === "Error: Network Error") {
         router.push('/auth/login')
         
-      } else{
+      } else {
+        if(error.response){
             switch (error.response.status) {
         case 401:
           router.push('/auth/login') //we will redirect user into 503 page 
@@ -39,7 +40,8 @@ axios.defaults.baseURL = "https://foodrepublic.herokuapp.com/api";
           break
         default:
           break
-      }
+          }     
+        }
       }
   
       // Do something with response error
