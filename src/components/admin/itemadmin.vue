@@ -1,13 +1,13 @@
 <template>
   <div>
-    <v-row class="py-3 mb-12 px-3">
+    <v-row class="py-3 mt-5 mb-12 px-3">
       <v-flex xs12 class="mb-3 pt-0 px-0">
         <v-card-title class="pt-0 body-1 text-right font-weight-medium px-0 grey--text">
-          <v-btn class="mx-auto" @click="dialog=true" x-small text color="primary">
-            <v-icon>mdi-plus</v-icon>add category
+          <v-btn depressed rounded class="mx-auto caption font-weight-black orange--text px-7 text--darken-4 "  dark @click="dialog=true"  color="grey lighten-3">
+            <v-icon>mdi-plus</v-icon> category
           </v-btn>
-          <v-btn class="mx-auto" @click="dialog5 =true" x-small text color="warning">
-            <v-icon>mdi-plus</v-icon>add option
+          <v-btn class="mx-auto caption font-weight-black blue--text text--darken-4 px-7" @click="dialog5 =true" depressed rounded  dark color="grey lighten-3">
+            <v-icon>mdi-plus</v-icon> option
           </v-btn>
         </v-card-title>
         <v-card flat tile color="transparent">
@@ -16,31 +16,30 @@
               <v-col class="text-center pa-0" cols="12">
                 <mainOptions />
               </v-col>
-              <v-col class="px-3 text-center" cols="12">
-                <v-card class="mx-auto" max-width="600px">
-                  <v-expansion-panels>
+              <v-col class="px-3 text-center py-1" cols="12">
+                <v-card color="transparent" flat tile class="mx-auto" max-width="600px">
+                  <v-expansion-panels accordion class="elevation-0" style="border-radius:25px">
                     <v-expansion-panel>
                       <v-expansion-panel-header>
                         <h3 class="grey--text text--darken-1 text-capitalize">Options</h3>
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
-                        <v-divider class="mb-1"></v-divider>
+                        <v-divider  class="my-4"></v-divider>
                         <v-progress-linear v-if="dialog45" indeterminate color="grey lighten-1"></v-progress-linear>
-                        <v-flex class="my-2 px-5" xs12 v-for="(n, i) in options" :key="n.id">
+                        <v-flex class="my-2 px-1" xs12 v-for="(n, i) in options" :key="n.id">
                           <v-card
                             :disabled="dialog45"
-                            width="95%"
-                            height="50px"
-                            color="transparent"
-                            style="border-radius:4px"
-                            class="mx-auto mb-2 py-1 px-1"
+                            width="90%"
+                              height="auto" flat
+                              color="grey lighten-5"
+                              style=" border-radius:30px"
+                              class="mx-auto mb-2 py-1 px-2"
                           >
                             <v-list-item class="pa-0">
                               <v-list-item-avatar
                                 size="30"
-                                tile
-                                style="border-radius: 4px;"
-                                class="my-0 elevation-1 mr-2"
+                                
+                               class="my-0 elevation-1 mr-2"
                               >
                                 <v-img @click="openImageInput(i)" :src="n.image"></v-img>
                                 <v-overlay absolute opacity="0.3" z-index="1" :value="attach === i"></v-overlay>
@@ -130,7 +129,7 @@
                                 >
                                   <v-icon
                                     size="11.5px"
-                                    style="width: 4.8px; padding-bottom:1.8px; margin-right:3px"
+                                    style="width: 4.8px; padding-bottom:1.8px; margin-left:7px"
                                   >mdi-currency-ngn</v-icon>
                                   {{n.price | price}}
                                 </p>
@@ -147,9 +146,9 @@
                 </v-card>
               </v-col>
               <input v-show="false" ref="file81" type="file" @change="itemFieldChange($event)" />
-              <v-col class="px-3" v-for="category in menu" :key="category.id" cols="12">
-                <router-link style="text-decoration:none;" :to="'/vendoradmin/item/'+category.id">
-                  <v-card class="mx-auto py-3 px-6" max-width="600px">
+              <v-col class="px-3 py-1" v-for="category in menu" :key="category.id" cols="12">
+                <router-link style="text-decoration:none;" :to="'/item/'+category.id">
+                  <v-card flat color="grey lighten-5" style="border-radius:25px" class="mx-auto py-3 px-6" max-width="600px">
                     <h4
                       class="grey--text font-weight-medium text--darken-1 text-capitalize"
                     >{{ category.name }}</h4>
@@ -209,7 +208,7 @@
                         ></v-text-field>
                         <v-flex xs12>
                           <v-file-input
-                            :rules="[rules.required]"
+                            :rules="[rules.pic]"
                             class="font-weight-regular grey--text text--darken-4"
                             ref="file"
                             multiple
@@ -754,9 +753,11 @@ export default {
       loading11: false,
       valid: true,
       rules: {
-        required: value => !!value || "Required."
+        required: value => !!value || "Required.",
+        pic: value => value.length > 0 || "Required."
       },
-      numberRules: [v => /^[0-9]*$/.test(v) || "Price must be only numbers"],
+      numberRules: [        
+          v => /^[0-9]*$/.test(v) || "Price must be only numbers"],
       radios: "Thank you soo much, we will keep improving"
     };
   },
@@ -799,9 +800,7 @@ export default {
           })
           .then(function(response) {
             console.log(response.data);
-            sn.$store.dispatch("loadItems", {
-              name: sn.vendor.name
-            });
+            sn.$store.dispatch("loadCategories");
             sn.dialog = false;
             sn.loading = false;
             sn.$store.dispatch("snack", {
@@ -1023,7 +1022,6 @@ export default {
           .then(function(response) {
             let d = response.data.message;
             sn.$store.dispatch("loadOptions");
-            sn.$store.dispatch("loadItems");
             sn.loading6 = false;
             sn.dialog45 = false;
             sn.$store.dispatch("snack", {
@@ -1313,12 +1311,20 @@ export default {
     addOptionItem() {
       var sn = this;
       if (sn.$refs.form5.validate()) {
+        if (!sn.$refs.file.$refs.input.files.length) {
+           sn.$store.dispatch("snack", {
+              color: "red",
+              text: "Image is required"
+            });
+            return
+        } else {
+   
         sn.loading5 = true;
         sn.dialog5 = false;
         sn.dialog45 = true;
         const fd = new FormData();
-        fd.append("name", smain_name);
-        fd.append("price", smain_price);
+        fd.append("name", sn.optionname);
+        fd.append("price", sn.optionprice);
         for (var i = 0; i < sn.$refs.file.$refs.input.files.length; i++) {
           let file = sn.$refs.file.$refs.input.files[i];
           fd.append("files[" + i + "]", file);
@@ -1346,6 +1352,8 @@ export default {
             sn.loading5 = false;
             sn.dialog45 = false;
           });
+                 
+        }
       }
     },
     editOptionImage(x, i) {

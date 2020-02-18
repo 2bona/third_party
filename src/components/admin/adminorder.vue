@@ -16,8 +16,7 @@
     <p class="overline mb-2 text-right font-weight-bold grey--text text--darken-1">{{order.created_at | myDate}}</p>
        </v-flex>
     </v-layout>
-    
-                      <v-layout width="100%" class=" mx-0" style="overflow-x:hidden; ">
+    <v-layout width="100%" class=" mx-0" style="overflow-x:hidden; ">
               <v-container  class=" px-0 pt-0">
         <v-card class="mx-auto" style="position:relative;display:flex;justify-content: center;" flat tile  color="transparent" max-width="600px"  min-height="116px">
     <v-card  
@@ -45,28 +44,78 @@
                 </v-card> 
              </v-container>
       </v-layout>
-  
-       <span class="overline grey--text  text--darken-1 font-weight-bold">
+       <span v-if="order.delivery != null" class="overline grey--text  text--darken-1 font-weight-bold">
+       Dispatch Timeline
+       </span>
+    <v-card-text style="margin-left:-30px" v-if="order.delivery != null" class="pa-0 my-3">
+      <v-timeline
+        align-top
+        dense>
+        <v-timeline-item
+          color="blue"
+          small
+        >
+         <span class="overline grey--text  text--darken-1 font-weight-bold">
+       Delivery Agent
+       </span>
+        <v-list-item class="px-0">
+         <v-list-item-content>
+          <v-list-item-title  class="font-weight-medium grey--text body-2" v-text="order.delivery.name"></v-list-item-title>
+        </v-list-item-content>
+            <v-list-item-content v-if="!(order.status === 4)" class="text-right" style="display: inline;">
+          <a style="text-decoration:none" :href="'tel:'+order.delivery.phone">
+            <v-btn fab dark icon  x-small color="primary"><v-icon>mdi-phone</v-icon> </v-btn></a>
+          <a style="text-decoration:none" :href="'https://wa.me/+234'+order.delivery.phone.substring(1)+'?text=Hello,%20this%20is%20'+vendor.name+'%20,%20I%20just%20want%20to%20confirm%20your%20location%20for%20a%20food%20delivery.'" target="_blank">
+          
+          <v-btn fab dark icon x-small color="green">
+            <v-icon>mdi-whatsapp</v-icon>
+             </v-btn>
+             </a>
+               <v-btn  fab dark depressed color="white" x-small >
+            <v-icon color="primary">mdi-map-marker</v-icon>
+             </v-btn>
+        </v-list-item-content>
+      </v-list-item>
+        </v-timeline-item>
+        <v-timeline-item v-if="order.status === 4"
+          color="green"
+          small>
+      <p class="grey--text  text--lighten-1">Order has been delivered.</p>
+        </v-timeline-item>
+      </v-timeline>
+    </v-card-text>
+       <span v-if="order.address" class="overline grey--text  text--darken-1 font-weight-bold">
        delivery
        </span>
-    <v-list-item class="my-1" dense two-line>  
-      <v-list-item-content v-if="order.address">
+    <v-list-item v-if="order.address" class="my-1" dense two-line>  
+      <v-list-item-content>
         <v-list-item-title  class="body-1 grey--text text--darken-1 text-wrap font-weight-bold mt-0 pt-0" v-if="!(order.payment_method === 4)">{{order.address.area.name}}</v-list-item-title>
-        <v-list-item-subtitle v-if="!(order.payment_method === 4)" class="caption grey--text text-wrap font-weight-medium mb-0 pb-0">{{order.address.name}}</v-list-item-subtitle>
-        <v-list-item-subtitle class="caption grey--text font-weight-medium mt-0 pt-0"   v-if="!(order.payment_method === 4)">{{order.address.name_2}}</v-list-item-subtitle>
-        <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="!(order.payment_method === 4)">{{order.address.company}}</v-list-item-subtitle>
-        <v-list-item-subtitle  class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="!(order.payment_method === 4)">{{order.address.instruction}}</v-list-item-subtitle>
-        <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0">{{order.user.phone}} - <span>{{order.user.surname}}</span> <span> {{order.user.middle_name}} </span> <span>{{order.user.first_name}}</span></v-list-item-subtitle>
-        <v-list-item-subtitle v-if="!(order.payment_method === 4)" class="overline text--darken-2 grey--text  font-weight-bold mt-0 pt-0">Order to reach customer in {{order.duration | duration}}</v-list-item-subtitle>
+        <v-list-item-subtitle v-if="!(order.payment_method === 4 || order.payment_method === 5)" class="caption grey--text text-wrap font-weight-medium mb-0 pb-0">{{order.address.name}}</v-list-item-subtitle>
+        <v-list-item-subtitle class="caption grey--text font-weight-medium mt-0 pt-0"   v-if="!(order.payment_method === 4 || order.payment_method === 5)">{{order.address.name_2}}</v-list-item-subtitle>
+        <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="!(order.payment_method === 4 || order.payment_method === 5)">{{order.address.company}}</v-list-item-subtitle>
+        <v-list-item-subtitle  class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="!(order.payment_method === 4 || order.payment_method === 5)">{{order.address.instruction}}</v-list-item-subtitle>
+        <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0">{{order.user.phone}}</v-list-item-subtitle>
+        <v-list-item-subtitle v-if="!(order.payment_method === 4 || order.payment_method === 5)" class="overline text--darken-2 grey--text  font-weight-bold mt-0 pt-0">Order to reach customer in {{order.duration | duration}}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
-
+      <div v-if="order.table_no">
+      <span class="overline grey--text  text--darken-3 font-weight-bold">
+       Table No
+      </span>
+    <v-list-item  class="my-1" dense>
+      <v-list-item-content>
+        <p class="text-wrap display-1 font-weight-bold grey--text  font-weight-medium my-0 pt-0"> {{order.table_no}}</p>
+      </v-list-item-content>
+    </v-list-item>
+</div>
       <span class="overline grey--text  text--darken-1 font-weight-bold">
        payment
       </span>
     <v-list-item  class="my-1" dense>
       <v-list-item-content>
-        <v-list-item-subtitle class=" text-wrap caption grey--text  font-weight-medium mt-0 pt-0">{{paymentMethod}}  <span v-show="order.change_amount > 1"> <v-icon style="padding-bottom:2px" color="grey" size="12">mdi-currency-ngn</v-icon>{{order.change_amount | price}}</span></v-list-item-subtitle>
+        <v-list-item-subtitle  class=" text-wrap caption grey--text  font-weight-medium mt-0 pt-0">{{paymentMethod}}  <span v-show="order.change_amount > 1"> <v-icon style="padding-bottom:2px" color="grey" size="12">mdi-currency-ngn</v-icon>{{order.change_amount | price}}</span></v-list-item-subtitle>
+        <v-list-item-subtitle v-if="order.paid" class=" text-wrap green--text  font-weight-bold mt-0 pt-0">PAID</v-list-item-subtitle>
+        <v-list-item-subtitle v-if="!order.paid" class=" text-wrap red--text  font-weight-bold mt-0 pt-0">UNPAID</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
   <v-card flat color="transparent" tile class="mb-12">
@@ -81,7 +130,7 @@
     <p class="caption grey--text  mb-1 font-weight-medium text-right"><v-icon size="12" style="padding-bottom:3px" color="grey">mdi-currency-ngn</v-icon>{{order.total | price}}.00</p>
   </v-flex>
 </v-row>
-      <v-row v-show="!(order.payment_method === 4)"  class="px-6 pt-0">
+      <v-row v-show="!(order.payment_method === 4 || order.payment_method === 5)"  class="px-6 pt-0">
                   <v-flex xs6>
 <p class="caption grey--text  mb-1 font-weight-medium">Delivery
     </p>
@@ -90,7 +139,7 @@
           <p class="caption grey--text  mb-1 font-weight-medium text-right"><v-icon size="12" style="padding-bottom:3px" color="grey">mdi-currency-ngn</v-icon>{{order.delivery_fee | price}}.00</p>
       </v-flex>      
 </v-row>
-      <v-row v-show="!(order.payment_method === 4)" justify="space-between" class="px-6 pt-0">
+      <v-row v-show="!(order.payment_method === 4 || order.payment_method === 5)" justify="space-between" class="px-6 pt-0">
                   <v-flex xs6>
 <p class="caption grey--text  mb-1 font-weight-medium">Service charge
     </p>
@@ -119,9 +168,9 @@
             </v-btn>
         </v-flex>
         <v-flex xs6 class="px-2">
-        <v-btn :loading="loading" block @click="order.payment_method === 4 ? serve() : dialog3 = true" class="mt-2 elevation-10" rounded="" 
+        <v-btn  :depressed="order.delivery != null"  :disabled="order.delivery != null" :loading="loading" block @click="order.payment_method === 4 || order.payment_method === 5 ? serveBtn() : dialog3 = true" :class="order.delivery != null ? 'mt-2' : 'mt-2 elevation-10' " rounded="" 
         dark color="primary">
-        {{order.payment_method === 4 ? 'deliver' : 'served' }}
+        {{order.payment_method === 4 || order.payment_method === 5 ? 'deliver' : 'served' }}
         <v-scale-transition origin="center center">
             <v-icon v-if="(order.status === 2) || (order.status === 3)" color="">mdi-check-decagram</v-icon>
         </v-scale-transition>
@@ -131,6 +180,47 @@
   </div>
 </v-card>
     </div>
+        <v-dialog scrollable  persistent
+            v-model="dialogIn" 
+            max-width="500px"
+            transition="dialog-transition">
+      <v-card color="white" v-if="dialogItem">      
+        <v-btn @click="dialogIn = false"  absolute fab right x-small class="mt-6" top><v-icon>mdi-close-circle</v-icon></v-btn>
+      <div v-show="dialogItem">
+        <v-card-title class="pb-1 elevation-10" primary-title>
+        <span class="pr-1 grey--text text--darken-3 font-weight-black" v-show="dialogItem.pivot.qty > 1">{{dialogItem.pivot.qty +'x'}} </span> {{dialogItem.name +' '}} <span class="pl-1 pb-2 caption grey--text"> <v-icon size="11" color="grey" style="padding-bottom:3px">mdi-currency-ngn</v-icon>{{(dialogItem.pivot.qty * dialogItem.price) | price}}</span>
+       <div v-if="dialogComp.length" class="px-0 pb-2">
+       <v-chip class="mx-1"  small v-for="(n, p) in dialogComp" :key="p+n.id+n.pivot.type">{{n.name}}</v-chip>
+        </div>
+        </v-card-title>
+       <v-card-text style="max-height:200px;overflow:auto">
+       <div v-for="(o, p) in dialogOpt" :key="p+o.id+o.pivot.type">
+       <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title style="padding-left:1px" class="body-2 mb-0 grey--text text--darken-1 text-capitalize font-weight-medium" v-html="o.name"></v-list-item-title>
+            <v-list-item-subtitle class=" grey--text pl-0">
+              <span><v-icon size="13" color="grey" style="padding-bottom:3px">mdi-currency-ngn</v-icon></span>{{(o.price * o.pivot.qty) | price}}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <div class="d-flex py-3">
+    <p  class="pt-1 mx-1 body-1 grey--text text--darken-3 font-weight-black text-center mb-0">{{'x '+o.pivot.qty}}</p> 
+        </div>
+        </v-list-item>
+        <v-divider></v-divider>
+       </div>
+    </v-card-text>
+    
+  <v-layout row wrap class="px-3 py-3">
+  <v-flex xs6 class="px-2">
+      <v-btn :disabled="item_no === 0" @click="food(0)" block rounded class="mx-auto" color="white">prev</v-btn>
+  </v-flex>
+  <v-flex xs6 class="px-2">
+      <v-btn :disabled="max_no === item_no" @click="food(1)" block rounded class="mx-auto" color="white">next</v-btn>
+  </v-flex>
+  </v-layout>
+      </div>
+      </v-card>
+</v-dialog>
         <v-dialog scrollable  
             v-model="dialog" 
             max-width="500px"
@@ -172,16 +262,17 @@
     <v-dialog
       v-model="dialog2"
       width="500">
-      <v-card v-if="replys">
+      <v-card>
         <v-card-title
           class="body-1 grey lighten-2"
           primary-title>
-          Reason for cancellation <v-btn class="ml-1" to="/vendoradmin/reviews" text x-small rounded color="grey">add new</v-btn>
+          Reason for cancellation <v-btn class="ml-0" to="/reviews" depressed x-small rounded color="grey">add new</v-btn>
         </v-card-title>
 
         <v-card-text>
           <v-form ref="form">
                <v-text-field
+               v-if="replys.length"
         v-model="replys[slide].content"
          readonly color="orange darken-4"
         :rules="[rules.required]">
@@ -189,7 +280,8 @@
           </v-form>
           
            <v-slider
-           color="grey "
+           color="grey"
+           v-if="replys.length"
            :loading="load" track-color="grey lighten-2"
             thumb-color="orange darken-4"
           v-model="slide"
@@ -199,7 +291,7 @@
 
         <v-divider></v-divider>
 
-        <v-card-actions>
+        <v-card-actions >
           <div class="flex-grow-1"></div>
           <v-btn
            color="grey"
@@ -212,7 +304,7 @@
           <v-btn
            color="orange darken-4"
             class="px-3 font-weight-bold caption"
-            rounded text
+            rounded text :disabled="!replys.length"
             dark :loading="loading2"
             @click="reject()">
             reject
@@ -223,7 +315,7 @@
     <v-dialog
       v-model="dialog3"
       width="500">
-      <v-card  v-if="agents">
+      <v-card  v-if="agents.length">
         <v-card-title
           class="body-1 grey lighten-2"
           primary-title>
@@ -232,13 +324,9 @@
         <v-card-text class="py-0 px-3 ">
           <v-form ref="form">
              <v-list-item class="mt-2 px-0 mb-0" style="max-height: 38px!important">
-          
 
-        <v-list-item-content>
-          <v-list-item-title class="caption grey--text text--darken-1 pb-0"> 
-            <span v-if="order.delivery">
-              <v-icon v-if="disableDelivery" color="orange darken-4">mdi-check-decagram</v-icon>
-              </span>
+        <v-list-item-content >
+          <v-list-item-title class="caption grey--text font-weight-bold text--darken-1 mt-1 pb-0"> 
             {{agents[slide2].name}}</v-list-item-title>
         </v-list-item-content>
                 <v-list-item-content style="display: inline;">
@@ -251,15 +339,14 @@
              </v-btn>
              </a>
         </v-list-item-content>
-           <v-switch :disabled="disableDelivery" color="grey lighten-2"   @change="setDeliveryAgent()"  :loading="load2"  v-model="deliverySwitch" class="pt-3"></v-switch> 
+           <v-switch color="grey lighten-2"   @change="setDeliveryAgent()"  :loading="load2"  v-model="deliverySwitch" class="pt-3"></v-switch> 
                </v-list-item>
           </v-form>
-          
            <v-slider
            color="grey"
            :loading="load2" track-color="grey lighten-2"
             thumb-color="orange darken-4"
-          v-model="slide2" :disabled="disableDelivery"
+          v-model="slide2"
           thumb-label :max="slider2"
         ></v-slider>
         </v-card-text>
@@ -279,7 +366,32 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  
+      <v-dialog
+      v-model="dialogServe"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="body-1">Have you served the food ?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="grey lighten-1"
+            text rounded small
+            @click="dialogServe = false"
+          >
+            cancel
+          </v-btn>
+
+          <v-btn
+            color="blue darken-1"
+            text rounded small
+            @click="serve()">
+            sure
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -309,18 +421,22 @@ export default{
       loading2: false, 
       payBtn: false,
       dialog: false,
+      dialogIn: false,
       dialog2: false,
+      dialogServe: false,
       dialog3: false,
       dialogItem: '',
       dialogComp: [],
       dialogOpt: [],
       slide: 0,
       slide2: 0,
+      item_no: 0,
+      max_no: 0,
       dialogOptions: [],
       reason: '', 
       rules: {
         required: value => !!value || "Required.",
-      },   
+      },
     }
  },
  computed: {
@@ -329,10 +445,10 @@ export default{
     },
     disableDelivery(){
       const sn = this
-      if (sn.order.payment_method === 4) {
+      if (sn.order.payment_method === 4 || sn.order.payment_method === 5) {
         return false
       }else if(sn.order.delivery != null){
-        if(sn.order.delivery.id === sn.agents[sn.slide2].id){
+        if(sn.order.delivery.id === sn.slide2){
         return true 
       }
       }else {
@@ -362,11 +478,12 @@ export default{
      slider() {
       if (this.replys.length) {
         return (this.replys.length - 1);
+      } else{
+        return null
       }
     },
      slider2() {
        if (this.agents.length) {
-         
          return (this.agents.length - 1);
        }
     },
@@ -381,8 +498,15 @@ export default{
       else if (this.order.payment_method === 2) {
          d = 'Mobile/USSD transfer on delivery'
       }
-      else if (this.order.payment_method === 4) {
-         d = 'Over the counter or with P.O.S'
+      else if (this.order.payment_method === 5) {
+         d = 'P.O.S payment'
+      }
+         else if (this.order.payment_method === 4) {
+        if (this.order.change_amount > 1) {
+          d = 'Cash payment and expecting change of '
+        } else {
+          d = 'Cash Payment'
+        }
       }
       else if (this.order.payment_method === 3) {
         if (this.order.change_amount > 1) {
@@ -394,18 +518,24 @@ export default{
       return d
     },
  },
- methods: {
-     dialogItemBtn(n){
-      const sn = this
+ mounted(){
+   if (this.order.items.length ) {
+          const sn = this
       sn.dialogItem = null
-    
-      sn.dialog = true
-      sn.dialogItem = n
+      sn.max_no = sn.order.items.length - 1
+      var n = sn.order.items[sn.item_no]
+      sn.dialogIn = true
+      sn.setItem(n)
+   }
+ },
+ methods: {
+   setItem(n){
+     const sn = this
+        sn.dialogItem = n
       sn.dialogOptions = sn.order.options.filter((item)=> {
           return item.pivot.tracking_id === n.pivot.tracking_id
       })
       if (sn.dialogOptions.length) {
-          
           sn.dialogComp = sn.dialogOptions.filter((item)=> {
               return item.pivot.type === "compulsory"
           })
@@ -416,6 +546,35 @@ export default{
         sn.dialogComp = []
         sn.dialogOpt = []
       }
+   },
+   food(x){
+     const sn = this
+     if (x) {
+       if (sn.max_no === sn.item_no) {
+         return
+       } else{
+         sn.item_no ++
+        var n = sn.order.items[sn.item_no]
+        sn.setItem(n)
+       }
+     }else{
+      if (sn.item_no === 0) {
+         return
+       } else{
+             sn.item_no --
+        var n = sn.order.items[sn.item_no]
+        sn.setItem(n)
+       }
+     }
+   },
+   serveBtn(){
+     this.dialogServe = true
+   },
+     dialogItemBtn(n){
+      const sn = this
+      sn.dialogItem = null
+      sn.dialog = true
+     sn.setItem(n)
      },
      serve(){
          const sn = this
@@ -433,12 +592,15 @@ export default{
             id: sn.order.id,
             action: 'delivered'
         })
-        sn.loading = false
-        sn.$store.dispatch('snack', {
-          color: 'green',
-          text: 'Customer has been notified'
+        .then(()=>{
+
+          sn.loading = false
+          sn.$store.dispatch('snack', {
+            color: 'green',
+            text: 'Customer has been notified'
+          })
+         sn.$router.push('/orders')
         })
-       sn.$router.go(-1)
     }
      },
      setDeliveryAgent(){
@@ -455,8 +617,8 @@ export default{
             }
     else{
       sn.$store.dispatch('order', {
-        id: sn.order.id,
-            delivery_agent_id: sn.agents[sn.slider2].id,
+            id: sn.order.id,
+            delivery_agent_id: sn.agents[sn.slide2].id,
             action: 'transit'
           })
         sn.load2 = false
@@ -470,20 +632,27 @@ export default{
      reject(){
        const sn = this
          if (sn.$refs.form.validate()){
-        sn.loading2 = true
-          if (sn.order.status === 5) {
-        sn.$store.dispatch('snack', {
-          color: 'blue',
-          text: 'Order has already been rejected'
-        })
-        sn.loading2 = false
-        sn.dialog2 = false
+            sn.loading2 = true
+        if (sn.order.status === 5) {
+            sn.$store.dispatch('snack', {
+              color: 'blue',
+              text: 'Order has already been rejected, turn off the unavailable items'
+            })
+            sn.loading2 = false
+            sn.dialog2 = false
             return  
           }
           else{
+            var n 
+            if (sn.order.delivery != null) {
+              n =  sn.order.delivery.id
+            } else {
+              n = null
+            }
             sn.$store.dispatch('order', {
-              id: sn.order.id,
+                id: sn.order.id,
                 action: 'rejected',
+                delivery: n,
                 reason: sn.replys[sn.slide].content
             })
                 sn.dialog2 = false

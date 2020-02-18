@@ -18,7 +18,7 @@ export const vendor = {
   state: {
     vendors: [],
     tags: [],
-    replys: [],
+    replys: [] || ["We don't have food anymore"],
     agents: [],
     orderList: [],
     vendor: JSON.parse(localStorage.getItem("vendor")) || "",
@@ -162,7 +162,16 @@ export const vendor = {
       axios.get(AXIOS_CONFIG.API_URL + url)
         .then(function (response) {
           var order = response.data.order;
+           if (order) {
           commit("setOrder", order)
+          if(data.action === null || data.action === 'read'){
+            router.push('/adminorder')
+          } else{
+            return
+          }
+          } else {
+            alert('Order was not found')
+          }
         }).catch(function (error) {
           console.log(error)
         })
@@ -175,12 +184,13 @@ export const vendor = {
       var url = ''
       if (data.action === null) {
          dispatch("getOrder", {
-           id: data.id
+           id: data.id,
+           action: null
          })
       }
       else{
          if(data.reason){
-          url = "/order/"+data.action+"?id=" + data.id+"&reason="+data.reason
+          url = "/order/" + data.action + "?id=" + data.id + "&reason=" + data.reason + "&delivery_agent_id=" + data.delivery
        } 
         else if (data.delivery_agent_id) {
           url = "/order/" + data.action + "?id=" + data.id + "&delivery_agent_id=" + data.delivery_agent_id
@@ -191,7 +201,8 @@ export const vendor = {
       axios.get(AXIOS_CONFIG.API_URL + url)
          .then(function (response) {
            dispatch("getOrder", {
-             id: data.id
+             id: data.id,
+             action: data.action
            })
          }).catch(function (error) {
            console.log(error)
@@ -213,7 +224,7 @@ export const vendor = {
           commit("setMainOptions", items.main_options)
           commit("setMainOptionslist", items.list)
         }).catch(function (error) {
-          alert(error)
+          
         })
     },
     saveItems({

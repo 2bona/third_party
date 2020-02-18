@@ -60,7 +60,7 @@ export default {
          handleConnectivityChange (status) {
             if (!status) { this.$router.push('/offlinepage') } else {
              setTimeout(() => {
-               this.$router.push('/usercity')
+               this.$router.push('/')
              }, 2000);
             }
         },

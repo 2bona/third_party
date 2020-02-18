@@ -2,22 +2,22 @@
   <div>
     <v-card color="transparent"  max-width="600px"  class="mx-auto pb-0 mt-0" flat tile>
       <v-card-title
-        class="font-weight-black pb-0 text-center grey--text text--darken-1"
+        class="font-weight-bold headline pb-0 text-center grey--text text--darken-1"
       >Vendor Registration</v-card-title>
       <span
         class="px-6 pt-0 mb-4 font-weight-regular caption grey--text text--lighten-1"
       >From your kitchen to the world.</span>
-      <v-stepper class="mx-2 my-4  pb-12" v-model="e6">
+      <v-stepper style="border-radius:25px" class="mx-2 my-4  pb-12" v-model="e6">
           <v-stepper-header>
-        <v-stepper-step edit-icon="mdi-check" editable :complete="(name.length > 2) && (phone.length > 9)" color="orange"   step='1'>
+        <v-stepper-step edit-icon="mdi-check" editable :complete="(name.length > 2) && (phone.length > 9)" color="orange darken-4"   step='1'>
           Basic Information
           <!-- <small>Summarize if needed</small> -->
         </v-stepper-step>
-           <v-stepper-step disabled color="orange" edit-icon="mdi-check" editable :complete="(address.length > 2)" step="2">
+           <v-stepper-step disabled color="orange darken-4" edit-icon="mdi-check" editable :complete="(address.length > 2)" step="2">
           Address
           <!-- <small>Summarize if needed</small> -->
         </v-stepper-step>
-               <v-stepper-step color="orange" editable edit-icon="mdi-check"  :complete="(tags.length > 2 || bio.length > 2)" step="3">
+               <v-stepper-step color="orange darken-4" editable edit-icon="mdi-check"  :complete="(tag.length > 1 || bio.length > 2)" step="3">
           Additional Information
           <!-- <small>Summarize if needed</small> -->
         </v-stepper-step>
@@ -49,11 +49,21 @@
               ></v-text-field>
                 <v-select
                 class="font-weight-medium grey--text text--darken-4"
+                :items="cats"
+                attach
+                chips cache-items
+                v-model="type"
+                placeholder="What type of vendor" :loading="load2"
+                label="Category"
+                color="orange"
+              ></v-select>
+                <v-select
+                class="font-weight-medium grey--text text--darken-4"
                 :items="cities"
                 attach
                 chips cache-items
                 v-model="city"
-                placeholder :loading="load2"
+                placeholder="Where are you" :loading="load2"
                 label="City"
                 color="orange"
               ></v-select>
@@ -71,7 +81,7 @@
               </v-form>
             </v-card-text>
             <div class="text-right pr-5">
-            <v-btn  right class="mt-3 elevation-5" dark fab small color="orange" @click="$refs.form.validate() ? e6 = 2 : false"><v-icon>mdi-arrow-right</v-icon></v-btn>
+            <v-btn  right class="mt-3 elevation-5" dark fab small color="orange lighten-4" @click="$refs.form.validate() ? e6 = 2 : false"><v-icon color="orange darken-4">mdi-arrow-right</v-icon></v-btn>
             </div>
             <v-card class="mt-2" flat tile height="300">
               
@@ -97,7 +107,7 @@
 
 <!-- save food by vendor and list food to user  -->
               <v-row justify="space-around" class="pr-3">
-                <v-card id="map" color="grey" width="100%" height="350"></v-card>
+                <v-card id="map" color="grey" width="100%" style="border-radius:25px" height="250"></v-card>
     
                 <div id="infowindow-content">
                   <img src width="16" height="16" id="place-icon" />
@@ -117,7 +127,7 @@
         </v-overlay>
             </v-card-text>
 <div class="text-right pr-5">
-            <v-btn  right class="mt-3 elevation-5" dark fab small color="orange" @click="e6 = 3"><v-icon>mdi-arrow-right</v-icon></v-btn>
+            <v-btn  right class="mt-3 elevation-5" dark fab small color="orange lighten-4" @click="e6 = 3"><v-icon color="orange darken-4">mdi-arrow-right</v-icon></v-btn>
 
             </div>          </v-card>
         </v-stepper-content>
@@ -133,7 +143,7 @@
                 attach
                 chips
                 v-model="tag"
-                placeholder
+                placeholder="Cuisines you serve"
                 label="Tags"
                 color="orange"
                 multiple
@@ -147,8 +157,11 @@
                 placeholder="A little info about your business."
                 hint="Maximum of 100 words"
               ></v-textarea>
-              </v-form>
-              <v-btn  :loading="loading" class="mt-12" color="orange" @click="registerVendor()" dark rounded>Register</v-btn>
+              </v-form> 
+              <div class="text-center">
+
+              <v-btn  :loading="loading" class="mt-12 caption orange--text text--lighten-5 font-weight-black" color="orange darken-4" @click="registerVendor()" dark rounded>Register</v-btn>
+              </div>
             </v-card-text>
           </v-card>
         </v-stepper-content>
@@ -182,7 +195,7 @@
 </style>
 <script>
 import axios from "axios";
-import $Scriptjs from 'scriptjs'
+import {loadedGoogleMapsAPI} from '@/main'
 
 export default {
   data() {
@@ -194,10 +207,26 @@ export default {
       disable: true,
       cities: [],
       city: [],
+     cats: [
+          {
+            text: "Food",
+            value: "Food"
+            },
+          {
+            text: "Shop",
+            value: "Shop"
+            },
+          {
+            text: "Pharmacy",
+            value: "Pharmacy"
+            }
+        ],
       areas: [],
       selectedAreas: [],
+      results: [],
       area: [],
       phone: "",
+      type: "",
       bio: "",
       e6: 1,
       rules: {
@@ -226,7 +255,7 @@ export default {
     }
   },
     mounted(){
-    $Scriptjs('https://maps.googleapis.com/maps/api/js?key=AIzaSyA1Uoi_ddjhFR5HNAgofZNat9eQAsUFtg0&libraries=places', () => {
+     loadedGoogleMapsAPI.then( () => {
       this.initMap()
     })
   },
@@ -239,6 +268,7 @@ export default {
           sn.load2 = false
       }).then(() => {
         this.$store.dispatch("loadTags");
+
       })
   },
   computed: {
@@ -248,8 +278,15 @@ export default {
     registerStatus() {
       return this.$store.getters.getLoadStatus;
     }, 
-    tags() {
+    tagsList() {
       return this.$store.getters.getTags;
+    },
+    tags() {
+      const sn = this
+      var tags = sn.tagsList.filter((item)=>{
+        return item.type.toLowerCase() === sn.type.toLowerCase()
+      });
+      return tags
     }
   },
   watch: {
@@ -266,7 +303,12 @@ export default {
          .then(function (response) {
             sn.areas = response.data.areas
             sn.disable = false
+          axios
+          .get("/city/vendorarea?city="+sn.city)
+          .then(function (response) {
+            sn.results = response.data.result
             sn.load = false
+          })
           })
       }
     }
@@ -277,7 +319,170 @@ methods: {
     var geocoder = new google.maps.Geocoder();
     var map = (this.map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 6.222, lng: 7.0821 },
-      zoom: 13
+      zoom: 15,
+      mapTypeControl: false,
+      fullscreenControl: false,
+      zoomControl: false,
+            styles: [
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#f5f5f5"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "on"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#616161"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#f5f5f5"
+      }
+    ]
+  }, //put image in kata
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#bdbdbd"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#eeeeee"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#e5e5e5"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9e9e9e"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#ffffff"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dadada"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#616161"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9e9e9e"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#e5e5e5"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.station",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#eeeeee"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#c9c9c9"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9e9e9e"
+      }
+    ]
+  }
+]
     }));
     this.autocomplete = new google.maps.places.Autocomplete(
       this.$refs.autocomplete.$refs.input
@@ -330,9 +535,8 @@ methods: {
     });
     //onload get user location
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        console.log(position);
-      sn.lat = position.coords.latitude;
+      navigator.geolocation.getCurrentPosition((position) => {
+        sn.lat = position.coords.latitude;
       sn.long = position.coords.longitude;
         var latlng = {
           lat: parseFloat(position.coords.latitude),
@@ -344,7 +548,8 @@ methods: {
           if (status === google.maps.GeocoderStatus.OK) {
             if (results) {
               sn.place_id = results[0].place_id;
-              console.log(results);
+              console.log('results: ');
+              console.log('results: '+ results);
               var substring = "Unnamed";
               if (results[1].formatted_address.includes(substring)) {
                 sn.address = results[2].formatted_address;
@@ -430,24 +635,61 @@ methods: {
      this.$store.dispatch('logout')
     },
   registerVendor() {
-
-    var sn = this
+      const sn = this
     sn.loading = true
     if (sn.$refs.form.validate() && sn.address.length > 6 ) {
-        axios
+      var d = sn.results
+    var e = []
+       sn.area.forEach(element => {
+       e.push(d.find((item)=>{
+      return item.id === element
+      }))
+    })
+    console.log(e)
+    console.log(d)
+    const origin = []
+    var set = []
+        e.forEach(item => {
+        set = new google.maps.LatLng(item.lat, item.lng)
+        origin.push(set)
+      })  
+      var service = new google.maps.DistanceMatrixService;
+        service.getDistanceMatrix({
+          origins: [new google.maps.LatLng(sn.lat, sn.long)],
+          destinations: origin,
+          travelMode: 'DRIVING',
+          unitSystem: google.maps.UnitSystem.METRIC,
+          avoidHighways: false,
+          avoidTolls: false
+        }, function(response, status) {
+          const duration = []
+          const distance = []
+         if (status !== 'OK') {
+            alert('Error was: ' + status);
+          } else {
+            var answer = response.rows[0].elements
+            answer.forEach(element => {
+              distance.push(element.distance.value)
+              duration.push(element.duration.value)
+            })
+          }
+     axios
          .post("/vendor/save", {
-           name: this.name,
-           phone: this.phone,
-           address: this.address,
-           user_id: this.user,
-           bio: this.bio,
-           tags: this.tag,
-           city: this.city,
-           areas: this.area,
-           lat: this.lat,
-           lng: this.long,
-           place_id: this.place_id,
-           category: 'vendor'
+           name: sn.name,
+           phone: sn.phone,
+           address: sn.address,
+           user_id: sn.user,
+           bio: sn.bio,
+           tags: sn.tag,
+           city: sn.city,
+           areas: sn.area,
+           duration: duration,
+           distance: distance,
+           lat: sn.lat,
+           lng: sn.long,
+           place_id: sn.place_id,
+           category: 'vendor',
+           type: sn.type
          })
          .then(function (response) {
            sn.loading = false
@@ -457,12 +699,18 @@ methods: {
               color: 'green',
             text: d.message
           })
-          sn.$router.push('/vendoradmin')
+          sn.$router.push('/')
          })
          .catch(function () {
            sn.loading = false
+              sn.$store.dispatch('snack', {
+              color: 'red',
+            text: 'An error occured'
+          })
          });
-          } else {
+          })
+          }
+           else {
         sn.loading = false
         sn.e6 = 1
       }

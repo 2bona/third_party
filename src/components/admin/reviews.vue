@@ -1,27 +1,30 @@
 <template>
 <div>
-<v-row justify="space-start" class="pa-3 px-6">
-<v-flex xs12 class="my-5"> 
+<v-row justify="space-start" class=" px-6">
+<v-flex xs12 class="mb-0"> 
 
-        <v-card class=" pb-3"  :loading="load">
-         <v-card-title class="body-1 font-weight-medium grey--text">
+         <v-card-title class="title  pb-3 pl-0 text--darken-2 pb-2 grey--text">
            Delivery agents
          </v-card-title>
+        <v-card style="border-radius: 25px;max-height:70vh;overflow-y:auto" class="elevation-2 pb-3"  :loading="load">
     <v-simple-table>
     <template v-slot:default>
       <thead>
         <tr>
-          <th class="text-left">Name</th>
+          <th class="text-right"></th>
+          <th class="text-left grey--text">Names</th>
           <th class="text-right"></th>
           <th class="text-right"></th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="n in agents" :key="n">
+        <tr v-for="(n, i) in agents" :key="n">
+          <td class="caption font-wight-bold grey--text text--lighten-1 ">{{i+1}}</td>
           <td class="caption ">{{n.name}}</td>
-          <td class="text-right"><a style="text-decoration:none" :href="'tel:'+n.phone"><v-btn fab dark  x-small color="primary"><v-icon>mdi-phone</v-icon> </v-btn></a></td>
+          <td class="text-right"><a style="text-decoration:none" :href="'tel:'+n.phone">
+            <v-btn depressed fab dark icon x-small color="primary"><v-icon>mdi-phone</v-icon> </v-btn></a></td>
           <td class="text-right"><a style="text-decoration:none" :href="'https://wa.me/+234'+n.phone.substring(1)+'?text=Hello,%20this%20is%20'+vendor.name+'%20,%20I%20just%20want%20to%20confirm%20your%20location%20for%20a%20food%20delivery.'" target="_blank">
-          <v-btn fab dark x-small color="green">
+          <v-btn depressed fab dark icon="" x-small color="green">
             <v-icon>mdi-whatsapp</v-icon>
              </v-btn>
              </a>
@@ -31,24 +34,27 @@
     </template>
   </v-simple-table>
        </v-card>
-       <v-card class=" my-3" :loading="load">
-         <v-card-title class="body-1 font-weight-medium grey--text">
-           Reasons for cancellation  <v-btn class="ml-3" @click="dialog= true"  x-small color="">add</v-btn>
+         <v-card-title class="title my-3 pt-2 pl-0 text--darken-2 pb-3 grey--text">
+           Reasons for cancellation  <v-btn rounded depressed class="ml-1 grey--text" @click="dialog= true"  x-small color="grey lighten-2">add</v-btn>
          </v-card-title>
+       <v-card style="border-radius: 25px;max-height:70vh;overflow-y:auto" class=" elevation-2 pb-4 my-3" :loading="load">
     <v-simple-table>
     <template v-slot:default>
       <thead>
         <tr>
-          <th class="text-left">Messages</th>
           <th class="text-left"></th>
-          <th class="text-left"></th>
+          <th class="text-left grey--text">Messages</th>
+          <th ></th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="n in replys" :key="n">
+        <tr v-for="(n, i) in replys" :key="n">
+          <td class="caption font-wight-bold grey--text text--lighten-1 ">{{i+1}}</td>
           <td class="caption ">{{n.content}}</td>
-          <td><v-btn @click="editBtn(n.content, n.id)"   x-small color="">edit</v-btn></td>
-          <td><v-btn @click="deleteBtn(n.id)"  x-small color="">delete</v-btn></td>
+          <td class="text-right">
+         
+            <v-btn depressed rounded class="grey--text mr-2" @click="editBtn(n.content, n.id)"   x-small color="">edit</v-btn><v-btn depressed rounded class="grey--text" @click="deleteBtn(n.id)"  x-small color="">delete</v-btn>
+          </td>
         </tr>
       </tbody>
     </template>
@@ -56,14 +62,16 @@
        </v-card>
  
      </v-flex>
-     <v-flex xs12 class="mt-5 mb-4 px-0">
-        <h1 class="title mb-5 font-weight-bold grey--text">Reviews</h1>
+     <v-flex xs12 class="mt-0 mb-4 px-0">
+          <v-card-title class="title pt-2 pl-0 text--darken-2 pb-3 grey--text">
+           Reviews  
+         </v-card-title>
           
-       <div class="mt-2" style="max-height:70vh; overflow:auto">
+       <div class="elevation-2 mt-2" style="max-height:70vh; border-radius:25px; overflow:auto">
           <v-list class="py-0 my-0" two-line v-for="n in 6" :key="n">
                 <v-list-item>
                       <v-list-item-avatar style="position: relative;
-                      top: -15px;" class="mt-0 mr-2" size="26">
+                      top: -7px;" class="mt-0 mr-2" size="26">
                         <v-img
                           src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
                         ></v-img>

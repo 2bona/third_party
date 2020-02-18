@@ -136,7 +136,7 @@ export default {
   methods: {
     register() {
       this.loading = true;
-      var sn = this;
+      const sn = this;
       if (this.$refs.form.validate()) {
         const url = "/register";
         http({
@@ -150,40 +150,45 @@ export default {
         })
           .then(response => {
             sn.loading = false
-            const d = response.data.success.user
             var type = ""
-            if (d.email) {
-              type = d.email
-            } else {
-              if (
-                d.result.data.SMSMessageData.Recipients[0].status ===
-                "InvalidPhoneNumber"
-              ) {
-                sn.error.phone = "Invalid phone number"
-                return
+            const data = response.data.success
+            if (sn.choice && (data.user != null)) {
+              type = data.user.email
+              sn.disp(data.user, data.user.email)
+            }else {
+              if (data.user != null && !sn.choice) {
+                type = data.user.phone
+                sn.disp(data.user, data.user.phone)
+                } else{
+                  sn.error.phone = data.error
               }
-              type = d.phone
-            }
-
-            sn.$store.dispatch("passcode", d)
-            sn.$store.dispatch("snack", {
-              color: "green",
-              text: `A 5 digit passcode has been sent to ${type}`
-            })
+              } 
           })
           .catch(function(error) {
+            sn.loading = false
+            if (error.response.data.error != null) {
               var r = error.response.data.error
               if (r.email) {
                 sn.error.email = r.email[0]
-              }
-             if (r.phone) {
+              } 
+              if (r.phone) {
                 sn.error.phone = r.phone[0]
               }
-            sn.loading = false
+             } else{
+               console.log(error)
+             }
           })
       } else {
         sn.loading = false
       }
+    },
+    disp(x, y){
+      const sn = this
+      sn.$store.dispatch("passcode", x)
+      sn.$store.dispatch("snack", {
+        color: "green",
+        text: `A 5 digit passcode has been sent to ${y}`
+      })
     }
   }
 };

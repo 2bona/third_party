@@ -7,7 +7,7 @@
           fixed @click="$router.push('/auth')"
           bottom color="white"
           right fab
-           style="z-index:10" class="elevation-20 mb-12">
+           style="z-index:10" class="elevation-6 mb-12">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
     </v-scale-transition>
@@ -42,7 +42,7 @@
           dark
           rounded
           color="white"
-          class="mt-4  caption font-weight-black text--darken-4 orange--text"
+          class="mt-4 mb-3 caption font-weight-black text--darken-4 orange--text"
         >
           login
         </v-btn>
@@ -55,6 +55,15 @@
         text
         color=""
         >forgot password</v-btn
+      >
+      <v-btn
+        to="/auth/register"
+        rounded
+        class="mt-4 caption font-weight-black grey--text"
+        small
+        text
+        color=""
+        >create account</v-btn
       >
     </v-card-text>
  
@@ -95,13 +104,13 @@ export default {
   mounted(){
     setTimeout(() => {
       this.btn=true
-    }, 400);
+    }, 300);
   },
   beforeRouteLeave (to, from, next) {
   this.btn = false
      setTimeout(() => {
       next()
-    }, 50);
+    }, 80);
 },
 methods: {
     login() {
@@ -119,12 +128,23 @@ methods: {
         })
           .then(response => {
             sn.loading = false;
-            sn.$store.dispatch("setUser", response.data.success.user);
-            sn.$store.dispatch("setToken", response.data.success.token);
-            if (sn.$route.query.nextUrl) {
-              sn.$router.push(sn.$route.query.nextUrl);
-            } else {
-              sn.$router.push("/");
+             var d = response.data.success.user
+            if (d.role !== 'vendor') {
+                sn.$store.dispatch("snack", {
+              color: "red",
+              text: 'Sorry, you are not a Vendor'
+            });
+              return
+            } else{
+            sn.$store.dispatch("setUser", d);
+            sn.$store.dispatch("setToken", response.data.success.token).then(()=>{
+              sn.$store.dispatch("loadVendor")
+              if (sn.$route.query.nextUrl) {
+                sn.$router.push(sn.$route.query.nextUrl);
+              } else {
+                sn.$router.push("/");
+              }
+            })
             }
           })
           .catch(function(error) {
@@ -139,6 +159,7 @@ methods: {
         sn.loading = false;
       }
     }
+    
   }
 };
 </script>

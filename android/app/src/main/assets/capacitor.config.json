@@ -1,6 +1,6 @@
 {
-  "appId": "com.redape.foodrepublic",
-  "appName": "foodrepublic",
+  "appId": "com.redape.vendorapp",
+  "appName": "Vendor app Food Republic",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "dist",

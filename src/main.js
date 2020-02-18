@@ -1,11 +1,39 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
+export const loadedGoogleMapsAPI = new Promise((resolve, reject) => {
 
-/**
- * Next we will register the CSRF Token as a common header with Axios so that
- * all outgoing HTTP requests automatically have it attached. This is just
- * a simple convenience so we don't have to attach every token manually.
- */
+  window['GoogleMapsInit'] = resolve;
+
+  let GMap = document.createElement('script');
+
+  GMap.setAttribute('src',
+    `https://maps.googleapis.com/maps/api/js?key=AIzaSyA1Uoi_ddjhFR5HNAgofZNat9eQAsUFtg0&callback=GoogleMapsInit&libraries=places`);
+
+  document.body.appendChild(GMap);
+});
+import {
+  Plugins,
+  AppUrlOpen
+} from '@capacitor/core';
+const {
+  Toast
+} = Plugins;
+const bckBtn = false
+Plugins.App.addListener('backButton', function () {
+  if (bckBtn === false) {
+   Toast.show({
+      text: 'Press back again to exit'
+    });
+    bckBtn = true
+    setTimeout(() => {
+      bckBtn = false
+    }, 5000);
+  } else{
+    Plugins.App.exitApp()
+  }
+});
+
+
 
 import Vue from "vue";
 import App from "./App.vue";
@@ -27,16 +55,13 @@ axios.defaults.baseURL = "https://foodrepublic.herokuapp.com/api";
       return response;
     }, function (error) {
       if (error === "Error: Network Error") {
-        router.push('/auth/login')
+        router.push('/auth')
         
       } else {
         if(error.response){
             switch (error.response.status) {
         case 401:
-          router.push('/auth/login') //we will redirect user into 503 page 
-          break
-        case 500:
-          router.push('/usercity') //we will redirect user into 503 page 
+          router.push('/auth') //we will redirect user into 503 page 
           break
         default:
           break
@@ -97,17 +122,17 @@ Vue.filter("duration", function(value) {
     if ((val <= 5) && (val > 0 )) {
       return "15mins";
     } else if (val <= 10 && (val > 5)) {
-      return "20mins";
+      return "25mins";
     } else if (val <= 15 && (val > 10)) {
-      return "30mins";
+      return "35mins";
     } else if (val <= 20 && (val > 15)) {
-      return "40mins";
-    } else if (val <= 30 && (val > 20)) {
       return "45mins";
+    } else if (val <= 30 && (val > 20)) {
+      return "50mins";
     } else if (val > 30) {
       return "55mins";
     } else {
-      return "0";
+      return "10mins";
     }
     // return val > 0 ? val + (val == 1 ? "min" : "mins") : "";
   } else {

@@ -1,4 +1,4 @@
-package com.redape.foodrepublic;
+package com.redape.vendorapp;
 
 import android.os.Bundle;
 

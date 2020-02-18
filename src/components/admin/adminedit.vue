@@ -17,8 +17,8 @@
             <h3 class="text-center mb-0 text-capitalize grey--text text--darken-1 font-weight-bold"><span>{{vendor.name}}</span></h3>
            </v-flex>
         <input v-show="false" ref="file" type="file" @change="fieldChange" class="v-input">
-           <v-row class="">
-              <v-flex xs3>
+           <v-row class=" px-6">
+              <v-flex xs4>
                   <h5 class="grey--text text--darken-1 font-weight-regular  text-center mb-0">
                     {{vendor.orders_count | price}}
                   </h5>
@@ -26,15 +26,15 @@
                       Orders
                   </p>
            </v-flex>
-              <v-flex xs3>
+              <v-flex xs4>
                     <h5 class="green--text font-weight-regular  text-center mb-0">
-                      <v-icon size="12px" style="padding-bottom:2px" color="green">mdi-currency-ngn</v-icon>20,000,000
+                      <v-icon size="12px" style="padding-bottom:2px" color="green">mdi-currency-ngn</v-icon>{{vendor.wallet | price}}
                     </h5>
                   <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
                       Wallet
                   </p>
            </v-flex>
-              <v-flex xs3>
+              <v-flex xs4>
                     <h5 class="green--text font-weight-regular  text-center mb-0">
                       <v-icon size="12px" style="padding-bottom:2px" color="green">mdi-currency-ngn</v-icon>20,000,000
                     </h5>
@@ -42,19 +42,12 @@
                       Paid
                   </p>
            </v-flex>
-              <v-flex xs3>
-                   <h5 class="grey--text text--darken-1  font-weight-regular  text-center mb-0">
-                      500000
-                  </h5>
-                  <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
-                      Points
-                  </p>
-           </v-flex>
+  
            </v-row> 
        </v-row>
-  <v-expansion-panels accordion>
+  <v-expansion-panels style="border-radius:25px 25px 0 0" accordion>
     <v-expansion-panel>
-      <v-expansion-panel-header class="px-3"><p class="  font-weight-regular  mb-0 subtitle-2">Business Information</p> </v-expansion-panel-header>
+      <v-expansion-panel-header class="px-3"><p class="grey--text  font-weight-medium  text--darken-2 mb-0 subtitle-2"><v-icon class="mr-2" color="grey lighten-3">mdi-account</v-icon>Business Information</p> </v-expansion-panel-header>
   <v-expansion-panel-content style="position: relative" class="px-4 py-2">
          <v-form onSubmit="return false;" ref="form">
 <v-flex xs12>
@@ -91,8 +84,8 @@
           ></v-text-field> 
               <v-select
                 :items="areas"
-                attach
-                chips
+                attach 
+                chips :rules="[rules.minArea]"
                 :loading="loading"
                 :disabled="loading"
                 v-model="area"
@@ -102,7 +95,7 @@
               ></v-select>
               <v-select
                 :items="tags"
-                attach
+                attach :rules="[rules.minTag]"
                 chips
                 :loading="loading"
                 :disabled="loading"
@@ -135,7 +128,7 @@
  
     </v-expansion-panel>
     <v-expansion-panel>
-            <v-expansion-panel-header @click="overlay = true" class="px-3"><p class="  font-weight-regular  mb-0 subtitle-2">Delivery</p> </v-expansion-panel-header>
+            <v-expansion-panel-header @click="overlay = true" class="px-3"><p class="grey--text  font-weight-medium  text--darken-2 mb-0 subtitle-2"><v-icon class="mr-2" color="grey lighten-3">mdi-map-marker</v-icon>Delivery</p> </v-expansion-panel-header>
      <v-expansion-panel-content>
         <v-list class="pt-0">
 <p class="px-2 mb-0 py-0 mt-0 caption grey--text text--lighten-1 text-center">SET DELIVERY FEE FOR THE AREAS YOU COVER</p>
@@ -164,7 +157,7 @@
   </v-expansion-panel-content>
     </v-expansion-panel>
     <v-expansion-panel>
-            <v-expansion-panel-header @click="overlay = true" class="px-3"><p class="font-weight-regular  mb-0 subtitle-2">Payment</p> </v-expansion-panel-header>
+            <v-expansion-panel-header @click="overlay = true" class="px-3"><p class="grey--text  font-weight-medium  text--darken-2 mb-0 subtitle-2"><v-icon class="mr-2" color="grey lighten-3">mdi-credit-card</v-icon>Payment</p> </v-expansion-panel-header>
      <v-expansion-panel-content>
         <v-list>
 <p class="px-2 mb-0 py-0 mt-0 caption grey--text text--lighten-1 text-center">SET PAYMENT OPTIONS FOR CUSTOMERS </p>
@@ -198,6 +191,20 @@
           <v-text-field :rules="minRule" :disabled="payLoad" :loading="payLoad" solo
           prepend-inner-icon="mdi-currency-ngn" dense color="grey"
             placeholder="Fee" v-model="vendor.minimum_order">
+          </v-text-field> 
+       </v-list-item-content>
+               </v-list-item>       
+         <v-list-item class="mt-3 mb-1" style="max-height: 38px!important">
+        <v-list-item-icon class=" mt-0 mr-2">
+          <v-icon color="grey lighten-2">mdi-cash</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title class="body-2 grey--text text--darken-1 pb-6">P.O.S charge</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-content class="pl-4 pr-1">
+          <v-text-field :disabled="payLoad" :loading="payLoad" solo
+          prepend-inner-icon="mdi-currency-ngn" dense color="grey"
+            placeholder="Fee" v-model="vendor.pos_charge">
           </v-text-field> 
        </v-list-item-content>
                </v-list-item>       
@@ -252,12 +259,12 @@
   </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
-  <v-card flat tile class="mb-7">
+  <v-card flat style="border-radius: 0 0 25px 25px" tile class="mb-7">
  
           <v-list>
             <v-list-item class="">
-                 <v-list-item-title class=" pl-0 subtitle-2   font-weight-regular">
-                Support
+            <v-list-item-title class="subtitle-2 px-1 grey--text  font-weight-medium  text--darken-2">
+                <v-icon size="19" class="mr-2" color="grey lighten-3">mdi-information</v-icon>                Support
                 <span class="caption"></span>
               </v-list-item-title>
               <v-list-item-action>
@@ -266,8 +273,8 @@
              
             </v-list-item>
                 <v-list-item>
-                 <v-list-item-title class="subtitle-2   font-weight-regular">
-                Withdraw funds
+ <v-list-item-title class="subtitle-2 px-1 grey--text  font-weight-medium  text--darken-2">
+                <v-icon size="19" class="mr-2" color="grey lighten-3">mdi-cash</v-icon>                Withdraw funds
               </v-list-item-title>
               <v-list-item-action>
                 <v-btn depressed  small color="grey lighten-3" rounded class="px-8 font-weight-bold"><v-icon size="18" color="grey lighten-1" class="px-2 mt-0">mdi-cash</v-icon></v-btn>
@@ -292,7 +299,7 @@
 <script>
 import axios from 'axios'
 import wrapper from 'axios-cache-plugin'
-import $Scriptjs from 'scriptjs'
+import {loadedGoogleMapsAPI} from '@/main'
 
 let http = wrapper(axios, {
   maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
@@ -321,6 +328,8 @@ export default {
       rules: {
         required: value => !!value || "Required.",
         min: value => value.length >= 3 || "Min 3 characters",
+        minArea: value => value.length > 0 || "Min 1 area",
+        minTag: value => value.length > 0 || "Min 1 tag",
         c_password: value =>
           this.password === this.c_password || "does not match passoword",
         email: value => {
@@ -335,7 +344,6 @@ export default {
         (v) => /^[0-9]*$/.test(v) || 'Number must be valid'
       ],
       minRule: [
-        (v) => !!v || 'Phone number is required',
         (v) => /^[0-9]*$/.test(v) || 'Number must be valid'
       ]
     }),
@@ -346,8 +354,15 @@ export default {
     vendor() {
       return this.$store.getters.getVendor;
     },
-    tags() {
+    tagsList() {
       return this.$store.getters.getTags;
+    },
+    tags() {
+      const sn = this
+      var tags = sn.tagsList.filter((item)=>{
+        return item.type.toLowerCase() === sn.vendor.type.toLowerCase()
+      });
+      return tags
     }
   },
  created() {
@@ -366,9 +381,9 @@ export default {
      sn.vendorTags = d.map(item => {
         return item.id
       })
-      $Scriptjs.get('https://maps.googleapis.com/maps/api/js?key=AIzaSyA1Uoi_ddjhFR5HNAgofZNat9eQAsUFtg0', function () {
-        sn.editBtn = false
-      })
+         loadedGoogleMapsAPI.then( () => {
+           sn.editBtn = false
+        })
     const e = sn.$store.getters.getVendor.area
      sn.area = e.map(item => {
         return item.id
@@ -388,6 +403,7 @@ export default {
            card: sn.vendor.card_on_delivery ? 1 : 0,
            cash: sn.vendor.cash_on_delivery ? 1 : 0,
            minimum: sn.vendor.minimum_order,
+           pos_charge: sn.vendor.pos_charge,
            bank_name: sn.vendor.bank_name,
            account_name: sn.vendor.account_name,
            account_number: sn.vendor.account_number
@@ -483,10 +499,10 @@ export default {
         })
     },
   edit() {
+    const sn = this
     if (this.$refs.form.validate()) {
     this.loading = true
     const url = '/vendor/update'
-    var sn = this
     var d = sn.results
     var e = []
     sn.area.forEach(element => {
@@ -500,7 +516,6 @@ export default {
         set = new google.maps.LatLng(item.lat, item.lng)
         origin.push(set)
       })  
- 
       var service = new google.maps.DistanceMatrixService;
         service.getDistanceMatrix({
           origins: [new google.maps.LatLng(sn.vendor.lat, sn.vendor.lng)],
@@ -522,7 +537,7 @@ export default {
               duration.push(element.duration.value)
             })
           }
-            console.log(duration)
+      console.log(duration)
      
       http({
         url: url,

@@ -1,8 +1,8 @@
 <template>
 <div>
-<v-col class="" cols="12">
-<v-card class="mx-auto" max-width="600px">
-        <v-expansion-panels>
+<v-col class="py-1" cols="12">
+<v-card class="mx-auto" flat tile color="transparent" max-width="600px">
+        <v-expansion-panels accordion style="border-radius:25px">
     <v-expansion-panel>
       <v-expansion-panel-header>
         <h3 class="grey--text text--darken-1 text-capitalize">Main Options</h3></v-expansion-panel-header>
@@ -16,15 +16,13 @@
             indeterminate
             color="grey lighten-1">
             </v-progress-linear>     
-     <v-flex class="my-2" xs12 v-for="n in mainOptions" :key="n.id">
+     <v-flex class="my-2 mb-3" xs12 v-for="n in mainOptions" :key="n.id">
           <v-card :disabled="dialog45"
             width="95%"
-            height="auto"
-            max-height
-            min-height
-            color="transparent"
-            style=" border-radius:4px"
-            class="mx-2 mb-2 py-1 px-1 "
+            height="auto" flat
+            color="grey lighten-5"
+            style=" border-radius:25px"
+            class="mx-2 mb-2 py-1 px-2 "
           >
             <v-list-item class="pa-0">
               <v-list-item-title @click="n.status = !n.status" style="" class="py-0">
@@ -101,21 +99,15 @@
     label="Name">
           </v-text-field>
   <v-text-field
-  v-model="title" autofocus
-    @keyup.enter.native="addMainOption" :rules="[rules.required]" validate-on-blur
+  v-model="title"
+    @keyup.enter.native="addMainOption" :rules="[rules.required]" 
     label="Title">
           </v-text-field>
-          <v-text-field
-            class="font-weight-regular grey--text text--darken-4"
-            label="Maximum choice" v-model="max"
-            :placeholder="'How many ' + name + ' option should a user select' " :rules="numberRules"
-            color="orange"
-          ></v-text-field>
-            <v-select :loading="!list.length"
+            <v-select 
             class="font-weight-regular grey--text text--darken-4"
             :items="list"
             attach v-model="options"
-            chips
+            chips :rules="[rules.min]"
             placeholder="eg. meat, fish, garri, fufu"
             label="Options"
             color="orange"
@@ -159,16 +151,10 @@
     label="Name">
           </v-text-field>
   <v-text-field
-  v-model="edittitle" autofocus
+  v-model="edittitle" 
     @keyup.enter.native="editMainOption2" :rules="[rules.required]" validate-on-blur
     label="Title">
           </v-text-field>
-          <v-text-field
-            class="font-weight-regular grey--text text--darken-4"
-            label="Maximum choice" v-model="editmax"
-            :placeholder="'How many ' + name + ' option should a user select' " :rules="numberRules"
-            color="orange"
-          ></v-text-field>
             <v-select :loading="!list.length"
             class="font-weight-regular grey--text text--darken-4"
             :items="list"
@@ -176,7 +162,7 @@
             chips
             placeholder="eg. meat, fish, garri, fufu"
             label="Options"
-            color="orange"
+            color="orange" :rules="[rules.min]"
             multiple
           ></v-select>
         </v-flex>
@@ -270,6 +256,7 @@ export default {
       dialog45: false,
       rules: {
         required: value => !!value || "Required.",
+        min: value => value.length > 0 || "Required."
       },
       numberRules: [
         (v) => /^[0-9]*$/.test(v) || 'Price must be only numbers'

@@ -282,8 +282,7 @@ export const user = {
         .then(function(response) {
           localStorage.removeItem("token")
           localStorage.removeItem("user")
-          localStorage.removeItem("usercity")
-          localStorage.removeItem("userarea")
+          localStorage.removeItem("vendor")
           delete axios.defaults.headers.common["Authorization"]
         router.push("/auth/login")
       }).catch(()=>{

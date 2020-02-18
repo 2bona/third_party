@@ -1,85 +1,130 @@
 <template>
-<div>
-<v-row justify="space-start" class="pa-3 px-6">
+<div style="min-height:100vh">
+<v-row  style="min-height:94vh" class="pa-3 px-4  pb-12 my-auto">
     <v-flex xs12 class>
-            <h1 class="title mb-5 font-weight-bold grey--text">Summary</h1>
+            <h1 class="title mb-2 font-weight-bold grey--text">Summary</h1>
         
     </v-flex>
     <v-flex xs6>
-
   <v-card
-    class="mx-auto"
+  style="border-radius: 25px"
+    class="ma-auto elevation-9"
     color="green lighten-2"
-    dark max-width="96%"
+    dark max-width="91%"
   >
-  <v-card-title class="px-2 title green--text text--lighten-4">
-      Sales today
+  <v-card-title class="px-2 headline pb-2 font-weight-black green--text text--lighten-4">
+      Sales 
   </v-card-title>
-  <p  class="ml-4 font-weight-bold mb-0 green--text text--lighten-5">N2000</p>
+  <p  class="ml-4 font-weight-bold mb-0 green--text text--lighten-5"><v-icon color=" green lighten-5" size="15" style="padding-bottom:2px" class="mr-0">mdi-currency-ngn</v-icon>2000</p>
     <v-divider></v-divider>
 
     <v-card-actions class="justify-center">
-      <v-btn to="/vendortables" block depressed color="green lighten-1">full Report</v-btn>
+      <v-btn rounded class="caption font-weight-black grey--text text--lighten-2" @click="dialog = true" block depressed color="green lighten-1">full Report</v-btn>
     </v-card-actions>
   </v-card>
     </v-flex>
     <v-flex xs6>
   <v-card
-    class="mx-auto"
+  style="border-radius: 25px"
+    class="ma-auto elevation-9"
     color="blue "
-    dark max-width="96%"
+    dark max-width="91%"
   >
-  <v-card-title class="px-2 title blue--text text--lighten-4">
-      Orders today
+  <v-card-title class="px-2 headline pb-2 font-weight-black blue--text text--lighten-4">
+      Orders 
   </v-card-title>
   <p  class="ml-4 mb-0 font-weight-bold blue--text text--lighten-5">300</p>
     <v-divider></v-divider>
 
     <v-card-actions class="justify-center">
-      <v-btn to="/vendorforms" block color="blue lighten-1" depressed>full Report</v-btn>
+      <v-btn rounded class="caption font-weight-black grey--text text--lighten-2" @click="dialog = true" block color="blue lighten-1" depressed>full Report</v-btn>
     </v-card-actions>
   </v-card>
     </v-flex>
           <v-flex xs6>
 
   <v-card
-    class="mx-auto"
+  style="border-radius: 25px"
+    class="ma-auto elevation-9"
     color="teal lighten-2"
-    dark max-width="96%"
+    dark max-width="91%"
   >
-  <v-card-title class="px-2 title mt-2 teal--text text--lighten-4">
-      Reviews today
+  <v-card-title class="px-2 headline pb-2 font-weight-black mt-2 teal--text text--lighten-4">
+      Reviews 
   </v-card-title>
   <p  class="ml-4 font-weight-bold mb-0 teal--text text--lighten-5">20</p>
     <v-divider></v-divider>
 
     <v-card-actions class="justify-center">
-      <v-btn to="/vendortables" block depressed color="teal lighten-1">full Report</v-btn>
+      <v-btn rounded class="caption font-weight-black grey--text text--lighten-2" @click="dialog = true" block depressed color="teal lighten-1">full Report</v-btn>
     </v-card-actions>
   </v-card>
     </v-flex>
         <v-flex xs6>
 
   <v-card
-    class="mx-auto"
+  style="border-radius: 25px"
+    class="ma-auto elevation-9"
     color="blue-grey lighten-2"
-    dark max-width="96%">
-  <v-card-title class="px-2 title mt-2 blue-grey--text text--lighten-4">
-      Visits today
+    dark max-width="91%">
+  <v-card-title class="px-2 headline pb-2 font-weight-black mt-2 blue-grey--text text--lighten-4">
+      Visits 
   </v-card-title>
   <p  class="ml-4 mb-0 font-weight-bold blue-grey--text text--lighten-5">200</p>
-    
-
- 
 
     <v-divider></v-divider>
 
     <v-card-actions class="justify-center">
-      <v-btn to="/vendortables" block depressed color="blue-grey lighten-1">full Report</v-btn>
+      <v-btn rounded class="caption font-weight-black grey--text text--lighten-2" @click="dialog = true" block depressed color="blue-grey lighten-1">full Report</v-btn>
+    </v-card-actions>
+  </v-card>
+        </v-flex>
+        <v-flex xs6>
+  <v-card
+  style="border-radius: 25px"
+    class="ma-auto elevation-9"
+    color="cyan darken-1"
+    dark max-width="91%">
+  <v-card-title class="px-2 headline pb-2 font-weight-black mt-2 cyan--text text--lighten-4">
+      Wallet 
+  </v-card-title>
+  <p  class="ml-4 mb-0 font-weight-bold grey--text text--lighten-5"><v-icon color=" grey lighten-5" size="15" style="padding-bottom:2px" class="mr-0">mdi-currency-ngn</v-icon>200</p>
+
+    <v-divider></v-divider>
+
+    <v-card-actions class="justify-center">
+      <v-btn rounded class="caption font-weight-black grey--text text--lighten-2" @click="dialog = true" block depressed color="cyan lighten-1">full Report</v-btn>
+    </v-card-actions>
+  </v-card>
+        </v-flex>
+         <v-flex xs6>
+
+  <v-card
+  style="border-radius: 25px"
+    class="ma-auto elevation-9"
+    color="light-green darken-4"
+    dark max-width="91%">
+  <v-card-title class="px-2 headline pb-2 font-weight-black mt-2 light-green--text text--lighten-4">
+      Payments 
+  </v-card-title>
+  <p  class="ml-4 mb-0 font-weight-bold blue-grey--text text--lighten-5"><v-icon color=" green lighten-5" size="15" style="padding-bottom:2px" class="mr-0">mdi-currency-ngn</v-icon>200</p>
+
+    <v-divider></v-divider>
+
+    <v-card-actions class="justify-center">
+      <v-btn rounded class="caption font-weight-black grey--text text--lighten-4" @click="dialog = true" block depressed color="green lighten-3">full Report</v-btn>
     </v-card-actions>
   </v-card>
     </v-flex>
 </v-row>
+                <v-dialog v-model="dialog" width="500">
+                  <v-card>
+                    <v-card-title class="body-2 d-block grey text-center lighten-2" primary-title>
+                       Coming Soon
+                      </v-card-title>
+        
+                  </v-card>
+                </v-dialog>
 </div>
 </template>
 <style>

@@ -18,14 +18,12 @@
           class=""
             cols="12"
             >
-            <v-card class="pa-4 mx-auto" max-width="650px">
+            <v-card flat color="transparent" class="pa-4 mx-auto" max-width="650px">
            <v-skeleton-loader v-show="$route.params.id != items.id"
             ref="skeleton" width="300"
             type="heading" 
-            tile
-          ></v-skeleton-loader>  
+         ></v-skeleton-loader>  
         <h3 v-show="$route.params.id == items.id" class="grey--text text--darken-1 text-capitalize">{{ items.name }} </h3>
-  
         
           <v-row justify="space-around" class="mt-3">
            <v-btn :disabled="$route.params.id != items.id" @click="editCat(items.name, items.id)"  text x-small color="grey"><v-icon>mdi-pencil-outline</v-icon> edit</v-btn>
@@ -34,29 +32,28 @@
            </v-row> 
            <v-divider class="my-4"></v-divider>
                    <v-progress-linear v-if="dialog45"
-      indeterminate
-      color="grey lighten-1"
-    ></v-progress-linear>     
+                indeterminate
+                color="grey lighten-1"
+              ></v-progress-linear>     
            <v-skeleton-loader v-for="n in 4" :key="n" v-show="$route.params.id != items.id"
-        ref="skeleton" width="300"
+        ref="skeleton" width="100%"
         type="list-item-avatar-two-line"
-        tile
+        
       ></v-skeleton-loader>
      <v-flex v-show="$route.params.id == items.id" class="my-2 px-1" xs12 v-for="n in items.items" :key="n.id">
           <v-card :disabled="dialog45"
-            width="95%"
-            height="auto"
-            max-height
-            min-height
-            color="transparent"
-            style=" border-radius:4px"
+            width="95%" @click="!n.status ? count(n.id, items.id) : ''"
+            height="auto" ripp
+            max-height :ripple="false"
+            min-height flat
+            color="grey lighten-5"
+            style=" border-radius:25px"
             class="mx-2 mb-2 py-1 px-1"
           >
             <v-list-item class="pa-0">
                 <v-list-item-avatar
-                  size="30"
-                  tile
-                  style="border-radius: 4px; align-self: flex-start; top: 8px;"
+                  size="40"
+                  style="align-self: flex-start; top: 4px;"
                   class="my-0 elevation-10 mr-2">
                        <v-img @click="openItemImageInput(n.id)" :src="n.image"></v-img>
                        <v-overlay
@@ -66,7 +63,7 @@
              </v-overlay>
         <v-btn :loading="loading11" style="z-index:7" dark absolute x-small  rounded icon v-show="itemAttach === n.id" color="orange" class="mt-0 mb-0 mx-auto" @click="editItemImage(items.id, n.id)"> <v-icon color="orange lighten-4" dark>mdi-cloud-upload</v-icon></v-btn>
                 </v-list-item-avatar>
-              <v-list-item-title @click="n.status = !n.status" style="" class="py-0">
+              <v-list-item-title @click="isLoading ? '' : n.status = !n.status" style="" class="py-0">
                 <v-layout>
                   <v-flex xs8>
                       <h2
@@ -96,7 +93,7 @@
                         <v-flex xs12>
                 <v-expand-transition>
           <v-layout v-show="!n.status" style="width:100%;padding-left: 13px !important;" row wrap class="py-1"> 
-      <v-flex xs12>
+      <v-flex v-if="n.main_option.length" xs12>
         <p class="overline my-0 py-0 grey--text font-weight-bold text-capitalize">Cumpolsory</p>
             <v-divider class=" grey lighten-4 mb-1"></v-divider>
         <v-layout row wrap class="pl-3">
@@ -108,7 +105,7 @@
     </v-chip>
           </div>   </v-layout>      
       </v-flex>
-      <v-flex xs12>
+      <v-flex xs12 v-if="n.main_option.length">
         <p class="overline my-0 py-0 grey--text font-weight-bold text-capitalize">Optional</p>
             <v-divider class="grey lighten-4 mb-1"></v-divider>
               <v-layout row wrap class="pl-3">
@@ -127,21 +124,15 @@
               </v-layout>
       </v-flex>
       <v-flex xs12>
-        <p class="overline my-0 py-0 grey--text font-weight-bold text-capitalize">Overview</p>
+        <p class="overline my-0 py-0 grey--text font-weight-bold text-capitalize">Sold</p>
+            <v-progress-linear color="grey lighten-1" v-show="isLoading && countId === n.id" :indeterminate="isLoading"></v-progress-linear>
             <v-divider class="grey lighten-4 mb-1"></v-divider>
-            <div style="width:40px;display: inline-grid;" class="mb-2 mr-2">
-              <v-avatar
+            <div style="width:40px;display: inline-grid;" class="mb-0 mr-2">
+            <v-avatar
             size="25px"  class=" mx-auto elevation-2"
             color="green">
       <v-icon small dark>mdi-cart-outline</v-icon>          </v-avatar> 
-          <p class="overline mb-0 text-capitalize text-center grey--text">{{n.sold}}</p>
-            </div>
-            <div style="width:40px;display: inline-grid;" class="mb-2 mr-2">
-              <v-avatar
-            size="25px"  class=" mx-auto elevation-2"
-            color="orange">
-      <v-icon small dark>mdi-star-outline</v-icon> </v-avatar> 
-          <p class="overline mb-0 text-capitalize text-center grey--text">{{n.avg_rating}}</p>
+          <p class="caption mb-0 text-capitalize text-center grey--text">{{counterValue(n.id)}}</p>
             </div>
       </v-flex>
           </v-layout> 
@@ -347,14 +338,14 @@
       label="Price" v-model="price"
       placeholder="0" hint="put only number eg '1000' not '1,000'"
       color="orange" prepend-inner-icon="mdi-currency-ngn"
-      required   :rules="numberRules"
+      required   :rules="[rules.required]"
     ></v-text-field>
 </v-flex>
    <v-row class="px-3"  justify="space-between">
 <v-flex xs12>
         <v-file-input ref="file2" @change="fieldChanges" class="font-weight-regular grey--text text--darken-4"
         prepend-icon="mdi-camera" placeholder="Item picture"
-        label="Image" :rules="[rules.required]"></v-file-input>
+        label="Image"></v-file-input>
 </v-flex>
 <v-flex xs12>
        <v-textarea
@@ -371,7 +362,8 @@
             :items="mainOptionsList"
             attach v-model="compulsory"
             chips
-            label="Required"
+            placeholder="eg. meat, fish, garri, fufu"
+            label="Compulsory extras (optional)"
             color="orange"
             multiple
           ></v-select>
@@ -432,7 +424,7 @@
         ></v-textarea>
           </v-flex>
                     <v-flex xs12>
-            <v-select :loading="!mainOptionsList.length"
+            <v-select
             class="font-weight-regular grey--text text--darken-4"
             :items="mainOptionsList"
             attach v-model="compValue"
@@ -446,7 +438,7 @@
 <v-flex xs12>
             <v-select
             class="font-weight-regular grey--text text--darken-4"
-            :items="mainOptionsList" :loading="!mainOptionsList.length"
+            :items="mainOptionsList"
             attach v-model="optValue"
             chips
             placeholder="eg. plantain, eggs, coleslaw, moi-moi"
@@ -458,7 +450,7 @@
    </v-row>
 
       <v-row class="px-3"  justify="space-around">
-<v-btn :loading="loading6" @click="editCategoryItem()"  class="px-6"  color="orange" dark small rounded>edit</v-btn>
+<v-btn :loading="loading6" @click="editCategoryItem()"  class="px-6" depressed color="orange" dark small rounded>edit</v-btn>
       </v-row>
 
 </div>
@@ -541,6 +533,7 @@ export default {
       dialog5: false,
       dialog6: false,
       loading: false,
+      isLoading: false,
       loading1: false,
       loading2: false,
       loading3: false,
@@ -548,11 +541,14 @@ export default {
       loading5: false,
       loading6: false,
       loading11: false,
+      countId: '',
+      counter: [],
       valid: true,
       rules: {
         required: value => !!value || "Required.",
       },
       numberRules: [
+        value => !!value || "Required.",
         (v) => /^[0-9]*$/.test(v) || 'Price must be only numbers'
       ],
       radios: 'Thank you soo much, we will keep improving',
@@ -585,6 +581,9 @@ export default {
       return this.$store.getters.getItems;
     },
   },
+  mounted(){
+    this.$store.dispatch('loadOptions')
+  },
 beforeRouteEnter (to, from, next) {
   next(vm => {
       let n = to
@@ -595,6 +594,59 @@ beforeRouteEnter (to, from, next) {
   })
 },
 methods: {
+  counterValue(x){
+    const sn = this
+   var item = sn.counter.find((element) => {
+                return element.id === x
+              })
+    if (item) {
+      return item.count
+    } else {
+      return 0
+    }
+  },
+  count(x, y){
+    const sn = this
+    sn.countId = x
+    if (!sn.counter.length && !sn.isloading) {
+       var d = {}
+        sn.isLoading = true
+        axios.get("/item/count_orders?id="+x+"&cat_id="+y)
+        .then((res)=>{
+          d.id = x
+          d.count = res.data.count
+        sn.counter.push(d)
+          setTimeout(() => {   
+              sn.isLoading = false
+            }, 1000);
+        })
+    }else{
+      var isCounted = sn.counter.find((element) => {
+                        return element.id === x
+                         })
+      setTimeout(() => {
+        if (isCounted && !sn.isLoading) {
+            return
+        } else{
+          sn.isLoading = true
+          var d = {}
+          axios.get("/item/count_orders?id="+x+"&cat_id="+y)
+          .then((res)=>{
+            d.id = x
+            d.count = res.data.count
+            sn.counter.push(d)
+            setTimeout(() => {
+              sn.isLoading = false
+            }, 1000);
+          })
+          return
+        }
+      }, 1000);
+    }
+
+
+
+  },
   addCategory(){
       var sn = this
   if (sn.$refs.form.validate()){
@@ -915,6 +967,13 @@ fieldChanges (e) {
 addCategoryItem(x){
   var sn = this
   if (sn.$refs.form4.validate()){
+    if (!sn.$refs.file2.$refs.input.files.length) {
+      sn.$store.dispatch("snack", {
+              color: "red",
+              text: "Image is required"
+            });
+            return
+        } else {
     sn.loading5 = true
     sn.dialog45 = true
         var comp = []
@@ -931,9 +990,9 @@ addCategoryItem(x){
       }
         var opt = []
         var opta = []
-      if (smain_al) {
-         var h =  smain_al.forEach(element => {
-          opt.push (smain_s.find((item) => {
+      if (sn.optional) {
+         var h =  sn.optional.forEach(element => {
+          opt.push (sn.options.find((item) => {
            return item.name === element
            }))
          }); 
@@ -973,12 +1032,13 @@ addCategoryItem(x){
         sn.attachments = []
         sn.$store.dispatch('snack', {
           color: 'red',
-          text: err
+          text: 'Image file is invalid'
         })
         sn.loading5 = false
         sn.dialog5 = false     
         sn.dialog45 = false     
      })
+    }
     }
   },
 editItemImage(x, y){

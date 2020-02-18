@@ -22,7 +22,7 @@
           dark
           rounded
           color="white"
-          class="mt-4 orange--text"
+          class="mt-4  caption font-weight-black text--darken-4 orange--text"
         >
           <span class>proceed</span>
           
