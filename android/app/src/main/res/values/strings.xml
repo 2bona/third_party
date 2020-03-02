@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Vendor app Food Republic</string>
-    <string name="title_activity_main">Vendor app Food Republic</string>
-    <string name="package_name">com.redape.vendorapp</string>
-    <string name="custom_url_scheme">com.redape.vendorapp</string>
+    <string name="app_name">E Dey</string>
+    <string name="title_activity_main">E Dey</string>
+    <string name="package_name">com.edeyapp.edey</string>
+    <string name="custom_url_scheme">com.edeyapp.edey</string>
 </resources>

@@ -57,7 +57,7 @@
           class="ma-auto text-center"
           width="290px"
         >
-          <v-switch
+          <!-- <v-switch
             class="px-5 mt-0 mx-auto"
             v-model="choice"
             color="grey lighten-2"
@@ -65,7 +65,7 @@
           <template v-slot:label>
             <span class="caption" v-if="!choice">Use <strong>email</strong> for verification</span>
             <span class="caption" v-if="choice">Use <strong>phone</strong> for verification</span>
-          </template></v-switch>
+          </template></v-switch> -->
 
           <v-btn
             :loading="loading"

@@ -41,30 +41,67 @@
         </v-list-item-avatar>
                 </v-list-item>
             </v-card>
-                </v-card> 
+                </v-card>
              </v-container>
       </v-layout>
-       <span v-if="order.delivery != null" class="overline grey--text  text--darken-1 font-weight-bold">
+        <div v-if="order.reviews" class="elevation-2 my-2" style="max-height:70vh; border-radius:25px; overflow:auto">
+          <v-list  class="py-0 my-0" three-line>
+                <v-list-item >
+                      <v-list-item-avatar style="position: relative;
+                      top: 17px;" class="mt-0 mb-0 mr-2" size="26">
+                        <v-img
+                          :src="order.user.image"
+                        ></v-img>
+                      </v-list-item-avatar>
+
+                      <v-list-item-content>
+                        <v-flex d-flex align-center class="pl-1">
+                          <div class="font-weight-bold caption  text-capitalize">
+                            {{order.user.surname + ' '+order.user.middle_name + ' '+ order.user.first_name}}
+                            <br />
+                            <p class="overline mb-0 grey--text text--darken-2">{{order.reviews.created_at | myDate}}</p>
+                          </div>
+
+                          <div class="flex-grow-1"></div>
+
+                          <v-rating
+                            size="15"
+                            dense readonly
+                            :value="order.reviews.rating"
+                            color="orange darken-4"
+                            style="position: relative;top: -7px;"
+                            background-color="grey lighten-2"
+                          ></v-rating>
+                        </v-flex>
+                        <v-list-item-subtitle
+                        style="line-height:1.3;"
+                          class=" px-1 caption grey--text text--darken-1"
+                        >{{order.reviews.content}}</v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                       </div>
+       <span v-if="(order.delivery != null) || (order.status === 5)" class="overline grey--text  text--darken-1 font-weight-bold">
        Dispatch Timeline
        </span>
-    <v-card-text style="margin-left:-30px" v-if="order.delivery != null" class="pa-0 my-3">
+    <v-card-text style="margin-left:-30px" v-if="(order.delivery != null) || (order.status === 5)" class="pa-0 my-3">
       <v-timeline
         align-top
         dense>
         <v-timeline-item
-          color="blue"
+          color="blue" v-if="(order.delivery != null)"
           small
         >
          <span class="overline grey--text  text--darken-1 font-weight-bold">
        Delivery Agent
        </span>
-        <v-list-item class="px-0">
-         <v-list-item-content>
-          <v-list-item-title  class="font-weight-medium grey--text body-2" v-text="order.delivery.name"></v-list-item-title>
+         <v-list-item-content class="mt-0 mb-0 pb-0">
+          <p  class="body-2 mb-0" v-text="order.delivery.name"></p>
         </v-list-item-content>
             <v-list-item-content v-if="!(order.status === 4)" class="text-right" style="display: inline;">
           <a style="text-decoration:none" :href="'tel:'+order.delivery.phone">
-            <v-btn fab dark icon  x-small color="primary"><v-icon>mdi-phone</v-icon> </v-btn></a>
+            <v-btn fab dark icon  x-small color="primary"><v-icon>mdi-phone</v-icon>
+             </v-btn></a>
           <a style="text-decoration:none" :href="'https://wa.me/+234'+order.delivery.phone.substring(1)+'?text=Hello,%20this%20is%20'+vendor.name+'%20,%20I%20just%20want%20to%20confirm%20your%20location%20for%20a%20food%20delivery.'" target="_blank">
           
           <v-btn fab dark icon x-small color="green">
@@ -75,12 +112,20 @@
             <v-icon color="primary">mdi-map-marker</v-icon>
              </v-btn>
         </v-list-item-content>
-      </v-list-item>
+    <p v-if="order.transit_time" class="caption grey--text text--lighten-1 mb-0"><v-icon size="12" color="grey lighten-1">mdi-clock</v-icon> {{order.transit_time | trackDate}}</p>
         </v-timeline-item>
-        <v-timeline-item v-if="order.status === 4"
+        <v-timeline-item v-if="order.status === 5"
+          color="red"
+          small>
+      <p class=" mb-0 ">Order has been rejected.</p>
+    <p  class="caption grey--text  mb-0"> {{order.reject_reason}}</p>
+    <p  class="caption grey--text text--lighten-1 mb-0"><v-icon size="12" color="grey lighten-1">mdi-clock</v-icon> {{order.rejected_time | trackDate}}</p>
+        </v-timeline-item>
+        <v-timeline-item v-if="(order.delivery != null) && (order.status === 4)"
           color="green"
           small>
-      <p class="grey--text  text--lighten-1">Order has been delivered.</p>
+      <p class=" mb-0">Order has been delivered.</p>
+    <p v-if="order.delivered_time" class="caption grey--text text--lighten-1 mb-0"><v-icon size="12" color="grey lighten-1">mdi-clock</v-icon> {{order.delivered_time | trackDate}}</p>
         </v-timeline-item>
       </v-timeline>
     </v-card-text>
@@ -91,10 +136,20 @@
       <v-list-item-content>
         <v-list-item-title  class="body-1 grey--text text--darken-1 text-wrap font-weight-bold mt-0 pt-0" v-if="!(order.payment_method === 4)">{{order.address.area.name}}</v-list-item-title>
         <v-list-item-subtitle v-if="!(order.payment_method === 4 || order.payment_method === 5)" class="caption grey--text text-wrap font-weight-medium mb-0 pb-0">{{order.address.name}}</v-list-item-subtitle>
-        <v-list-item-subtitle class="caption grey--text font-weight-medium mt-0 pt-0"   v-if="!(order.payment_method === 4 || order.payment_method === 5)">{{order.address.name_2}}</v-list-item-subtitle>
-        <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="!(order.payment_method === 4 || order.payment_method === 5)">{{order.address.company}}</v-list-item-subtitle>
-        <v-list-item-subtitle  class="caption grey--text text-wrap font-weight-medium mt-0 pt-0" v-if="!(order.payment_method === 4 || order.payment_method === 5)">{{order.address.instruction}}</v-list-item-subtitle>
-        <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium mt-0 pt-0">{{order.user.phone}}</v-list-item-subtitle>
+        <v-list-item-subtitle class="caption grey--text font-weight-medium my-0 pt-0"   v-if="!(order.payment_method === 4 || order.payment_method === 5)">{{order.address.name_2}}</v-list-item-subtitle>
+        <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium my-0 pt-0" v-if="!(order.payment_method === 4 || order.payment_method === 5)">{{order.address.company}}</v-list-item-subtitle>
+        <v-list-item-subtitle  class="caption grey--text text-wrap font-weight-medium my-0 pt-0" v-if="!(order.payment_method === 4 || order.payment_method === 5)">{{order.address.instruction}}</v-list-item-subtitle>
+        <v-list-item-subtitle class="caption grey--text text-wrap font-weight-medium my-0 pt-0">{{order.user.phone}}
+        <a style="text-decoration:none" :href="'tel:'+order.user.phone">
+            <v-btn fab dark icon  x-small color="primary"><v-icon>mdi-phone</v-icon>
+             </v-btn>
+        </a>
+        <a style="text-decoration:none" :href="'https://wa.me/+234'+order.user.phone.substring(1)+'?text=Hello,%20this%20is%20'+vendor.name+'%20,%20hope%20you%20enjoyed%20our%20services?.'" target="_blank">
+          <v-btn fab dark icon x-small color="green">
+            <v-icon>mdi-whatsapp</v-icon>
+             </v-btn>
+             </a>
+        </v-list-item-subtitle>
         <v-list-item-subtitle v-if="!(order.payment_method === 4 || order.payment_method === 5)" class="overline text--darken-2 grey--text  font-weight-bold mt-0 pt-0">Order to reach customer in {{order.duration | duration}}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
@@ -114,8 +169,9 @@
     <v-list-item  class="my-1" dense>
       <v-list-item-content>
         <v-list-item-subtitle  class=" text-wrap caption grey--text  font-weight-medium mt-0 pt-0">{{paymentMethod}}  <span v-show="order.change_amount > 1"> <v-icon style="padding-bottom:2px" color="grey" size="12">mdi-currency-ngn</v-icon>{{order.change_amount | price}}</span></v-list-item-subtitle>
-        <v-list-item-subtitle v-if="order.paid" class=" text-wrap green--text  font-weight-bold mt-0 pt-0">PAID</v-list-item-subtitle>
+        <v-list-item-subtitle v-if="order.paid && !(order.status === 5)" class=" text-wrap green--text  font-weight-bold mt-0 pt-0">PAID</v-list-item-subtitle>
         <v-list-item-subtitle v-if="!order.paid" class=" text-wrap red--text  font-weight-bold mt-0 pt-0">UNPAID</v-list-item-subtitle>
+        <v-list-item-subtitle v-if="order.paid && (order.status === 5)" class=" text-wrap blue--text  font-weight-bold mt-0 pt-0">REFUNDED</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
   <v-card flat color="transparent" tile class="mb-12">
@@ -149,17 +205,17 @@
       </v-flex>
 </v-row>
  <v-divider></v-divider>
-<v-row justify="space-between" class="px-6 pt-4">
- <v-flex xs6>
-<p class="font-weight-black body-1">Total</p>
+<v-row justify="space-between" class="px-5 pt-4">
+ <v-flex xs4>
+<p class="font-weight-black headline">Total</p>
 </v-flex>
-<v-flex xs6>
-<p class=" font-weight-black body-1 text-right"><v-icon style="padding-bottom:2px" color="black" size="15">mdi-currency-ngn</v-icon>{{order.grand_total | price}}.00</p>
+<v-flex xs8>
+<p class=" font-weight-black headline text-right"><v-icon style="padding-bottom:5px" color="black" size="22">mdi-currency-ngn</v-icon>{{order.grand_total | price}}.00</p>
 </v-flex>
-</v-row>
+</v-row> 
  <v-divider></v-divider>
   <div>
-      <v-layout v-if="!(order.status === 4)"  style="position:fixed; bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9" row wrap class=" pb-2 px-2">
+      <v-layout v-if="!(order.status === 4 || order.status === 5)"  style="position:fixed; bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9" row wrap class=" pb-2 px-2">
         <v-flex xs6 class="px-2">
         <v-btn  :loading="loading" block @click="dialog2 = true" class="mt-2 elevation-10" rounded="" dark color="orange darken-4">reject
              <v-scale-transition origin="center center">
@@ -209,7 +265,7 @@
         <v-divider></v-divider>
        </div>
     </v-card-text>
-    
+
   <v-layout row wrap class="px-3 py-3">
   <v-flex xs6 class="px-2">
       <v-btn :disabled="item_no === 0" @click="food(0)" block rounded class="mx-auto" color="white">prev</v-btn>
@@ -228,7 +284,13 @@
       <v-card color="white" v-if="dialogItem">      
       <div v-show="dialogItem">
         <v-card-title class="pb-1 elevation-10" primary-title>
-        <span class="pr-1 grey--text text--darken-3 font-weight-black" v-show="dialogItem.pivot.qty > 1">{{dialogItem.pivot.qty +'x'}} </span> {{dialogItem.name +' '}} <span class="pl-1 pb-2 caption grey--text"> <v-icon size="11" color="grey" style="padding-bottom:3px">mdi-currency-ngn</v-icon>{{(dialogItem.pivot.qty * dialogItem.price) | price}}</span>
+        <span class="pr-1 grey--text text--darken-3 font-weight-black"
+         v-show="dialogItem.pivot.qty > 1">{{dialogItem.pivot.qty +'x'}} </span>
+         {{dialogItem.name +' '}}
+         <span class="pl-1 pb-2 caption grey--text">
+           <v-icon size="11" color="grey" style="padding-bottom:3px">mdi-currency-ngn</v-icon>
+           {{(dialogItem.pivot.qty * dialogItem.price) | price}}</span>
+
        <div v-if="dialogComp.length" class="px-0 pb-2">
        <v-chip class="mx-1"  small v-for="(n, p) in dialogComp" :key="p+n.id+n.pivot.type">{{n.name}}</v-chip>
         </div>
@@ -497,6 +559,9 @@ export default{
       }
       else if (this.order.payment_method === 2) {
          d = 'Mobile/USSD transfer on delivery'
+      }
+        else if (this.order.payment_method === 6) {
+         d = 'Paid from wallet'
       }
       else if (this.order.payment_method === 5) {
          d = 'P.O.S payment'

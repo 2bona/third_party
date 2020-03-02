@@ -49,14 +49,14 @@
       </v-row>
           </v-container>
             <v-card color="transparent" flat tile class="ma-auto text-center" width="290px">
-          <v-switch class="px-5 grey--text mt-0 mx-auto" v-model="choice" color="grey" >
+          <!-- <v-switch class="px-5 grey--text mt-0 mx-auto" v-model="choice" color="grey" >
 <template v-slot:label>
   <span class="caption" v-if="!choice">Use <strong>email</strong> for verification</span>
   <span class="caption" v-if="choice">Use <strong>phone</strong> for verification</span>
         
       </template>
 
-          </v-switch>
+          </v-switch> -->
 
         <v-btn
           :loading="loading"

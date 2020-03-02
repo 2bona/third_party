@@ -19,7 +19,7 @@
         <input v-show="false" ref="file" type="file" @change="fieldChange" class="v-input">
            <v-row class=" px-6">
               <v-flex xs4>
-                  <h5 class="grey--text text--darken-1 font-weight-regular  text-center mb-0">
+                  <h5 class="grey--text text--darken-1 font-weight-bold  text-center mb-0">
                     {{vendor.orders_count | price}}
                   </h5>
                   <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
@@ -27,7 +27,7 @@
                   </p>
            </v-flex>
               <v-flex xs4>
-                    <h5 class="green--text font-weight-regular  text-center mb-0">
+                    <h5 class="green--text font-weight-bold  text-center mb-0">
                       <v-icon size="12px" style="padding-bottom:2px" color="green">mdi-currency-ngn</v-icon>{{vendor.wallet | price}}
                     </h5>
                   <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
@@ -35,7 +35,7 @@
                   </p>
            </v-flex>
               <v-flex xs4>
-                    <h5 class="green--text font-weight-regular  text-center mb-0">
+                    <h5 class="green--text font-weight-bold  text-center mb-0">
                       <v-icon size="12px" style="padding-bottom:2px" color="green">mdi-currency-ngn</v-icon>20,000,000
                     </h5>
                   <p class=" mt-0 grey--text text-capitalize caption font-weight-regular text--lighten-1  text-center">
@@ -262,22 +262,44 @@
   <v-card flat style="border-radius: 0 0 25px 25px" tile class="mb-7">
  
           <v-list>
-            <v-list-item class="">
+            <v-list-item class="pl-2 pr-0">
             <v-list-item-title class="subtitle-2 px-1 grey--text  font-weight-medium  text--darken-2">
-                <v-icon size="19" class="mr-2" color="grey lighten-3">mdi-information</v-icon>                Support
+                <v-icon size="19" class="mr-2" color="grey lighten-3">mdi-information</v-icon>
+                Support
                 <span class="caption"></span>
               </v-list-item-title>
-              <v-list-item-action>
-                <v-btn depressed  small color="grey lighten-3" rounded class="px-8 font-weight-bold"><v-icon size="18" color="grey lighten-1" class="px-2 mt-0">mdi-information-outline</v-icon></v-btn>
+              <v-list-item-action class=" pr-5  ml-0">
+                <v-btn depressed  small color="grey" 
+                :href="'https://wa.me/+234'+8033685498+'?text=Hello,%20this%20is%20'+vendor.name"
+                 target="_blank" rounded class="px-3 font-weight-bold">
+                 <v-icon size="18" color="grey lighten-1" class="px-2 mt-0">mdi-information-outline</v-icon>
+                 </v-btn>
               </v-list-item-action>
-             
             </v-list-item>
-                <v-list-item>
- <v-list-item-title class="subtitle-2 px-1 grey--text  font-weight-medium  text--darken-2">
-                <v-icon size="19" class="mr-2" color="grey lighten-3">mdi-cash</v-icon>                Withdraw funds
+            <v-list-item class="pl-2 pr-0">
+            <v-list-item-title class="subtitle-2 px-1 grey--text  font-weight-medium  text--darken-2">
+                <v-icon size="19" class="mr-2" color="grey lighten-3">mdi-refresh-circle</v-icon>
+                Refresh offline data
+                <span class="caption"></span>
               </v-list-item-title>
-              <v-list-item-action>
-                <v-btn depressed  small color="grey lighten-3" rounded class="px-8 font-weight-bold"><v-icon size="18" color="grey lighten-1" class="px-2 mt-0">mdi-cash</v-icon></v-btn>
+              <v-list-item-action class=" pr-5  ml-0">
+                <v-btn @click="refreshOffline()" depressed  small color="grey"
+                 rounded class="px-3 font-weight-bold">
+                 <v-icon size="18" color="grey lighten-1" class="px-2 mt-0">mdi-refresh-circle</v-icon>
+                 </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item class="pl-2 pr-0">
+            <v-list-item-title class="subtitle-2 px-1 grey--text  font-weight-medium  text--darken-2">
+                <v-icon size="19" class="mr-2" color="grey lighten-3">mdi-upload</v-icon>
+                Upload offline orders
+                <span class="caption"></span>
+              </v-list-item-title>
+              <v-list-item-action class=" pr-5  ml-0">
+                <v-btn depressed  small color="grey"
+                 rounded class="px-3 font-weight-bold">
+                 <v-icon size="18" color="grey lighten-1" class="px-2 mt-0">mdi-cloud-upload</v-icon>
+                 </v-btn>
               </v-list-item-action>
             </v-list-item>
             <v-list-item>
@@ -289,6 +311,12 @@
             </v-list-item>
           </v-list>
 </v-card>
+ <v-dialog v-model="dialog" persistent max-width="290">
+      <v-card flat  color="transparent">
+ <v-progress-linear color="grey darken-4" :indeterminate="true"></v-progress-linear>
+    <p class="text-center mt-3 font-weight-bold grey--text text--lighten-3">please wait...</p>
+      </v-card>
+    </v-dialog>
 </v-card>
 </template>
 <style>
@@ -300,6 +328,8 @@
 import axios from 'axios'
 import wrapper from 'axios-cache-plugin'
 import {loadedGoogleMapsAPI} from '@/main'
+import localforage from 'localforage'
+
 
 let http = wrapper(axios, {
   maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
@@ -321,8 +351,10 @@ export default {
       distance: [],
       duration: [],
       area: [],
+      vendorItems: '',
       show: [],
       overlay: true,
+      dialog: false,
       editBtn: true,
       visible: true,
       rules: {
@@ -392,6 +424,49 @@ export default {
  
     },
   methods: {
+    refreshOffline(){
+    const sn = this
+      sn.dialog = true
+      const url = '/vendor/get_offline_data'
+      http({
+        url: url,
+        method: 'get'
+      }).then((response)=>{
+        sn.vendorItems = response.data.items
+     
+        localforage.ready().then(function() {
+          localforage.removeItem('vendorItems')
+            localforage.setItem('vendorItems', sn.vendorItems).then((val)=>{
+                sn.vendorItems = val
+                sn.dialog = false
+                sn.$store.dispatch('snack', {
+                  color: 'green',
+                  text: 'Your offline data has been refreshed successfully and your users has been notified, to refresh their data.'  
+                })
+                 }).catch((err)=>{
+                  sn.$store.dispatch('snack', {
+                    color: 'green',
+                    text: 'An error occured.'  
+                  })
+                })
+              }).catch(()=>{
+                sn.dialog = false
+                  sn.$store.dispatch('snack', {
+                    color: 'green',
+                    text: 'An error occured.'  
+                })
+              })
+        }).catch((err)=>{
+            sn.$store.dispatch('snack', {
+              color: 'green',
+              text: 'An error occured.'  
+            })
+          })
+        console.log(sn.vendorItems)
+        setTimeout(() => {
+      sn.btn=true
+    }, 50);
+    },
   paySet(){
     const sn = this
     sn.payLoad = true

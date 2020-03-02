@@ -1,6 +1,6 @@
 {
-  "name": "foodman2",
-  "short_name": "foodman2",
+  "name": "edey",
+  "short_name": "edey",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
@@ -15,6 +15,6 @@
   ],
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#ff9800"
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
 }

@@ -87,12 +87,19 @@ Vue.use(VueMeta, {
   // refreshOnceOnNavigation: true
 });
 Vue.filter("myDate", function(created) {
-  return moment(created).format("MMM Do YYYY");
+  return moment(created).format("lll");
 });
 Vue.filter("nowDate", function(created) {
   return moment(created)
     .startOf("seconds")
     .fromNow();
+});
+Vue.filter("trackDate", function (created) {
+  if (created) {
+    return moment(created).format('LT');
+  } else {
+    return null
+  }
 });
 Vue.filter("name", function(text) {
   if (text.length >= 10) {

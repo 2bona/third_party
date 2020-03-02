@@ -8,13 +8,14 @@
       <v-btn class="mb-12" bottom fixed right @click=" dialog = !dialog" fab small color="white">
             <v-icon color="grey darken-1">mdi-camera</v-icon>
           </v-btn>  
+         
       <v-flex xs6 class="pl-3">
         <h1 class="title overline mb-3 font-weight-bold grey--text">Orders
         
         </h1>
       </v-flex>
       <v-flex xs6 >
-        
+        <v-btn absolute @click="start()" depressed icon right dark style="top:8px" fab small class="mb-2" ><v-icon color="grey">mdi-reload</v-icon></v-btn>
           
       </v-flex>
       </v-layout>
@@ -59,6 +60,12 @@
       >{{item.tracking_id}}</span>
     </template>
       <template v-slot:item.payment_method="{ item }">
+      <v-icon
+      size="16"
+      :class="(item.status === 1) ? 'blue--text' : (item.status === 2) ? 'green--text' : (item.status === 3) ? 'orange--text' : (item.status === 4) ? 'grey--text' : (item.status === 5) ? 'red--text':''" 
+      v-if="(item.payment_method === 6)"
+      >mdi-wallet-outline
+      </v-icon>
       <v-icon
       size="16"
       :class="(item.status === 1) ? 'blue--text' : (item.status === 2) ? 'green--text' : (item.status === 3) ? 'orange--text' : (item.status === 4) ? 'grey--text' : (item.status === 5) ? 'red--text':''" 
@@ -207,6 +214,19 @@ export default {
       }, 90000)
   },
   methods: {
+        start(){
+    const sn = this
+    sn.pageClose = true
+     sn.$store.dispatch("vendorOrderPage", {})
+    .then(()=>{
+      sn.$store.dispatch("setVendorOrderList", null)
+    })
+      .then(()=>{
+      sn.$store.dispatch('orderList')
+      sn.navb() 
+      }) 
+
+    },
          async onDecode (decodedString) {
            const sn = this
        if((decodedString != null) && (decodedString.indexOf('/adminorder') !== -1)){

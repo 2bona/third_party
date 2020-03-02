@@ -1,12 +1,12 @@
 <template>
 <div>
-<v-row justify="space-start" class=" px-6">
+<v-row  class=" px-6">
 <v-flex xs12 class="mb-0"> 
 
          <v-card-title class="title  pb-3 pl-0 text--darken-2 pb-2 grey--text">
            Delivery agents
          </v-card-title>
-        <v-card style="border-radius: 25px;max-height:70vh;overflow-y:auto" class="elevation-2 pb-3"  :loading="load">
+        <v-card style="border-radius: 25px;max-height:50vh;overflow-y:auto" class="elevation-2 pb-3"  :loading="load">
     <v-simple-table>
     <template v-slot:default>
       <thead>
@@ -18,7 +18,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(n, i) in agents" :key="n">
+        <tr v-for="(n, i) in agents" :key="n.id">
           <td class="caption font-wight-bold grey--text text--lighten-1 ">{{i+1}}</td>
           <td class="caption ">{{n.name}}</td>
           <td class="text-right"><a style="text-decoration:none" :href="'tel:'+n.phone">
@@ -35,9 +35,11 @@
   </v-simple-table>
        </v-card>
          <v-card-title class="title my-3 pt-2 pl-0 text--darken-2 pb-3 grey--text">
-           Reasons for cancellation  <v-btn rounded depressed class="ml-1 grey--text" @click="dialog= true"  x-small color="grey lighten-2">add</v-btn>
+          <span> Reasons for cancellation </span> <v-spacer></v-spacer>
+          <v-btn rounded depressed class="ml-1 font-weight-bold  white--text" @click="dialog= true"
+            small color="grey darken-2">add</v-btn>
          </v-card-title>
-       <v-card style="border-radius: 25px;max-height:70vh;overflow-y:auto" class=" elevation-2 pb-4 my-3" :loading="load">
+       <v-card style="border-radius: 25px;max-height:50vh;overflow-y:auto" class=" elevation-2 pb-4 my-3" :loading="load">
     <v-simple-table>
     <template v-slot:default>
       <thead>
@@ -48,7 +50,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(n, i) in replys" :key="n">
+        <tr v-for="(n, i) in replys" :key="n.id">
           <td class="caption font-wight-bold grey--text text--lighten-1 ">{{i+1}}</td>
           <td class="caption ">{{n.content}}</td>
           <td class="text-right">
@@ -63,53 +65,94 @@
  
      </v-flex>
      <v-flex xs12 class="mt-0 mb-4 px-0">
-          <v-card-title class="title pt-2 pl-0 text--darken-2 pb-3 grey--text">
-           Reviews  
-         </v-card-title>
-          
-       <div class="elevation-2 mt-2" style="max-height:70vh; border-radius:25px; overflow:auto">
-          <v-list class="py-0 my-0" two-line v-for="n in 6" :key="n">
-                <v-list-item>
+          <v-card-title class="title pt-2 px-0 text--darken-2 pb-3 grey--text">
+           <span>Reviews({{vendor.reviews_count}})</span>  <v-spacer></v-spacer>
+         
+                    <v-menu style="border-radius: 25px;" z-index="99999" max-height="300" nudge-bottom="5" allow-overflow max-width="200" offset-y>
+      <template   v-slot:activator="{ on }">
+        <v-btn 
+        :disabled="loadingR" 
+          color="grey darken-2" depressed
+          small  rounded
+          class=" mt-1 font-weight-bold  white--text"
+          v-on="on">
+            {{filter}}<v-icon class="">mdi-menu-down</v-icon>
+        </v-btn>
+      </template>
+      <v-list style="border-radius:25px">
+        <v-list-item-group active-class="orange--text" color="orange darken-4">
+             <v-list-item :disabled="reviewSettings.method === 'latest'" dense
+             @click="getReviews(latest)">
+          <v-list-item-title class="grey--text">Latest</v-list-item-title>
+        </v-list-item>
+             <v-list-item dense :disabled="reviewSettings.method === 'oldest'"
+             @click="getReviews(oldest)">
+          <v-list-item-title class="grey--text">Oldest</v-list-item-title>
+        </v-list-item>
+             <v-list-item dense :disabled="reviewSettings.method === 'best'"
+             @click="getReviews(best)">
+          <v-list-item-title class="grey--text">Best</v-list-item-title>
+        </v-list-item>
+             <v-list-item dense :disabled="reviewSettings.method === 'worst'"
+             @click="getReviews(worst)">
+          <v-list-item-title class="grey--text">Worst</v-list-item-title>
+        </v-list-item>
+         </v-list-item-group>
+      </v-list>
+    </v-menu>
+    </v-card-title>
+       <div ref="reviewContainer" class="elevation-2 mt-2" style="max-height:50vh; border-radius:25px; overflow:auto">
+             <div v-show="loadingRTop" class="py-7 text-center">
+    <v-progress-circular
+      indeterminate v-show="loadingRTop"
+      color="primary"
+    ></v-progress-circular>
+                   </div>
+          <v-list  class="py-0 my-0" two-line v-for="n in reviews" :key="n.id">
+                <v-list-item :ripple="false" @click="getOrder(n.order.id)">
                       <v-list-item-avatar style="position: relative;
-                      top: -7px;" class="mt-0 mr-2" size="26">
+                      top: 0px;" class="mt-0 mb-0 mr-2" size="26">
                         <v-img
-                          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+                          :src="n.user.image"
                         ></v-img>
                       </v-list-item-avatar>
 
                       <v-list-item-content>
                         <v-flex d-flex align-center class="pl-1">
-                          <div class="font-weight-bold caption pt-1 text-capitalize">
-                            emeka okolo
+                          <div class="font-weight-bold caption  text-capitalize">
+                            {{n.user.surname + ' '+n.user.middle_name + ' '+ n.user.first_name}}
                             <br />
-                            <p class="overline mb-0 grey--text text--darken-2">20th Mar. 2019</p>
+                            <p class="overline mb-0 grey--text text--darken-2">{{n.created_at | myDate}}</p>
                           </div>
 
                           <div class="flex-grow-1"></div>
 
                           <v-rating
                             size="15"
-                            dense
+                            dense readonly
                             :value="3"
-                            color="orange"
+                            color="orange darken-4"
                             style="position: relative;top: -7px;"
                             background-color="grey lighten-2"
-                            v-model="rating"
+                            v-model="n.rating"
                           ></v-rating>
                         </v-flex>
                         <v-list-item-subtitle
                         style="line-height:1.3;"
-                          class="text-wrap px-1 caption grey--text text--darken-1"
-                        >This was the best Rice i have ever ate This was the best
-                         Rice i e best Rice.</v-list-item-subtitle>
+                          class=" px-1 caption grey--text text--darken-1"
+                        >{{n.content}}</v-list-item-subtitle>
     
                       </v-list-item-content>
-
-                      <v-list-item-icon-text></v-list-item-icon-text>
                     </v-list-item>
-
                     <v-divider></v-divider>
                   </v-list>
+                    <div class="py-7 text-center">
+    <v-progress-circular
+      indeterminate v-show="loadingR && !loadingRTop"
+      color="primary"
+    ></v-progress-circular>
+    <p v-show="!next_page && !loadingRTop" class="overline text-center">the end</p>
+                    </div>
                        </div>
      </v-flex>
     <v-flex xs12 class="my-3 px-0">
@@ -242,7 +285,17 @@
 </div>
 </template>
 <style>
-
+.v-menu__content--fixed {
+  border-radius: 25px!important;
+}
+</style>
+<style>
+.v-menu__content {
+    border-radius: 25px;
+}
+/* as e dey hot.com
+tv show
+ */
 </style>
 <script>
 import axios from 'axios'
@@ -259,18 +312,28 @@ export default {
     return {
       content: '',
       load: false,
+      filter: '',
       loading: false,
+      loadingR: false,
+      loadingRTop: false,
       loading2: false,
       loading3: false,
       dialog: false,
       dialog2: false,
+      pageClose: false,
       dialog3: false,
+      reviewSettings: {},
       valid: true,
       deleteId: '',
       reply: '',
+      reviews: '',
       replyEdit: '',
       replyEditId: '',
       replyDeleteId: '',
+      next_page: '',
+      per_page: '',
+      isLoading: false,
+
       dialog4: false,
       rules: {
         required: value => !!value || "Required.",
@@ -288,12 +351,83 @@ export default {
   agents() {
       return this.$store.getters.getAgents;
     },
+    latest()  {
+    return {
+      name: this.vendor.name,
+      filter: 'created_at',
+      direction: 'desc',
+      method: 'latest'
+    }
+    },
+    oldest()  {
+    return {
+      name: this.vendor.name,
+      filter: 'created_at',
+      direction: 'asc',
+      method: 'oldest'
+    }
+    },
+    best() {
+      return {
+        name: this.vendor.name,
+      filter: 'rating',
+      direction: 'desc',
+      method: 'best'
+    }
+    },
+    worst() {
+      return {
+        name: this.vendor.name,
+      filter: 'rating',
+      direction: 'asc',
+      method: 'worst'
+    }
+    },
   },
+    beforeDestroy(){
+    this.pageClose = false
+  },
+    beforeRouteLeave (to, from, next) {
+  this.pageClose = false
+     setTimeout(() => {
+      next()
+    }, 50);
+    },
   mounted(){
-    this.navb()
-    this.getAgents()
+    const sn = this
+     sn.pageClose = true
+    sn.navb()
+    sn.navb2()
+    sn.getAgents()
+    sn.getReviews({
+      name: sn.vendor.name,
+      filter: 'created_at',
+      direction: 'desc',
+      method: 'latest'
+      
+    
+    })
   },
    methods: {
+     getOrder(x){
+            this.$store.dispatch('order', {
+        id: x,
+        action: null
+          })
+     },
+     scrollTop() {
+      this.$refs.reviewContainer.scrollTo(0, 0)
+    },
+    navb2(){
+      const sn = this
+     sn.$refs.reviewContainer.onscroll = () => {
+       let bottomOfWindow = sn.$refs.reviewContainer.scrollTop >= sn.$refs.reviewContainer.offsetHeight - 280;
+      if (bottomOfWindow && sn.next_page && !sn.loadingR && sn.pageClose) {
+        sn.scrollReviews(sn.reviewSettings)
+       console.log('true')
+      }
+     }
+    },
     saveReply(){
        const sn = this
   if (sn.$refs.form.validate()){
@@ -331,6 +465,61 @@ export default {
       const sn = this
       sn.replyDeleteId = x 
       sn.dialog3 = true
+    },
+    scrollReviews(x){
+       const sn = this
+           sn.loadingR = true
+      sn.filter = x.method
+     let url = sn.next_page
+      http({
+        url: url,
+      method: 'get',
+      params: {
+        name: x.name,
+        filter: x.filter,
+        direction: x.direction
+      }
+    })
+      .then((response) => {
+        response.data.reviews.data.forEach(element => {
+          sn.reviews.push(element)
+        });
+        sn.next_page = response.data.reviews.next_page
+        sn.loadingR = false
+      })
+      .catch(function (error) {
+        sn.loadingR = false
+        console.log(error)
+      })
+    },
+    getReviews(x){
+      this.$refs.reviewContainer.scrollTo(0, 0)
+       const sn = this
+      sn.loadingR = true
+      sn.loadingRTop = true
+      sn.filter = x.method
+      sn.reviewSettings = x
+     let url = "/review/all"
+      http({
+      url: url,
+      method: 'get',
+      params: {
+        name: x.name,
+        filter: x.filter,
+        direction: x.direction
+      }
+    })
+      .then((response) => {
+        sn.reviews = response.data.reviews.data
+        sn.next_page = response.data.reviews.next_page_url
+        sn.loadingR = false
+      sn.loadingRTop = false
+      })
+      .catch(function (error) {
+        sn.loadingR = false
+      sn.loadingRTop = false
+        console.log(error)
+      })
     },
     editReply(){
        const sn = this
