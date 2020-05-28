@@ -199,12 +199,29 @@ export const vendor = {
           url = "/order/" + data.action + "?id=" + data.id
        } 
       axios.get(AXIOS_CONFIG.API_URL + url)
-         .then(function (response) {
+         .then(res => {
+           console.log('....... response.......')
+           console.log(res)
+           if (res.data.token && res.data.message) {
+             axios.post(AXIOS_CONFIG.API_URL + "/notify", {
+               receiver_user : res.data.token,
+               title: 'Order Update',
+               message: res.data.message,
+               push_type: 'individual',
+               payload: JSON.stringify({url: '/cart', id: data.id})
+              }).then((res)=>{
+                console.log('....... response.......')
+                console.log(res)
+             }).catch((err)=>{
+              console.log(err)
+             })
+             
+           }
            dispatch("getOrder", {
              id: data.id,
              action: data.action
            })
-         }).catch(function (error) {
+         }).catch((error)=>{
            console.log(error)
          })
       }

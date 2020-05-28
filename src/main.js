@@ -1,40 +1,32 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 export const loadedGoogleMapsAPI = new Promise((resolve, reject) => {
+  window["GoogleMapsInit"] = resolve;
 
-  window['GoogleMapsInit'] = resolve;
+  let GMap = document.createElement("script");
 
-  let GMap = document.createElement('script');
-
-  GMap.setAttribute('src',
-    `https://maps.googleapis.com/maps/api/js?key=AIzaSyA1Uoi_ddjhFR5HNAgofZNat9eQAsUFtg0&callback=GoogleMapsInit&libraries=places`);
-
+  GMap.setAttribute(
+    "src",
+    `https://maps.googleapis.com/maps/api/js?key=AIzaSyA1Uoi_ddjhFR5HNAgofZNat9eQAsUFtg0&callback=GoogleMapsInit&libraries=places`
+  );
   document.body.appendChild(GMap);
 });
-import {
-  Plugins,
-  AppUrlOpen
-} from '@capacitor/core';
-const {
-  Toast
-} = Plugins;
-const bckBtn = false
-Plugins.App.addListener('backButton', function () {
+import { Plugins, AppUrlOpen } from "@capacitor/core";
+const { Toast } = Plugins;
+const bckBtn = false;
+Plugins.App.addListener("backButton", function() {
   if (bckBtn === false) {
-   Toast.show({
-      text: 'Press back again to exit'
+    Toast.show({
+      text: "Press back again to exit"
     });
-    bckBtn = true
+    bckBtn = true;
     setTimeout(() => {
-      bckBtn = false
+      bckBtn = false;
     }, 5000);
-  } else{
-    Plugins.App.exitApp()
+  } else {
+    navigator.app.exitApp();
   }
 });
-
-
-
 import Vue from "vue";
 import App from "./App.vue";
 import VueRouter from "vue-router";
@@ -46,32 +38,35 @@ import Vuex from "vuex";
 import store from "./store.js";
 import axios from "axios";
 import moment from "moment";
-
-document.cookie = 'cross-site-cookie=image; SameSite=None; Secure';
+document.cookie = "cross-site-cookie=image; SameSite=None; Secure";
 
 axios.defaults.baseURL = "https://foodrepublic.herokuapp.com/api";
-    axios.interceptors.response.use(function (response) {
-      // Do something with response data
-      return response;
-    }, function (error) {
-      if (error === "Error: Network Error") {
-        router.push('/auth')
-        
-      } else {
-        if(error.response){
-            switch (error.response.status) {
-        case 401:
-          router.push('/auth') //we will redirect user into 503 page 
-          break
-        default:
-          break
-          }     
+axios.interceptors.response.use(
+  function(response) {
+    // Do something with response data
+    return response;
+  },
+  function(error) {
+    if (error === "Error: Network Error") {
+      localStorage.removeItem("token");
+      router.push("/auth");
+    } else {
+      if (error.response) {
+        switch (error.response.status) {
+          case 401:
+            localStorage.removeItem("token");
+            router.push("/auth"); //we will redirect user into 503 page
+            break;
+          default:
+            break;
         }
       }
-  
-      // Do something with response error
-      return Promise.reject(error);
-    });
+    }
+
+    // Do something with response error
+    return Promise.reject(error);
+  }
+);
 Vue.use(axios);
 
 Vue.config.productionTip = false;
@@ -94,11 +89,11 @@ Vue.filter("nowDate", function(created) {
     .startOf("seconds")
     .fromNow();
 });
-Vue.filter("trackDate", function (created) {
+Vue.filter("trackDate", function(created) {
   if (created) {
-    return moment(created).format('LT');
+    return moment(created).format("LT");
   } else {
-    return null
+    return null;
   }
 });
 Vue.filter("name", function(text) {
@@ -126,15 +121,15 @@ Vue.filter("duration", function(value) {
   if (value != null && val != 0) {
     var val = Math.floor((value % 3600) / 60);
 
-    if ((val <= 5) && (val > 0 )) {
+    if (val <= 5 && val > 0) {
       return "15mins";
-    } else if (val <= 10 && (val > 5)) {
+    } else if (val <= 10 && val > 5) {
       return "25mins";
-    } else if (val <= 15 && (val > 10)) {
+    } else if (val <= 15 && val > 10) {
       return "35mins";
-    } else if (val <= 20 && (val > 15)) {
+    } else if (val <= 20 && val > 15) {
       return "45mins";
-    } else if (val <= 30 && (val > 20)) {
+    } else if (val <= 30 && val > 20) {
       return "50mins";
     } else if (val > 30) {
       return "55mins";

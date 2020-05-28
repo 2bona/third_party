@@ -39,6 +39,25 @@ const router = new VueRouter({
       
     },
     {
+      path: "/offlineorders",
+      component: () =>
+        import(
+          /* webpackChunkName: "offlineorders" */
+          "./components/offlineorders.vue"
+        ),
+      
+    },
+    {
+      path: "/offlinepage/:id",
+      props: true,
+      component: () =>
+        import(
+          /* webpackChunkName: "offlinepage" */
+          "./components/offlinepage.vue"
+        ),
+      
+    },
+    {
       path: "/vendorreviews",
       component: () =>
         import(
@@ -281,9 +300,9 @@ router.beforeEach((to, from, next) => {
         query: {
           nextUrl: to.fullPath
         }
-      });
+      })
     } else{
-      next();
+      next()
     }
   }
     else if (to.matched.some(record => record.meta.role)) {
@@ -301,10 +320,10 @@ router.beforeEach((to, from, next) => {
     } else {
       next({
         path: "/"
-      });
+      })
     }
   } else {
-    next();
+    next()
   }
 });
 export default router;

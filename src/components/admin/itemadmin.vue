@@ -2,11 +2,27 @@
   <div>
     <v-row class="py-3 mt-5 mb-12 px-3">
       <v-flex xs12 class="mb-3 pt-0 px-0">
-        <v-card-title class="pt-0 body-1 text-right font-weight-medium px-0 grey--text">
-          <v-btn depressed rounded class="mx-auto caption font-weight-black orange--text px-7 text--darken-4 "  dark @click="dialog=true"  color="grey lighten-3">
+        <v-card-title
+          class="pt-0 body-1 text-right font-weight-medium px-0 grey--text"
+        >
+          <v-btn
+            depressed
+            rounded
+            class="mx-auto caption font-weight-black orange--text px-7 text--darken-4 "
+            dark
+            @click="dialog = true"
+            color="grey lighten-3"
+          >
             <v-icon>mdi-plus</v-icon> category
           </v-btn>
-          <v-btn class="mx-auto caption font-weight-black blue--text text--darken-4 px-7" @click="dialog5 =true" depressed rounded  dark color="grey lighten-3">
+          <v-btn
+            class="mx-auto caption font-weight-black blue--text text--darken-4 px-7"
+            @click="dialog5 = true"
+            depressed
+            rounded
+            dark
+            color="grey lighten-3"
+          >
             <v-icon>mdi-plus</v-icon> option
           </v-btn>
         </v-card-title>
@@ -17,32 +33,61 @@
                 <mainOptions />
               </v-col>
               <v-col class="px-3 text-center py-1" cols="12">
-                <v-card color="transparent" flat tile class="mx-auto" max-width="600px">
-                  <v-expansion-panels accordion class="elevation-0" style="border-radius:25px">
+                <v-card
+                  color="transparent"
+                  flat
+                  tile
+                  class="mx-auto"
+                  max-width="600px"
+                >
+                  <v-expansion-panels
+                    accordion
+                    class="elevation-0"
+                    style="border-radius:25px"
+                  >
                     <v-expansion-panel>
                       <v-expansion-panel-header>
-                        <h3 class="grey--text text--darken-1 text-capitalize">Options</h3>
+                        <h3 class="grey--text text--darken-1 text-capitalize">
+                          Options
+                        </h3>
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
-                        <v-divider  class="my-4"></v-divider>
-                        <v-progress-linear v-if="dialog45" indeterminate color="grey lighten-1"></v-progress-linear>
-                        <v-flex class="my-2 px-1" xs12 v-for="(n, i) in options" :key="n.id">
+                        <v-divider class="my-4"></v-divider>
+                        <v-progress-linear
+                          v-if="dialog45"
+                          indeterminate
+                          color="grey lighten-1"
+                        ></v-progress-linear>
+                        <v-flex
+                          class="my-2 px-1"
+                          xs12
+                          v-for="(n, i) in options"
+                          :key="n.id"
+                        >
                           <v-card
                             :disabled="dialog45"
                             width="90%"
-                              height="auto" flat
-                              color="grey lighten-5"
-                              style=" border-radius:30px"
-                              class="mx-auto mb-2 py-1 px-2"
+                            height="auto"
+                            flat
+                            color="grey lighten-5"
+                            style=" border-radius:30px"
+                            class="mx-auto mb-2 py-1 px-2"
                           >
                             <v-list-item class="pa-0">
                               <v-list-item-avatar
                                 size="30"
-                                
-                               class="my-0 elevation-1 mr-2"
+                                class="my-0 elevation-1 mr-2"
                               >
-                                <v-img @click="openImageInput(i)" :src="n.image"></v-img>
-                                <v-overlay absolute opacity="0.3" z-index="1" :value="attach === i"></v-overlay>
+                                <v-img
+                                  @click="openImageInput(i)"
+                                  :src="n.image"
+                                ></v-img>
+                                <v-overlay
+                                  absolute
+                                  opacity="0.3"
+                                  z-index="1"
+                                  :value="attach === i"
+                                ></v-overlay>
                                 <v-btn
                                   :loading="loading8"
                                   style="z-index:7"
@@ -56,7 +101,9 @@
                                   class="mt-0 mb-0 mx-4"
                                   @click="editOptionImage(n.id, i)"
                                 >
-                                  <v-icon color="orange lighten-4" dark>mdi-cloud-upload</v-icon>
+                                  <v-icon color="orange lighten-4" dark
+                                    >mdi-cloud-upload</v-icon
+                                  >
                                 </v-btn>
                               </v-list-item-avatar>
                               <input
@@ -80,8 +127,9 @@
                                       <v-icon
                                         size="9px"
                                         :color="n.available ? 'green' : 'red'"
-                                      >mdi-circle</v-icon>
-                                      {{n.name}}
+                                        >mdi-circle</v-icon
+                                      >
+                                      {{ n.name }}
                                     </h2>
                                   </v-flex>
                                   <v-slide-x-reverse-transition>
@@ -91,7 +139,14 @@
             position: absolute; right: -2px; z-index:99; top: -3px;"
                                     >
                                       <v-btn
-                                        @click="editOption(n.id, n.name, n.price)"
+                                        @click="
+                                          editOption(
+                                            n.id,
+                                            n.name,
+                                            n.cost_price,
+                                            n.mark_up_price
+                                          )
+                                        "
                                         icon
                                         text
                                         color="grey lighten-2"
@@ -115,7 +170,9 @@
                                   <v-slide-x-transition>
                                     <v-switch
                                       v-show="!n.status"
-                                      @click.prevent="offOption(n.available, n.id)"
+                                      @click.prevent="
+                                        offOption(n.available, n.id)
+                                      "
                                       style="position: absolute;transform: rotate(270deg);top: 15px;right: -25px;"
                                       v-model="n.available"
                                       color="grey lighten-4"
@@ -130,8 +187,9 @@
                                   <v-icon
                                     size="11.5px"
                                     style="width: 4.8px; padding-bottom:1.8px; margin-left:7px"
-                                  >mdi-currency-ngn</v-icon>
-                                  {{n.price | price}}
+                                    >mdi-currency-ngn</v-icon
+                                  >
+                                  {{ n.price | price }}
                                 </p>
                                 <p class="mb-0">
                                   <span class="d-flex justify mb-0 mt-0"></span>
@@ -145,20 +203,43 @@
                   </v-expansion-panels>
                 </v-card>
               </v-col>
-              <input v-show="false" ref="file81" type="file" @change="itemFieldChange($event)" />
-              <v-col class="px-3 py-1" v-for="category in menu" :key="category.id" cols="12">
-                <router-link style="text-decoration:none;" :to="'/item/'+category.id">
-                  <v-card flat color="grey lighten-5" style="border-radius:25px" class="mx-auto py-3 px-6" max-width="600px">
+              <input
+                v-show="false"
+                ref="file81"
+                type="file"
+                @change="itemFieldChange($event)"
+              />
+              <v-col
+                class="px-3 py-1"
+                v-for="category in menu"
+                :key="category.id"
+                cols="12"
+              >
+                <router-link
+                  style="text-decoration:none;"
+                  :to="'/item/' + category.id"
+                >
+                  <v-card
+                    flat
+                    color="grey lighten-5"
+                    style="border-radius:25px"
+                    class="mx-auto py-3 px-6"
+                    max-width="600px"
+                  >
                     <h4
                       class="grey--text font-weight-medium text--darken-1 text-capitalize"
-                    >{{ category.name }}</h4>
+                    >
+                      {{ category.name }}
+                    </h4>
                   </v-card>
                 </router-link>
               </v-col>
               <div class="text-center">
                 <v-dialog v-model="dialog" width="500" :persistent="loading">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title>Add Category</v-card-title>
+                    <v-card-title class="body-2 grey lighten-2" primary-title
+                      >Add Category</v-card-title
+                    >
                     <v-form onSubmit="return false;" ref="form">
                       <v-card-text>
                         <v-text-field
@@ -179,14 +260,17 @@
                           small
                           :loading="loading"
                           @click="addCategory()"
-                        >submit</v-btn>
+                          >submit</v-btn
+                        >
                       </v-card-actions>
                     </v-form>
                   </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialog5" width="500" :persistent="loading5">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title>Add Option</v-card-title>
+                    <v-card-title class="body-2 grey lighten-2" primary-title
+                      >Add Option</v-card-title
+                    >
                     <v-form onSubmit="return false;" ref="form5">
                       <v-card-text>
                         <v-text-field
@@ -199,8 +283,17 @@
                         ></v-text-field>
                         <v-text-field
                           class="font-weight-regular grey--text text--darken-4"
-                          label="Price"
-                          v-model="optionprice"
+                          label="Cost Price"
+                          v-model="optioncostprice"
+                          placeholder="10000"
+                          :rules="numberRules"
+                          color="orange"
+                          prepend-inner-icon="mdi-currency-ngn"
+                        ></v-text-field>
+                        <v-text-field
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Mark up"
+                          v-model="optionmarkupprice"
                           placeholder="10000"
                           :rules="numberRules"
                           color="orange"
@@ -229,17 +322,17 @@
                           small
                           :loading="loading5"
                           @click="addOptionItem()"
-                        >submit</v-btn>
+                          >submit</v-btn
+                        >
                       </v-card-actions>
                     </v-form>
                   </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialog6" width="500" :persistent="loading6">
                   <v-card>
-                    <v-card-title
-                      class="body-2 grey lighten-2"
-                      primary-title
-                    >Edit {{editoptionname}}</v-card-title>
+                    <v-card-title class="body-2 grey lighten-2" primary-title
+                      >Edit {{ editoptionname }}</v-card-title
+                    >
                     <v-form onSubmit="return false;" ref="form5">
                       <v-card-text>
                         <v-text-field
@@ -253,8 +346,19 @@
                         <v-text-field
                           @keyup.enter.native="editOptionItem"
                           class="font-weight-regular grey--text text--darken-4"
-                          label="Price"
-                          v-model="editoptionprice"
+                          label="Cost price"
+                          v-model="editoptioncostprice"
+                          :rules="numberRules"
+                          placeholder="0"
+                          hint="put only number eg '1000' not '1,000'"
+                          color="orange"
+                          prepend-inner-icon="mdi-currency-ngn"
+                        ></v-text-field>
+                        <v-text-field
+                          @keyup.enter.native="editOptionItem"
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Mark up"
+                          v-model="editoptionmarkupprice"
                           :rules="numberRules"
                           placeholder="0"
                           hint="put only number eg '1000' not '1,000'"
@@ -273,20 +377,25 @@
                           small
                           :loading="loading6"
                           @click="editOptionItem()"
-                        >edit</v-btn>
+                          >edit</v-btn
+                        >
                       </v-card-actions>
                     </v-form>
                   </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialog2" width="500" :persistent="loading2">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title>Edit category</v-card-title>
+                    <v-card-title class="body-2 grey lighten-2" primary-title
+                      >Edit category</v-card-title
+                    >
                     <v-form onSubmit="return false;" ref="form2">
                       <v-card-text>
                         <v-text-field
                           v-model="editContent"
                           autofocus
-                          @keyup.enter.native="editCategory(editContent, editId)"
+                          @keyup.enter.native="
+                            editCategory(editContent, editId)
+                          "
                         ></v-text-field>
                       </v-card-text>
                       <v-divider></v-divider>
@@ -300,17 +409,17 @@
                           :disabled="editContent.length < 2"
                           :loading="loading2"
                           @click="editCategory(editContent, editId)"
-                        >edit</v-btn>
+                          >edit</v-btn
+                        >
                       </v-card-actions>
                     </v-form>
                   </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialog3" width="200">
                   <v-card>
-                    <v-card-title
-                      class="body-2 grey lighten-2"
-                      primary-title
-                    >Delete {{deleteName}} and its Items?</v-card-title>
+                    <v-card-title class="body-2 grey lighten-2" primary-title
+                      >Delete {{ deleteName }} and its Items?</v-card-title
+                    >
                     <v-divider></v-divider>
 
                     <v-card-actions>
@@ -322,21 +431,25 @@
                         small
                         :loading="loading3"
                         @click="deleteCategory(deleteId)"
-                      >sure</v-btn>
+                        >sure</v-btn
+                      >
                       <v-btn
                         color="red"
                         class="px-3 mx-auto"
                         rounded
                         dark
                         small
-                        @click="dialog3=false"
-                      >cancel</v-btn>
+                        @click="dialog3 = false"
+                        >cancel</v-btn
+                      >
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialog35" width="200">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title>Turn {{offName}}?</v-card-title>
+                    <v-card-title class="body-2 grey lighten-2" primary-title
+                      >Turn {{ offName }}?</v-card-title
+                    >
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-btn
@@ -347,24 +460,25 @@
                         small
                         :loading="loading35"
                         @click="offItem()"
-                      >sure</v-btn>
+                        >sure</v-btn
+                      >
                       <v-btn
                         color="red"
                         class="px-3 mx-auto"
                         rounded
                         dark
                         small
-                        @click="dialog35=false"
-                      >cancel</v-btn>
+                        @click="dialog35 = false"
+                        >cancel</v-btn
+                      >
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialog355" width="200">
                   <v-card>
-                    <v-card-title
-                      class="body-2 grey lighten-2"
-                      primary-title
-                    >Turn {{offoptionName}}?</v-card-title>
+                    <v-card-title class="body-2 grey lighten-2" primary-title
+                      >Turn {{ offoptionName }}?</v-card-title
+                    >
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-btn
@@ -375,24 +489,25 @@
                         small
                         :loading="loading355"
                         @click="offOptionMain()"
-                      >sure</v-btn>
+                        >sure</v-btn
+                      >
                       <v-btn
                         color="red"
                         class="px-3 mx-auto"
                         rounded
                         dark
                         small
-                        @click="dialog355=false"
-                      >cancel</v-btn>
+                        @click="dialog355 = false"
+                        >cancel</v-btn
+                      >
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialog7" width="200">
                   <v-card>
-                    <v-card-title
-                      class="body-2 grey lighten-2"
-                      primary-title
-                    >Delete {{deleteOptionName}}?</v-card-title>
+                    <v-card-title class="body-2 grey lighten-2" primary-title
+                      >Delete {{ deleteOptionName }}?</v-card-title
+                    >
                     <v-divider></v-divider>
 
                     <v-card-actions>
@@ -404,24 +519,25 @@
                         small
                         :loading="loading7"
                         @click="optionDelete(deleteOptionId)"
-                      >sure</v-btn>
+                        >sure</v-btn
+                      >
                       <v-btn
                         color="red"
                         class="px-3 mx-auto"
                         rounded
                         dark
                         small
-                        @click="dialog7=false"
-                      >cancel</v-btn>
+                        @click="dialog7 = false"
+                        >cancel</v-btn
+                      >
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialog9" width="200">
                   <v-card>
-                    <v-card-title
-                      class="body-2 grey lighten-2"
-                      primary-title
-                    >Remove {{detachOptionName}}?</v-card-title>
+                    <v-card-title class="body-2 grey lighten-2" primary-title
+                      >Remove {{ detachOptionName }}?</v-card-title
+                    >
                     <v-divider></v-divider>
 
                     <v-card-actions>
@@ -433,224 +549,18 @@
                         small
                         :loading="loading9"
                         @click="optionDetach(detachOptionId)"
-                      >sure</v-btn>
+                        >sure</v-btn
+                      >
                       <v-btn
                         color="red"
                         class="px-3 mx-auto"
                         rounded
                         dark
                         small
-                        @click="dialog9=false"
-                      >cancel</v-btn>
+                        @click="dialog9 = false"
+                        >cancel</v-btn
+                      >
                     </v-card-actions>
-                  </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialog10" width="200">
-                  <v-card>
-                    <v-card-title
-                      class="body-2 item-truncate grey lighten-2"
-                      primary-title
-                    >Delete {{deleteCatItemName}}?</v-card-title>
-                    <v-divider></v-divider>
-                    <v-card-actions>
-                      <v-btn
-                        color="orange"
-                        class="px-3 mx-auto"
-                        rounded
-                        dark
-                        small
-                        :loading="loading10"
-                        @click="deleteItem(deleteCatId, deleteCatItemId)"
-                      >sure</v-btn>
-                      <v-btn
-                        color="red"
-                        class="px-3 mx-auto"
-                        rounded
-                        dark
-                        small
-                        @click="dialog10=false"
-                      >cancel</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialog4" width="500">
-                  <v-card flat tile class="pb-9">
-                    <v-form onSubmit="return false;" ref="form4">
-                      <v-card-title
-                        primary-title
-                        class="grey lighten-2 body-2 mb-3"
-                      >Add new item to category</v-card-title>
-                      <div class="px-5 pb-9">
-                        <v-flex xs12>
-                          <v-text-field
-                            class="font-weight-regular grey--text text--darken-4"
-                            label="Name"
-                            placeholder="eg. Jollof Rice"
-                            color="orange"
-                            v-model="name"
-                            required
-                            :rules="[rules.required]"
-                          ></v-text-field>
-                          <v-text-field
-                            class="font-weight-regular grey--text text--darken-4"
-                            label="Price"
-                            v-model="price"
-                            placeholder="0"
-                            hint="put only number eg '1000' not '1,000'"
-                            color="orange"
-                            prepend-inner-icon="mdi-currency-ngn"
-                            required
-                            :rules="numberRules"
-                          ></v-text-field>
-                        </v-flex>
-                        <v-row class="px-3" justify="space-between">
-                          <v-flex xs12>
-                            <v-file-input
-                              ref="file2"
-                              @change="fieldChanges"
-                              class="font-weight-regular grey--text text--darken-4"
-                              prepend-icon="mdi-camera"
-                              placeholder="Item picture"
-                              label="Image"
-                              :rules="[rules.required]"
-                            ></v-file-input>
-                          </v-flex>
-                          <v-flex xs12>
-                            <v-textarea
-                              name="description"
-                              label="Description (optional)"
-                              color="orange"
-                              v-model="description"
-                              class="font-weight-regular grey--text text--darken-4"
-                              placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
-                            ></v-textarea>
-                          </v-flex>
-                          <v-flex xs12>
-                            <v-select
-                              class="font-weight-regular grey--text text--darken-4"
-                              :items="mainOptionsList"
-                              attach
-                              v-model="compulsory"
-                              chips
-                              label="Compulsory extras"
-                              color="orange"
-                              multiple
-                            ></v-select>
-                          </v-flex>
-                          <v-flex xs12>
-                            <v-select
-                              class="font-weight-regular grey--text text--darken-4"
-                              :items="mainOptionsList"
-                              attach
-                              v-model="optional"
-                              chips
-                              placeholder="eg. plantain, eggs, coleslaw, moi-moi"
-                              label="Optional extras"
-                              color="orange"
-                              multiple
-                            ></v-select>
-                          </v-flex>
-                        </v-row>
-
-                        <v-row class="my-5 px-3" justify="space-around">
-                          <v-btn
-                            :loading="loading4"
-                            @click="addCategoryItem(addId)"
-                            class="px-6"
-                            color="orange"
-                            dark
-                            small
-                            rounded
-                          >add</v-btn>
-                        </v-row>
-                      </div>
-                    </v-form>
-                  </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialog8" width="500">
-                  <v-card flat tile>
-                    <v-form onSubmit="return false;" ref="form45">
-                      <v-card-title
-                        primary-title
-                        class="grey lighten-2 body-2 mb-3"
-                      >Edit {{editCatItemName}}</v-card-title>
-                      <div class="px-5 pb-5">
-                        <v-flex xs12>
-                          <v-text-field
-                            class="font-weight-regular grey--text text--darken-4"
-                            label="Name"
-                            placeholder="eg. Jollof Rice"
-                            color="orange"
-                            v-model="editCatItemName"
-                            required
-                            :rules="[rules.required]"
-                          ></v-text-field>
-                          <v-text-field
-                            class="font-weight-regular grey--text text--darken-4"
-                            label="Price"
-                            v-model="editCatItemPrice"
-                            placeholder="0"
-                            hint="put only number eg '1000' not '1,000'"
-                            color="orange"
-                            prepend-inner-icon="mdi-currency-ngn"
-                            required
-                            :rules="numberRules"
-                          ></v-text-field>
-                        </v-flex>
-                        <v-row class="px-3" justify="space-between">
-                          <v-flex xs12>
-                            <v-textarea
-                              name="description"
-                              label="Description (optional)"
-                              color="orange"
-                              v-model="editCatItemDescription"
-                              class="font-weight-regular grey--text text--darken-4"
-                              placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
-                            ></v-textarea>
-                          </v-flex>
-                          <v-flex xs12>
-                            <v-select
-                              :loading="!mainOptionsList.length"
-                              class="font-weight-regular grey--text text--darken-4"
-                              :items="mainOptionsList"
-                              attach
-                              v-model="compValue"
-                              chips
-                              placeholder="eg. meat, fish, garri, fufu"
-                              label="Compulsory extras"
-                              color="orange"
-                              multiple
-                            ></v-select>
-                          </v-flex>
-                          <v-flex xs12>
-                            <v-select
-                              class="font-weight-regular grey--text text--darken-4"
-                              :items="mainOptionsList"
-                              :loading="!mainOptionsList.length"
-                              attach
-                              v-model="optValue"
-                              chips
-                              placeholder="eg. plantain, eggs, coleslaw, moi-moi"
-                              label="Optional extras"
-                              color="orange"
-                              multiple
-                            ></v-select>
-                          </v-flex>
-                        </v-row>
-
-                        <v-row class="px-3" justify="space-around">
-                          <v-btn
-                            :loading="loading81"
-                            @click="editCategoryItem()"
-                            class="px-6"
-                            color="orange"
-                            dark
-                            small
-                            rounded
-                          >edit</v-btn>
-                        </v-row>
-                      </div>
-                    </v-form>
                   </v-card>
                 </v-dialog>
               </div>
@@ -663,14 +573,7 @@
 </template>
 <script>
 import axios from "axios";
-import wrapper from "axios-cache-plugin";
 import mainOptions from "./options.vue";
-
-let http = wrapper(axios, {
-  maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
-  ttl: 60000, // time to live. if you set this option the cached item will be auto deleted after ttl(ms).
-  excludeHeaders: true // should headers be ignored in cache key, helpful for ignoring tracking headers
-});
 
 export default {
   components: {
@@ -684,19 +587,22 @@ export default {
       category_name: "",
       generic: "",
       price: "",
-      editoptionprice: "",
+      editoptioncostprice: "",
+      editoptionmarkupprice: "",
       editoptionname: "",
       editoptionid: "",
       editCatId: "",
       editCatitemId: "",
       editCatItemName: "",
       editCatItemDescription: "",
-      editCatItemPrice: "",
+      editCatItemCostPrice: "",
+      editCatItemMarkUp: "",
       editContent: "",
       editId: "",
       optionname: "",
       optional: [],
-      optionprice: "",
+      optionmarkupprice: "",
+      optioncostprice: "",
       compulsory: [],
       deleteId: "",
       deleteCatId: "",
@@ -756,8 +662,7 @@ export default {
         required: value => !!value || "Required.",
         pic: value => value.length > 0 || "Required."
       },
-      numberRules: [        
-          v => /^[0-9]*$/.test(v) || "Price must be only numbers"],
+      numberRules: [v => /^[0-9]*$/.test(v) || "Price must be only numbers"],
       radios: "Thank you soo much, we will keep improving"
     };
   },
@@ -890,7 +795,8 @@ export default {
             name: sn.editCatItemName,
             compulsory: JSON.stringify(compa),
             optional: JSON.stringify(opta),
-            price: sn.editCatItemPrice,
+            cost_price: sn.editCatItemCostPrice,
+            mark_up_price: sn.editCatItemMarkUp,
             description: sn.editCatItemDescription
           })
           .then(function(response) {
@@ -1016,7 +922,8 @@ export default {
         axios
           .post("/options/update", {
             name: sn.editoptionname,
-            price: sn.editoptionprice,
+            cost_price: sn.editoptioncostprice,
+            mark_up_price: sn.editoptionmarkupprice,
             id: sn.editoptionid
           })
           .then(function(response) {
@@ -1129,42 +1036,16 @@ export default {
           });
         });
     },
-    editCatItem(u, v, x, y, z, a) {
-      var sn = this;
-      sn.compValue = [];
-      sn.optValue = [];
-      sn.editCatId = u;
-      if (a.length) {
-        var compItems = [];
-        var optItems = [];
-        a.forEach(elem => {
-          if (elem.pivot.type === "compulsory") {
-            compItems.push(elem);
-          } else {
-            optItems.push(elem);
-          }
-        });
-        sn.compValue = compItems.map(item => {
-          return item.name;
-        });
-        sn.optValue = optItems.map(item => {
-          return item.name;
-        });
-      }
-      sn.editCatItemId = v;
-      sn.editCatItemName = x;
-      sn.editCatItemPrice = y;
-      sn.editCatItemDescription = z;
-      sn.dialog8 = true;
-    },
+
     editOption(x, y, z) {
       var sn = this;
       sn.editoptionid = x;
       sn.editoptionname = y;
       if (z === null) {
-        sn.editoptionprice = 0;
+        sn.editoptioncostprice = 0;
+        sn.editoptionmarkupprice = 0;
       } else {
-        sn.editoptionprice = z;
+        sn.editoptioncostprice = z;
       }
       sn.dialog6 = true;
     },
@@ -1271,7 +1152,8 @@ export default {
         }
         const fd = new FormData();
         fd.append("name", sn.name);
-        fd.append("price", sn.price);
+        fd.append("cost_price", sn.cost_price);
+        fd.append("mark_up_price", sn.mark_up_price);
         fd.append("description", sn.description);
         fd.append("compulsory", JSON.stringify(compa));
         fd.append("optional", JSON.stringify(opta));
@@ -1312,47 +1194,46 @@ export default {
       var sn = this;
       if (sn.$refs.form5.validate()) {
         if (!sn.$refs.file.$refs.input.files.length) {
-           sn.$store.dispatch("snack", {
-              color: "red",
-              text: "Image is required"
-            });
-            return
-        } else {
-   
-        sn.loading5 = true;
-        sn.dialog5 = false;
-        sn.dialog45 = true;
-        const fd = new FormData();
-        fd.append("name", sn.optionname);
-        fd.append("price", sn.optionprice);
-        for (var i = 0; i < sn.$refs.file.$refs.input.files.length; i++) {
-          let file = sn.$refs.file.$refs.input.files[i];
-          fd.append("files[" + i + "]", file);
-        }
-        const config = { headers: { "Content-Type": "multipart/form-data" } };
-        axios
-          .post("/options/save", fd, config)
-          .then(res => {
-            var d = res.data;
-            sn.$store.dispatch("loadOptions");
-            sn.attachments = [];
-            sn.loading5 = false;
-            sn.dialog45 = false;
-            sn.$store.dispatch("snack", {
-              color: "green",
-              text: "Option item added"
-            });
-          })
-          .catch(err => {
-            sn.attachments = [];
-            sn.$store.dispatch("snack", {
-              color: "red",
-              text: err
-            });
-            sn.loading5 = false;
-            sn.dialog45 = false;
+          sn.$store.dispatch("snack", {
+            color: "red",
+            text: "Image is required"
           });
-                 
+          return;
+        } else {
+          sn.loading5 = true;
+          sn.dialog5 = false;
+          sn.dialog45 = true;
+          const fd = new FormData();
+          fd.append("name", sn.optionname);
+          fd.append("costprice", sn.optioncostprice);
+          fd.append("markupprice", sn.optionmarkupprice);
+          for (var i = 0; i < sn.$refs.file.$refs.input.files.length; i++) {
+            let file = sn.$refs.file.$refs.input.files[i];
+            fd.append("files[" + i + "]", file);
+          }
+          const config = { headers: { "Content-Type": "multipart/form-data" } };
+          axios
+            .post("/options/save", fd, config)
+            .then(res => {
+              var d = res.data;
+              sn.$store.dispatch("loadOptions");
+              sn.attachments = [];
+              sn.loading5 = false;
+              sn.dialog45 = false;
+              sn.$store.dispatch("snack", {
+                color: "green",
+                text: "Option item added"
+              });
+            })
+            .catch(err => {
+              sn.attachments = [];
+              sn.$store.dispatch("snack", {
+                color: "red",
+                text: err
+              });
+              sn.loading5 = false;
+              sn.dialog45 = false;
+            });
         }
       }
     },

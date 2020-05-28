@@ -58,11 +58,7 @@ export default {
     },
     methods: {
          handleConnectivityChange (status) {
-            if (!status) { this.$router.push('/offlinepage') } else {
-             setTimeout(() => {
-               this.$router.push('/')
-             }, 2000);
-            }
+            if (!status) { this.$router.push('/offlinepage') }
         },
     }
 
