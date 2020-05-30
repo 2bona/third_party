@@ -12,23 +12,19 @@ export const loadedGoogleMapsAPI = new Promise((resolve, reject) => {
   document.body.appendChild(GMap);
 });
 import { Plugins, AppUrlOpen } from "@capacitor/core";
-const { Toast } = Plugins;
-const bckBtn = false;
-Plugins.App.addListener("backButton", function() {
-  if (bckBtn === false) {
-    Toast.show({
-      text: "Press back again to exit"
-    });
-    bckBtn = true;
-    setTimeout(() => {
-      bckBtn = false;
-    }, 5000);
-  } else {
-    navigator.app.exitApp();
-  }
-});
+const {
+  Toast,
+  SplashScreen,
+  PushNotifications,
+  App,
+  LocalNotifications,
+  Device
+} = Plugins;
+App.removeAllListeners();
+SplashScreen.hide();
+
 import Vue from "vue";
-import App from "./App.vue";
+import Apps from "./App.vue";
 import VueRouter from "vue-router";
 import vuetify from "./plugins/vuetify";
 import router from "./router";
@@ -38,6 +34,134 @@ import Vuex from "vuex";
 import store from "./store.js";
 import axios from "axios";
 import moment from "moment";
+const platform = JSON.stringify(localStorage.getItem("platform"));
+
+// LocalNotifications.schedule({
+//   notifications: [
+//     {
+//       title: "Welcome back",
+//       body: "hey welcome back to our app",
+//       id: 1,
+//       schedule: { at: new Date(Date.now() + 1000 * 5) },
+//       sound: null,
+//       attachments: null,
+//       actionTypeId: "",
+//       extra: null
+//     }
+//   ]
+// });
+LocalNotifications.addListener("localNotificationReceived", lcm => {
+  console.log(lcm);
+});
+
+Device.getInfo().then(res => {
+  console.log(JSON.stringify(res));
+  console.log(res.platform);
+  if (!platform.platform) {
+    console.log("getting platform..............");
+    localStorage.setItem("platform", JSON.stringify(res));
+  }
+});
+
+PushNotifications.requestPermission().then(result => {
+  if (result.granted) {
+    // Register with Apple / Google to receive push via APNS/FCM
+    PushNotifications.register();
+  } else {
+    // Show some error
+    alert(
+      "Push notification is disabled, you will not recieve any notifications."
+    );
+  }
+});
+
+// Set up push notification for vendor
+// and round it oup then do the same for delivery agent
+
+PushNotifications.addListener("registration", fcm => {
+  console.log("Push registration success, token: " + fcm.value);
+  var token = localStorage.getItem("fcm");
+  var vendor = JSON.parse(localStorage.getItem("vendor"));
+  if (token) {
+    if (token != fcm.value) {
+      localStorage.removeItem("fcm");
+      localStorage.setItem("fcm", fcm.value);
+      if (vendor.id) {
+        axios
+          .post("/setfcm", {
+            token: fcm.value
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    }
+  } else {
+    localStorage.setItem("fcm", fcm.value);
+  }
+});
+
+PushNotifications.addListener("registrationError", error => {
+  console.log("Error on registration: " + JSON.stringify(error));
+});
+
+PushNotifications.addListener("pushNotificationReceived", res => {
+  console.log("Push received: " + JSON.stringify(res));
+  // alert(res.title + " : " + res.body);
+  var t = JSON.parse(res.data.payload);
+  var action = null;
+  var id = t.id;
+  var actionText = "";
+  if (t.id != null) {
+    if (t.url === "/cart") {
+      action = 1;
+      actionText = "open order";
+    } else if (t.url === "/vendor") {
+      action = 2;
+      actionText = "go to vendor";
+    }
+  } else {
+    id = null;
+    action = null;
+    actionText = null;
+  }
+  store.dispatch("snack2", {
+    color: "primary",
+    text: res.body,
+    title: res.title,
+    action: action,
+    actionText: actionText,
+    id: id,
+    status: 1
+  });
+  //id data title body
+});
+
+PushNotifications.addListener("pushNotificationActionPerformed", res => {
+  console.log("Push action performed: " + JSON.stringify(res));
+  store.getters.getBusy ? "" : store.dispatch("busy");
+
+  var t = JSON.parse(res.notification.data.payload);
+
+  if (res.actionId === "tap") {
+    if (t.url === "/cart") {
+      store.dispatch("getUserOrder", {
+        id: t.id
+      });
+    } else if (t.url === "/vendor") {
+      router.push("/vendor/" + t.id);
+    } else if (t.url === "/home") {
+      router.push("/");
+    }
+    store.dispatch("status2", false);
+  }
+
+  // actionId notification obj {id data
+});
+
 document.cookie = "cross-site-cookie=image; SameSite=None; Secure";
 
 axios.defaults.baseURL = "https://foodrepublic.herokuapp.com/api";
@@ -146,5 +270,5 @@ new Vue({
   store,
   router,
 
-  render: h => h(App)
+  render: h => h(Apps)
 }).$mount("#app");

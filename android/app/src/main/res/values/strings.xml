@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">E Dey</string>
-    <string name="title_activity_main">E Dey</string>
-    <string name="package_name">com.edeyapp.edey</string>
-    <string name="custom_url_scheme">com.edeyapp.edey</string>
+    <string name="app_name">edeyvendor</string>
+    <string name="title_activity_main">edeyvendor</string>
+    <string name="package_name">com.edeyapp.vendor</string>
+    <string name="custom_url_scheme">com.edeyapp.vendor</string>
 </resources>

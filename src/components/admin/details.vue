@@ -1,7 +1,6 @@
 <template>
   <div>
-    <v-row class="py-3 mb-12 px-2">
-      <v-flex xs12 class="mb-3 pt-0 px-0">
+      <v-flex xs12 class=" pt-0 px-0">
         <v-btn
           v-show="
             !dialog &&
@@ -24,7 +23,7 @@
         >
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        <v-card flat tile color="transparent">
+        <v-card flat tile color="white">
           <v-container fluid>
             <v-row justify="space-around">
               <input
@@ -36,7 +35,7 @@
               <v-col class="" cols="12">
                 <v-card
                   flat
-                  color="transparent"
+                  color="white"
                   class="pa-4 mx-auto"
                   max-width="650px"
                 >
@@ -338,8 +337,12 @@
               <div class="text-center">
                 <v-dialog v-model="dialog" width="500" :persistent="loading">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title>
+                    <v-card-title class="body-1 grey lighten-2" primary-title>
                       Add Category
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
                     </v-card-title>
                     <v-form onSubmit="return false;" ref="form">
                       <v-card-text>
@@ -358,7 +361,7 @@
                           rounded
                           :disabled="content.length < 2"
                           dark
-                          small
+                          depressed
                           :loading="loading"
                           @click="addCategory()"
                         >
@@ -371,8 +374,12 @@
 
                 <v-dialog v-model="dialog1" width="500" :persistent="loading1">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title>
+                    <v-card-title class="body-1 grey lighten-2" primary-title>
                       Edit items
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog1 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
                     </v-card-title>
                     <v-form onSubmit="return false;" ref="form2">
                       <v-card-text>
@@ -391,7 +398,7 @@
                           class="px-3 mx-auto"
                           rounded
                           dark
-                          small
+                          depressed
                           :disabled="editContent.length < 2"
                           :loading="loading1"
                           @click="editCategory(editContent, editId)"
@@ -402,31 +409,35 @@
                     </v-form>
                   </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialog2" width="200">
+                <v-dialog v-model="dialog2" width="500">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title>
-                      Delete {{ deleteName }} and its Items?
+                    <v-card-title class="body-1 grey lighten-2" primary-title>
+                      Delete category and its Items?
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog2 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
                     </v-card-title>
                     <v-divider></v-divider>
 
                     <v-card-actions>
                       <v-btn
-                        color="orange"
+                        color="blue"
                         class="px-3 mx-auto"
                         rounded
                         dark
-                        small
+                        depressed
                         :loading="loading2"
                         @click="deleteCategory(deleteId)"
                       >
                         sure
                       </v-btn>
                       <v-btn
-                        color="red"
+                        color="grey"
                         class="px-3 mx-auto"
                         rounded
                         dark
-                        small
+                        depressed
                         @click="dialog2 = false"
                       >
                         cancel
@@ -434,30 +445,34 @@
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialog3" width="200">
+                <v-dialog v-model="dialog3" width="500">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title>
+                    <v-card-title class="body-1 grey lighten-2" primary-title>
                       Turn {{ offName }}?
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog3 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
                     </v-card-title>
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-btn
-                        color="orange"
+                        color="blue"
                         class="px-3 mx-auto"
                         rounded
                         dark
-                        small
+                        depressed
                         :loading="loading3"
                         @click="offItem()"
                       >
                         sure
                       </v-btn>
                       <v-btn
-                        color="red"
+                        color="grey"
                         class="px-3 mx-auto"
                         rounded
                         dark
-                        small
+                        depressed
                         @click="dialog3 = false"
                       >
                         cancel
@@ -465,33 +480,37 @@
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialog4" width="200">
+                <v-dialog v-model="dialog4" width="500">
                   <v-card>
                     <v-card-title
-                      class="body-2 item-truncate grey lighten-2"
+                      class="body-1 item-truncate grey lighten-2"
                       primary-title
                     >
-                      Delete {{ deleteCatItemName }}?
+                      Delete item?
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog4 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
                     </v-card-title>
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-btn
-                        color="orange"
+                        color="blue"
                         class="px-3 mx-auto"
                         rounded
                         dark
-                        small
+                        depressed
                         :loading="loading4"
                         @click="deleteItem(deleteCatId, deleteCatItemId)"
                       >
                         sure
                       </v-btn>
                       <v-btn
-                        color="red"
+                        color="grey"
                         class="px-3 mx-auto"
                         rounded
                         dark
-                        small
+                        depressed
                         @click="dialog4 = false"
                       >
                         cancel
@@ -504,9 +523,13 @@
                     <v-form onSubmit="return false;" ref="form4">
                       <v-card-title
                         primary-title
-                        class=" grey lighten-2 body-2 mb-3"
+                        class=" grey lighten-2 body-1 mb-3"
                       >
-                        Add new item to {{ items.name }}
+                        Add new item
+                        <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog5 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
                       </v-card-title>
                       <div class="px-5 pb-9">
                         <v-flex xs12>
@@ -597,7 +620,7 @@
                             class="px-6"
                             color="orange"
                             dark
-                            small
+                            depressed=""
                             rounded
                             >add</v-btn
                           >
@@ -611,9 +634,13 @@
                     <v-form onSubmit="return false;" ref="form45">
                       <v-card-title
                         primary-title
-                        class=" grey lighten-2 body-2 mb-3"
+                        class=" grey lighten-2 body-1 mb-3"
                       >
-                        Edit {{ editCatItemName }}
+                        Edit item
+                        <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog6 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
                       </v-card-title>
                       <div class="px-5 pb-5">
                         <v-flex xs12>
@@ -695,7 +722,7 @@
                             depressed
                             color="orange"
                             dark
-                            small
+                            
                             rounded
                             >edit</v-btn
                           >
@@ -709,7 +736,6 @@
           </v-container>
         </v-card>
       </v-flex>
-    </v-row>
   </div>
 </template>
 <style></style>

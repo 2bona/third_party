@@ -2,15 +2,21 @@
 <template>
   <div class="">
     <v-card-text class="px-6 mt-6">
-         <v-scale-transition>
-           <v-btn v-show="btn"
-          fixed @click="$router.push('/auth')"
-          bottom color="white"
-          right fab
-           style="z-index:10" class="elevation-6 mb-12">
+      <v-scale-transition>
+        <v-btn
+          v-show="btn"
+          fixed
+          @click="$router.push('/auth')"
+          bottom
+          color="white"
+          right
+          fab
+          style="z-index:10"
+          class="elevation-6 mb-12"
+        >
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-    </v-scale-transition>
+      </v-scale-transition>
       <v-form ref="form">
         <v-text-field
           class="ma-auto px-8"
@@ -66,8 +72,6 @@
         >create account</v-btn
       >
     </v-card-text>
- 
-        
   </div>
 </template>
 
@@ -101,18 +105,48 @@ export default {
       ]
     };
   },
-  mounted(){
+  computed: {
+    ios() {
+      return this.$store.getters.getIos;
+    },
+    android() {
+      return this.$store.getters.getAndroid;
+    }
+  },
+  mounted() {
     setTimeout(() => {
-      this.btn=true
+      this.btn = true;
     }, 300);
   },
-  beforeRouteLeave (to, from, next) {
-  this.btn = false
-     setTimeout(() => {
-      next()
+  beforeRouteLeave(to, from, next) {
+    this.btn = false;
+    setTimeout(() => {
+      next();
     }, 80);
-},
-methods: {
+  },
+  methods: {
+    setFcm() {
+      const url = "/setfcm";
+      var token = localStorage.getItem("fcm");
+      const sn = this;
+      http({
+        url: url,
+        method: "post",
+        params: {
+          fcm: token,
+          type: "vendor"
+        }
+      }).then(() => {
+        sn.go();
+      });
+    },
+    go() {
+      if (this.$route.query.nextUrl) {
+        this.$router.push(this.$route.query.nextUrl);
+      } else {
+        this.$router.push("/");
+      }
+    },
     login() {
       var sn = this;
       if (this.$refs.form.validate()) {
@@ -128,23 +162,32 @@ methods: {
         })
           .then(response => {
             sn.loading = false;
-             var d = response.data.success.user
-            if (d.role !== 'vendor') {
-                sn.$store.dispatch("snack", {
-              color: "red",
-              text: 'Sorry, you are not a Vendor'
-            });
-              return
-            } else{
-            sn.$store.dispatch("setUser", d);
-            sn.$store.dispatch("setToken", response.data.success.token).then(()=>{
-              sn.$store.dispatch("loadVendor")
-              if (sn.$route.query.nextUrl) {
-                sn.$router.push(sn.$route.query.nextUrl);
+            var d = response.data.success.user;
+            if (d.role !== "vendor") {
+              sn.$store.dispatch("snack", {
+                color: "red",
+                text: "Sorry, you are not a Vendor"
+              });
+              return;
+            } else {
+              var token = localStorage.getItem("token");
+              sn.$store.dispatch("setUser", d);
+              if (sn.ios || sn.android) {
+                if (d.token != token) {
+                  sn.setFcm();
+                } else {
+                  sn.go();
+                }
               } else {
-                sn.$router.push("/");
+                sn.go();
               }
-            })
+              sn.$store.dispatch("setToken", response.data.success.token);
+              sn.$store
+                .dispatch("setToken", response.data.success.token)
+                .then(() => {
+                  sn.$store.dispatch("loadVendor");
+                  sn.go();
+                });
             }
           })
           .catch(function(error) {
@@ -159,7 +202,6 @@ methods: {
         sn.loading = false;
       }
     }
-    
   }
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-card flat tile color="grey lighten-4">
+  <v-card flat tile color="">
     <v-content style="overflow-x:hidden">
       <router-view></router-view>
     </v-content>

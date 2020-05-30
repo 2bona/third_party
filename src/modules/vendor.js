@@ -30,7 +30,8 @@ export const vendor = {
     options: JSON.parse(localStorage.getItem("options")) || '',
     orderFull:  {},
     vendorOrderListPage: {},
-    vendorLoadStatus: false
+    vendorLoadStatus: false,
+    platform: JSON.parse(localStorage.getItem("platform"))|| '' 
   },
   actions: {
      addVendor({
@@ -400,6 +401,18 @@ loadOptions({
     },
     getVendor(state) {
       return state.vendor
+    },
+    getAndroid(state) {
+      return state.platform.platform === "android" ? true : false
+    },
+    getIos(state) {
+      return state.platform.platform === "ios" ? true : false
+    },
+    getWeb(state) {
+      return state.platform.platform === "web" ? true : false
+    },
+    getPlatform(state) {
+      return state.platform
     },
     getVendorLoadStatus(state) {
       return state.vendorLoadStatus

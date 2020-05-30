@@ -26,7 +26,7 @@
             <v-icon>mdi-plus</v-icon> option
           </v-btn>
         </v-card-title>
-        <v-card flat tile color="transparent">
+        <v-card flat tile color="white">
           <v-container fluid>
             <v-row justify="space-around">
               <v-col class="text-center pa-0" cols="12">
@@ -171,7 +171,7 @@
                                     <v-switch
                                       v-show="!n.status"
                                       @click.prevent="
-                                        offOption(n.available, n.id)
+                                        offOption(n.available, n.id, n.name)
                                       "
                                       style="position: absolute;transform: rotate(270deg);top: 15px;right: -25px;"
                                       v-model="n.available"
@@ -237,8 +237,11 @@
               <div class="text-center">
                 <v-dialog v-model="dialog" width="500" :persistent="loading">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title
-                      >Add Category</v-card-title
+                    <v-card-title class="body-1 grey lighten-2" primary-title
+                      >Add Category <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      ></v-card-title
                     >
                     <v-form onSubmit="return false;" ref="form">
                       <v-card-text>
@@ -268,8 +271,11 @@
                 </v-dialog>
                 <v-dialog v-model="dialog5" width="500" :persistent="loading5">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title
-                      >Add Option</v-card-title
+                    <v-card-title class="body-1 grey lighten-2" primary-title
+                      >Add Option <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog5 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      ></v-card-title
                     >
                     <v-form onSubmit="return false;" ref="form5">
                       <v-card-text>
@@ -330,8 +336,11 @@
                 </v-dialog>
                 <v-dialog v-model="dialog6" width="500" :persistent="loading6">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title
-                      >Edit {{ editoptionname }}</v-card-title
+                    <v-card-title class="body-1 grey lighten-2" primary-title
+                      >Edit option <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog6 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      ></v-card-title
                     >
                     <v-form onSubmit="return false;" ref="form5">
                       <v-card-text>
@@ -374,7 +383,7 @@
                           class="px-3 mx-auto"
                           rounded
                           dark
-                          small
+                          depressed=""
                           :loading="loading6"
                           @click="editOptionItem()"
                           >edit</v-btn
@@ -386,8 +395,11 @@
                 <v-dialog v-model="dialog2" width="500" :persistent="loading2">
                   <v-card>
                     <v-card-title class="body-2 grey lighten-2" primary-title
-                      >Edit category</v-card-title
-                    >
+                      >Edit category <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog2 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
+                    </v-card-title>
                     <v-form onSubmit="return false;" ref="form2">
                       <v-card-text>
                         <v-text-field
@@ -415,11 +427,15 @@
                     </v-form>
                   </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialog3" width="200">
+                <v-dialog v-model="dialog3" width="500">
                   <v-card>
                     <v-card-title class="body-2 grey lighten-2" primary-title
-                      >Delete {{ deleteName }} and its Items?</v-card-title
-                    >
+                      >Delete category and its Items?
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog3 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
+                    </v-card-title>
                     <v-divider></v-divider>
 
                     <v-card-actions>
@@ -445,11 +461,14 @@
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialog35" width="200">
+                <v-dialog v-model="dialog35" width="500">
                   <v-card>
                     <v-card-title class="body-2 grey lighten-2" primary-title
-                      >Turn {{ offName }}?</v-card-title
-                    >
+                      >Turn {{ offName }}? <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog35 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
+                    </v-card-title>
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-btn
@@ -474,27 +493,32 @@
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialog355" width="200">
+                <v-dialog v-model="dialog355" width="500">
                   <v-card>
                     <v-card-title class="body-2 grey lighten-2" primary-title
-                      >Turn {{ offoptionName }}?</v-card-title
+                      >Turn {{ offoptionName }}?
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog355 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      ></v-card-title
                     >
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-btn
-                        color="orange"
+                        color="blue"
                         class="px-3 mx-auto"
                         rounded
+                        depressed
                         dark
                         small
                         :loading="loading355"
                         @click="offOptionMain()"
                         >sure</v-btn
-                      >
-                      <v-btn
-                        color="red"
+                      ><v-btn
+                        color="grey"
                         class="px-3 mx-auto"
                         rounded
+                        depressed
                         dark
                         small
                         @click="dialog355 = false"
@@ -503,28 +527,33 @@
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialog7" width="200">
+                <v-dialog v-model="dialog7" width="500">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title
-                      >Delete {{ deleteOptionName }}?</v-card-title
-                    >
+                    <v-card-title class="body-1 grey lighten-2" primary-title
+                      >Delete option?
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog7 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      >
+                    </v-card-title>
                     <v-divider></v-divider>
 
                     <v-card-actions>
                       <v-btn
-                        color="orange"
+                        color="blue"
                         class="px-3 mx-auto"
                         rounded
+                        depressed
                         dark
                         small
                         :loading="loading7"
                         @click="optionDelete(deleteOptionId)"
                         >sure</v-btn
-                      >
-                      <v-btn
-                        color="red"
+                      ><v-btn
+                        color="grey"
                         class="px-3 mx-auto"
                         rounded
+                        depressed
                         dark
                         small
                         @click="dialog7 = false"
@@ -533,10 +562,15 @@
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialog9" width="200">
+                <v-dialog v-model="dialog9" width="500">
                   <v-card>
-                    <v-card-title class="body-2 grey lighten-2" primary-title
-                      >Remove {{ detachOptionName }}?</v-card-title
+                    <v-card-title class="body-1 grey lighten-2" primary-title
+                      >Remove option?
+
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="dialog9 = false"
+                        ><v-icon>mdi-close</v-icon></v-btn
+                      ></v-card-title
                     >
                     <v-divider></v-divider>
 
@@ -612,6 +646,7 @@ export default {
       deleteName: "",
       offName: "",
       offoptionName: "",
+      offoptionName2: "",
       offId: "",
       offoptionId: "",
       offCat: "",
@@ -964,7 +999,7 @@ export default {
       sn.offCat = u;
       sn.dialog35 = true;
     },
-    offOption(e, o) {
+    offOption(e, o, r) {
       var sn = this;
       if (e) {
         sn.offoptionName = "Off";
@@ -973,6 +1008,7 @@ export default {
       }
       sn.offoptionAvailable = !e;
       sn.offoptionId = o;
+      sn.offoptionName2 = r;
       sn.dialog355 = true;
     },
     offItem() {

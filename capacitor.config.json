@@ -1,13 +1,16 @@
 {
-  "appId": "com.redape.vendorapp",
-  "appName": "Vendor app Food Republic",
+  "appId": "com.edeyapp.vendor",
+  "appName": "edeyvendor",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "dist",
-  "cordova": {},
   "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    },
     "PushNotifications": {
       "presentationOptions": ["badge", "sound", "alert"]
     }
-  }
+  },
+  "cordova": {}
 }

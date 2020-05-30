@@ -771,6 +771,7 @@ export default {
                 lng: sn.long,
                 place_id: sn.place_id,
                 category: "vendor",
+                token: localStorage.getItem("fcm") || "",
                 type: sn.type
               })
               .then(function(response) {

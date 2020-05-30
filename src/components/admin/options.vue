@@ -12,7 +12,7 @@
             <v-expansion-panel-content>
               <v-row justify="space-around">
                 <v-btn @click="dialog = true" text x-small color="grey"
-                  ><v-icon>mdi-plus</v-icon>add item</v-btn
+                  ><v-icon>mdi-plus</v-icon>add option category</v-btn
                 >
               </v-row>
               <v-divider class="my-4"></v-divider>
@@ -154,8 +154,10 @@
 
     <v-dialog v-model="dialog" width="500" :persistent="loading">
       <v-card>
-        <v-card-title class="body-2 grey lighten-2" primary-title>
+        <v-card-title class="body-1 grey lighten-2" primary-title>
           Add Option
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog = false"><v-icon>mdi-close</v-icon></v-btn>
         </v-card-title>
         <v-form onSubmit="return false;" ref="form">
           <v-card-text>
@@ -210,8 +212,12 @@
     </v-dialog>
     <v-dialog v-model="dialog2" width="500" :persistent="loading2">
       <v-card>
-        <v-card-title class="body-2 grey lighten-2" primary-title>
-          Edit {{ editname }}
+        <v-card-title class="body-1 grey lighten-2" primary-title>
+          Edit option category
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog2 = false"
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
         </v-card-title>
         <v-form onSubmit="return false;" ref="form2">
           <v-card-text>
@@ -257,7 +263,7 @@
               class="px-3 mx-auto"
               rounded
               dark
-              small
+              depressed=""
               :loading="loading2"
               @click="editMainOption2()"
               >edit
@@ -266,31 +272,35 @@
         </v-form>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialog3" width="200">
+    <v-dialog v-model="dialog3" width="500">
       <v-card>
-        <v-card-title class="body-2 grey lighten-2" primary-title>
-          Delete {{ deletename }} and its Items?
+        <v-card-title class="body-1 grey lighten-2" primary-title>
+          Delete option category?
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog3 = false"
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
         </v-card-title>
         <v-divider></v-divider>
 
         <v-card-actions>
           <v-btn
-            color="orange"
+            color="blue"
             class="px-3 mx-auto"
             rounded
             dark
-            small
+            depressed=""
             :loading="loading3"
             @click="deleteMainOption2(deleteid)"
           >
             sure
           </v-btn>
           <v-btn
-            color="red"
+            color="grey"
             class="px-3 mx-auto"
             rounded
             dark
-            small
+            depressed=""
             @click="dialog3 = false"
           >
             cancel

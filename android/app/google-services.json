@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "594814434427",
+    "firebase_url": "https://e-dey-vendor.firebaseio.com",
+    "project_id": "e-dey-vendor",
+    "storage_bucket": "e-dey-vendor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594814434427:android:042d31fc2b5e8d7e0736de",
+        "android_client_info": {
+          "package_name": "com.edeyapp.vendor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594814434427-b7f4vnh98q9ihb9n6jmbo2a2s8k1qd4a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhelJMBXHUOfYNam4oztXXv0WbRS4p1-M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594814434427-b7f4vnh98q9ihb9n6jmbo2a2s8k1qd4a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

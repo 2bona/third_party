@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 <template>
   <v-card
-    color="grey lighten-3"
+    color=""
     style="overflow-x: hidden;"
     flat
     tile
@@ -81,7 +81,7 @@
       <v-row class=" px-6">
         <v-flex xs4>
           <h4
-            class="grey--text text--darken-1 font-weight-bold  text-center mb-0"
+            class="grey--text text--darken-1 font-weight-medium  text-center mb-0"
           >
             {{ vendor.orders_count | price }}
           </h4>
@@ -92,7 +92,7 @@
           </p>
         </v-flex>
         <v-flex xs4>
-          <h4 class="green--text font-weight-bold  text-center mb-0">
+          <h4 class="green--text font-weight-medium  text-center mb-0">
             <v-icon size="14px" style="padding-bottom:1px" color="green"
               >mdi-currency-ngn</v-icon
             >{{ vendor.wallet | price }}
@@ -104,7 +104,7 @@
           </p>
         </v-flex>
         <v-flex xs4>
-          <h4 class="green--text font-weight-bold  text-center mb-0">
+          <h4 class="green--text font-weight-medium  text-center mb-0">
             <v-icon size="14px" style="padding-bottom:1px" color="green"
               >mdi-currency-ngn</v-icon
             >20,000,000
@@ -121,7 +121,7 @@
       <v-expansion-panel>
         <v-expansion-panel-header class="px-3"
           ><p
-            class="grey--text  font-weight-medium  text--darken-2 mb-0 body-1"
+            class="grey--text  font-weight-light  text--darken-1 mb-0 body-1"
           >
             <v-icon class="mr-2" color="grey lighten-3">mdi-account</v-icon
             >Business Information
@@ -210,7 +210,7 @@
                 @click.prevent="edit"
                 :loading="loading"
                 class="px-6"
-                small
+                
                 color="primary"
                 dark
                 rounded
@@ -223,7 +223,7 @@
       <v-expansion-panel>
         <v-expansion-panel-header @click="overlay = true" class="px-3"
           ><p
-            class="black--text  font-weight-medium  text--darken-2 mb-0 body-1"
+            class="black--text  font-weight-light  text--darken-1 mb-0 body-1"
           >
             <v-icon class="mr-2" color="grey lighten-3">mdi-map-marker</v-icon
             >Delivery
@@ -259,7 +259,7 @@
                     solo rounded
                     @keyup.enter.native="setFee"
                     prepend-inner-icon="mdi-currency-ngn"
-                    ref="fee"
+                    ref="fee"  class="caption"
                     dense
                     color="grey lighten-2"
                     placeholder="Fee"
@@ -288,7 +288,7 @@
       <v-expansion-panel>
         <v-expansion-panel-header @click="overlay = true" class="px-3"
           ><p
-            class="black--text  font-weight-medium  text--darken-2 mb-0 body-1"
+            class="black--text  font-weight-light  text--darken-1 mb-0 body-1"
           >
             <v-icon class="mr-2" color="grey lighten-3">mdi-credit-card</v-icon
             >Payment
@@ -357,7 +357,7 @@
                   :loading="payLoad"
                   solo rounded
                   prepend-inner-icon="mdi-currency-ngn"
-                  dense
+                  dense  class="caption"
                   color="grey"
                   placeholder="Fee"
                   v-model="vendor.minimum_order"
@@ -380,7 +380,7 @@
                   :loading="payLoad"
                   solo rounded
                   prepend-inner-icon="mdi-currency-ngn"
-                  dense
+                  dense  class="caption"
                   color="grey"
                   placeholder="Fee"
                   v-model="vendor.pos_charge"
@@ -408,7 +408,7 @@
                   :disabled="payLoad"
                   :loading="payLoad"
                   solo rounded
-                  dense
+                  dense  class="caption"
                   color="grey"
                   placeholder="Bank Name"
                   v-model="vendor.bank_name"
@@ -430,7 +430,7 @@
                   :disabled="payLoad"
                   :loading="payLoad"
                   solo rounded
-                  dense
+                  dense  class="caption"
                   color="grey"
                   placeholder="Account name"
                   v-model="vendor.account_name"
@@ -453,7 +453,7 @@
                   :disabled="payLoad"
                   :loading="payLoad"
                   solo rounded
-                  dense
+                  dense  class="caption"
                   color="grey"
                   placeholder="Account number"
                   v-model="vendor.account_number"
@@ -483,7 +483,7 @@
       <v-list>
         <v-list-item class="pl-2 pr-0">
           <v-list-item-title
-            class="body-1 px-1 black--text  font-weight-medium  text--darken-2"
+            class="body-1 px-1 black--text  font-weight-light  text--darken-1"
           >
             <v-icon size="21" class="mr-2" color="grey lighten-3"
               >mdi-information</v-icon
@@ -514,7 +514,7 @@
         </v-list-item>
         <v-list-item class="pl-2 pr-0">
           <v-list-item-title
-            class="body-1 px-1 black--text  font-weight-medium  text--darken-2"
+            class="body-1 px-1 black--text  font-weight-light  text--darken-1"
           >
             <v-icon size="21" class="mr-2" color="grey lighten-3"
               >mdi-refresh-circle</v-icon
@@ -539,7 +539,7 @@
         </v-list-item>
         <v-list-item class="pl-2 pr-0">
           <v-list-item-title
-            class="body-1 px-1 black--text  font-weight-medium  text--darken-2"
+            class="body-1 px-1 black--text  font-weight-light  text--darken-1"
           >
             <v-icon size="21" class="mr-2" color="grey lighten-3"
               >mdi-upload</v-icon
@@ -564,7 +564,7 @@
         </v-list-item>
         <v-list-item class="pl-2 pr-0">
           <v-list-item-title
-            class="body-1 px-1 black--text  font-weight-medium  text--darken-2"
+            class="body-1 px-1 black--text  font-weight-light  text--darken-1"
           >
             <v-icon size="21" class="mr-2" color="grey lighten-3"
               >mdi-network-strength-off-outline</v-icon
@@ -589,7 +589,7 @@
         </v-list-item>
         <v-list-item class="pl-2 pr-0">
           <v-list-item-title
-            class="body-1 px-1 black--text  font-weight-medium  text--darken-2"
+            class="body-1 px-1 black--text  font-weight-light  text--darken-1"
           >
             <v-icon size="21" class="mr-2" color="grey lighten-3"
               >mdi-cart-outline</v-icon
@@ -612,11 +612,9 @@
             </v-btn>
           </v-list-item-action>
         </v-list-item>
-        <v-list-item>
-          <v-list-item-title class="subtitle-2"> </v-list-item-title>
-          <v-list-item-action>
-            <v-btn dark @click="logout" text rounded color="red">Logout</v-btn>
-          </v-list-item-action>
+        <v-list-item class="pl-2 pr-0">
+          <v-spacer></v-spacer>
+            <v-btn   @click="logout" dark  depressed="" rounded color="red lighten-2">Logout</v-btn>
         </v-list-item>
       </v-list>
     </v-card>
@@ -1101,7 +1099,8 @@ export default {
                 tags: sn.vendorTags,
                 areas: sn.area,
                 duration: duration,
-                distance: distance
+                distance: distance,
+                token: localStorage.getItem("fcm") || ""
               }
             })
               .then(() => {

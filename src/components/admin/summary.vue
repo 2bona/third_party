@@ -90,152 +90,164 @@
       </v-flex>
     </v-row>
     <v-dialog v-model="dialog" fullscreen>
-      <v-card>
-        <v-card-title class="text-capitalize" primary-title>
-          {{ category }}
-          <v-spacer></v-spacer>
-          <v-btn @click="dialog = false" style="" color="" icon
-            ><v-icon>mdi-close</v-icon></v-btn
+      <div>
+        <v-card>
+          <div
+            style="position: sticky; top:0;
+                  background: #f7f7f7;
+                  z-index: 9;"
           >
-        </v-card-title>
-        <div></div>
-        <div class="text-center py-3 px-1">
-          <v-btn
-            x-small
-            @click="loadBar(1)"
-            rounded
-            :disabled="disBtn === 1 || disBtn === 5"
-            text
-            depressed
-            color=""
-            ><v-icon>mdi-calendar-today</v-icon> today</v-btn
-          >
-          <v-btn
-            x-small
-            @click="loadBar(2)"
-            rounded
-            :disabled="disBtn === 2 || disBtn === 5"
-            text
-            depressed
-            ><v-icon>mdi-calendar-week</v-icon> week</v-btn
-          >
-          <v-btn
-            x-small
-            @click="loadBar(3)"
-            rounded
-            :disabled="disBtn === 3 || disBtn === 5"
-            text
-            depressed
-            ><v-icon>mdi-calendar-month</v-icon> month</v-btn
-          >
-          <v-btn
-            x-small
-            @click="loadBar(4)"
-            rounded
-            :disabled="disBtn === 4 || disBtn === 5"
-            text
-            depressed
-            ><v-icon>mdi-calendar-blank</v-icon> year</v-btn
-          >
-        </div>
-        <div class="text-center">
-          <h3 class="mb-3 font-weight-light grey--text mt-5">{{ desc }}</h3>
-          <div class="py-4 d-flex" style="min-height: 400px; max-width: 400">
-            <v-progress-circular
-              indeterminate
-              v-show="loading"
-              class="ma-auto"
-              color="primary"
-            ></v-progress-circular>
+            <v-card-title class="text-capitalize" primary-title>
+              {{ category }}
+              <v-spacer></v-spacer>
+              <v-btn @click="dialog = false" style="" color="" icon
+                ><v-icon>mdi-close</v-icon></v-btn
+              >
+            </v-card-title>
 
-            <la-cartesian
-              v-if="!loading"
-              :width="300"
-              :height="400"
-              class="ma-auto"
-              :bound="[0]"
-              :data="summary"
-            >
-              <la-bar :width="8" prop="value"></la-bar>
-              <la-x-axis font-size="10" prop="title"></la-x-axis>
-              <la-tooltip></la-tooltip>
-            </la-cartesian>
-          </div>
-          <div class="p2-2 mx-auto" style="max-width: 400px;width:80%">
-            <v-data-table
-              v-if="!loading"
-              :headers="headers"
-              :mobile-breakpoint="30"
-              :items="summary"
-              hide-default-footer
-            >
-              <template v-slot:item.value="{ item }">
-                <span
-                  ><v-icon
-                    v-if="category == 'sales' || category == 'payments'"
-                    size="13"
-                    style="padding-bottom:2px"
-                    >mdi-currency-ngn</v-icon
-                  >
-                  <span v-if="category == 'sales' || category == 'payments'">{{
-                    item.value | price
-                  }}</span>
-                  <span v-else> {{ item.value }}</span>
-                </span>
-              </template>
-            </v-data-table>
-          </div>
-          <h3
-          v-if="pie.length"
-            class="mt-5 font-weight-light grey--text"
-          style="position:relative;top:40px"
-          >
-            General Information
-          </h3>
-          <div
-            v-if="!loading && pie.length"
-            class="py-2 mx-auto d-flex"
-            style="min-height: 400px; max-width: 500px; width:100%"
-          >
-            <la-polar :width="320" class="ma-auto" :data="pie">
-              <la-pie
-                show-label
-                font-size="13"
-                label-prop="title"
-                prop="value"
-              ></la-pie>
-            </la-polar>
+            <div class="text-center py-3 px-1">
+              <v-btn
+                x-small
+                @click="loadBar(1)"
+                rounded
+                :disabled="disBtn === 1 || disBtn === 5"
+                text
+                depressed
+                color=""
+                ><v-icon>mdi-calendar-today</v-icon> today</v-btn
+              >
+              <v-btn
+                x-small
+                @click="loadBar(2)"
+                rounded
+                :disabled="disBtn === 2 || disBtn === 5"
+                text
+                depressed
+                ><v-icon>mdi-calendar-week</v-icon> week</v-btn
+              >
+              <v-btn
+                x-small
+                @click="loadBar(3)"
+                rounded
+                :disabled="disBtn === 3 || disBtn === 5"
+                text
+                depressed
+                ><v-icon>mdi-calendar-month</v-icon> month</v-btn
+              >
+              <v-btn
+                x-small
+                @click="loadBar(4)"
+                rounded
+                :disabled="disBtn === 4 || disBtn === 5"
+                text
+                depressed
+                ><v-icon>mdi-calendar-blank</v-icon> year</v-btn
+              >
+            </div>
           </div>
           <div
-            class="pb-12 pt-3 mx-auto"
-            style="position: relative;
-    top: -51px;max-width: 400px;width:80%"
+            class="text-center"
           >
-            <v-data-table
+            <h3 class="mb-3 font-weight-light grey--text mt-5">{{ desc }}</h3>
+            <div class="py-4 d-flex" style="min-height: 400px; max-width: 400">
+              <v-progress-circular
+                indeterminate
+                v-show="loading"
+                class="ma-auto"
+                color="primary"
+              ></v-progress-circular>
+
+              <la-cartesian
+                v-show="!loading"
+                :width="300"
+                :height="400"
+                class="ma-auto"
+                :bound="[0]"
+                :data="summary"
+              >
+                <la-bar :width="8" prop="value"></la-bar>
+                <la-x-axis font-size="10" prop="title"></la-x-axis>
+                <la-tooltip></la-tooltip>
+              </la-cartesian>
+            </div>
+            <div class="p2-2 mx-auto" style="max-width: 400px;width:80%">
+              <v-data-table
+                v-show="!loading"
+                :headers="headers"
+                :mobile-breakpoint="30"
+                :items="summary"
+                hide-default-footer
+              >
+                <template v-slot:item.value="{ item }">
+                  <span
+                    ><v-icon
+                      v-show="category == 'sales' || category == 'payments'"
+                      size="13"
+                      style="padding-bottom:2px"
+                      >mdi-currency-ngn</v-icon
+                    >
+                    <span
+                      v-if="category == 'sales' || category == 'payments'"
+                      >{{ item.value | price }}</span
+                    >
+                    <span v-else> {{ item.value }}</span>
+                  </span>
+                </template>
+              </v-data-table>
+            </div>
+            <h3
+              v-if="pie.length"
+              class="mt-5 font-weight-light grey--text"
+              style="position:relative;top:40px"
+            >
+              General Information
+            </h3>
+            <div
               v-if="!loading && pie.length"
-              :headers="headers2"
-              :mobile-breakpoint="30"
-              :items="pie"
-              hide-default-footer
+              class="py-2 mx-auto d-flex"
+              style="min-height: 400px; max-width: 500px; width:100%"
             >
-              <template v-slot:item.value="{ item }">
-                <span
-                  ><v-icon
-                    v-if="category == 'sales' || category == 'payments'"
-                    size="13"
-                    style="padding-bottom:2px"
-                    >mdi-currency-ngn</v-icon
-                  >
-                  <span v-if="category == 'sales' || category == 'payments'">{{
-                    item.value | price
-                  }}</span>
-                  <span v-else> {{ item.value }}</span>
-                </span>
-              </template>
-            </v-data-table>
+              <la-polar :width="320" class="ma-auto" :data="pie">
+                <la-pie
+                  show-label
+                  font-size="13"
+                  label-prop="title"
+                  prop="value"
+                ></la-pie>
+              </la-polar>
+            </div>
+            <div
+              class="pb-12 pt-3 mx-auto"
+              style="position: relative;
+    top: -51px;max-width: 400px;width:80%"
+            >
+              <v-data-table
+                v-if="!loading && pie.length"
+                :headers="headers2"
+                :mobile-breakpoint="30"
+                :items="pie"
+                hide-default-footer
+              >
+                <template v-slot:item.value="{ item }">
+                  <span
+                    ><v-icon
+                      v-if="category == 'sales' || category == 'payments'"
+                      size="13"
+                      style="padding-bottom:2px"
+                      >mdi-currency-ngn</v-icon
+                    >
+                    <span
+                      v-if="category == 'sales' || category == 'payments'"
+                      >{{ item.value | price }}</span
+                    >
+                    <span v-else> {{ item.value }}</span>
+                  </span>
+                </template>
+              </v-data-table>
+            </div>
           </div>
-        </div>
-      </v-card>
+        </v-card>
+      </div>
     </v-dialog>
   </div>
 </template>

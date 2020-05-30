@@ -1,4 +1,4 @@
-package com.redape.vendorapp;
+package com.edeyapp.vendor;
 
 import android.os.Bundle;
 
