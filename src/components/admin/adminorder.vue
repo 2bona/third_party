@@ -56,6 +56,7 @@
                   v-ripple
                   @click="dialogItemBtn(n)"
                   class="my-auto elevation-5 mx-2"
+                  style="overflow:inherit;"
                 >
                   <v-img :src="n.image"> </v-img>
                   <p
@@ -68,9 +69,10 @@
                     class="caption grey--text font-weight-bold"
                     style="position:absolute; bottom:-36px"
                   >
-                    <v-icon color="grey" style="padding-bottom:2px" size="11"
-                      >mdi-currency-ngn</v-icon
-                    >{{ n.pivot.total | price }}
+                    <v-icon color="grey" style="padding-bottom:2px" size="11">
+                      mdi-currency-ngn
+                    </v-icon>
+                    {{ n.pivot.total | price }}
                   </p>
                 </v-list-item-avatar>
               </v-list-item>
@@ -220,60 +222,36 @@
       >
         delivery
       </span>
-      <v-list-item v-if="order.address" class="my-1" dense two-line>
+      <v-list-item v-if="order.address" class="my-1" two-line>
         <v-list-item-content>
           <v-list-item-title
-            class="body-1 grey--text text--darken-1 text-wrap font-weight-bold mt-0 pt-0"
+            class="body-1 grey--text text--darken-1 text-wrap font-weight-bold"
             v-if="!(order.payment_method === 4)"
             >{{ order.address.area.name }}</v-list-item-title
           >
           <v-list-item-subtitle
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
-            class="body-2 grey--text text-wrap font-weight-medium mb-0 pb-0"
+            class="body-2 grey--text text-wrap font-weight-medium"
             >{{ order.address.name }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
-            class="body-2 grey--text font-weight-medium my-0 pt-0"
+            class="body-2 grey--text font-weight-medium "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.name_2 }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
-            class="body-2 grey--text text-wrap font-weight-medium my-0 pt-0"
+            class="body-2 grey--text text-wrap font-weight-medium "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.company }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
-            class="body-2 grey--text text-wrap font-weight-medium my-0 pt-0"
+            class="body-2 grey--text text-wrap font-weight-medium "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.instruction }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
-            class="body-2 grey--text text-wrap font-weight-medium my-0 pt-0"
-            >{{ order.user.phone }}
-            <a style="text-decoration:none" :href="'tel:' + order.user.phone">
-              <v-btn fab dark icon x-small color="primary"
-                ><v-icon>mdi-phone</v-icon>
-              </v-btn>
-            </a>
-            <a
-              style="text-decoration:none"
-              :href="
-                'https://wa.me/+234' +
-                  order.user.phone.substring(1) +
-                  '?text=Hello,%20this%20is%20' +
-                  vendor.name +
-                  '%20,%20hope%20you%20enjoyed%20our%20services?.'
-              "
-              target="_blank"
-            >
-              <v-btn fab dark icon x-small color="green">
-                <v-icon>mdi-whatsapp</v-icon>
-              </v-btn>
-            </a>
-          </v-list-item-subtitle>
-          <v-list-item-subtitle
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
-            class="overline text--darken-2 grey--text  font-weight-bold mt-0 pt-0"
+            class="title text--darken-2 grey--text  font-weight-bold"
             >ETA - {{ order.duration | duration }}</v-list-item-subtitle
           >
         </v-list-item-content>
@@ -285,7 +263,7 @@
         <v-list-item class="my-1" dense>
           <v-list-item-content>
             <p
-              class="text-wrap display-1 font-weight-bold grey--text  font-weight-medium my-0 pt-0"
+              class="text-wrap display-1 font-weight-bold font-weight-medium my-0 pt-0"
             >
               {{ order.table_no }}
             </p>
@@ -295,10 +273,10 @@
       <span class="overline grey--text  text--darken-1 font-weight-bold">
         payment
       </span>
-      <v-list-item class="my-1" dense>
+      <v-list-item class="my-1">
         <v-list-item-content>
           <v-list-item-subtitle
-            class=" text-wrap body-1 grey--text  font-weight-medium mt-0 pt-0"
+            class=" text-wrap body-1 grey--text  font-weight-medium"
             >{{ paymentMethod }}
             <span v-show="order.change_amount > 1">
               <v-icon style="padding-bottom:2px" color="grey" size="12"
@@ -308,17 +286,17 @@
           >
           <v-list-item-subtitle
             v-if="order.paid && !(order.status === 5)"
-            class=" text-wrap green--text  font-weight-bold mt-0 pt-0"
+            class=" text-wrap title green--text  font-weight-bold"
             >PAID</v-list-item-subtitle
           >
           <v-list-item-subtitle
             v-if="!order.paid"
-            class=" text-wrap red--text  font-weight-bold mt-0 pt-0"
+            class=" text-wrap title red--text  font-weight-bold"
             >UNPAID</v-list-item-subtitle
           >
           <v-list-item-subtitle
             v-if="order.paid && order.status === 5"
-            class=" text-wrap blue--text  font-weight-bold mt-0 pt-0"
+            class=" text-wrap title blue--text  font-weight-bold"
             >REFUNDED</v-list-item-subtitle
           >
         </v-list-item-content>
@@ -413,16 +391,16 @@
             </v-flex>
             <v-flex xs6 class="px-2">
               <v-btn
-                :depressed="order.delivery != null"
-                :disabled="order.delivery != null"
+                :depressed="order.status === 2"
+                :disabled="order.status === 2"
                 :loading="loading"
                 block
                 @click="
                   order.payment_method === 4 || order.payment_method === 5
                     ? serveBtn()
-                    : (dialog3 = true)
+                    : setDeliveryAgent()
                 "
-                :class="order.delivery != null ? 'mt-2' : 'mt-2 elevation-10'"
+                :class="order.status === 2 ? 'mt-2' : 'mt-2 elevation-10'"
                 rounded=""
                 dark
                 color="primary"
@@ -430,7 +408,7 @@
                 {{
                   order.payment_method === 4 || order.payment_method === 5
                     ? "deliver"
-                    : "served"
+                    : "available"
                 }}
                 <v-scale-transition origin="center center">
                   <v-icon
@@ -515,7 +493,7 @@
             </div>
           </v-card-text>
 
-          <v-layout row wrap class="px-3 py-3">
+          <v-layout row wrap style="width:100%" class="px-3 py-3">
             <v-flex xs6 class="px-2">
               <v-btn
                 :disabled="item_no === 0"
@@ -681,7 +659,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialog3" width="500">
+    <!-- <v-dialog v-model="dialog3" width="500">
       <v-card v-if="agents.length">
         <v-card-title class="body-1 grey lighten-2" primary-title>
           Choose delivery agent
@@ -760,6 +738,31 @@
           </v-btn>
         </v-card-actions>
       </v-card>
+    </v-dialog> -->
+    <v-dialog v-model="dialogDelivery" max-width="290">
+      <v-card>
+        <v-card-title class="body-1">
+          Have you delivered the food
+          <span v-if="!order.paid">and collected the money</span>?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="grey lighten-1"
+            text
+            rounded
+            small
+            @click="dialogDelivery = false"
+          >
+            cancel
+          </v-btn>
+
+          <v-btn color="blue darken-1" text rounded small @click="deliver()">
+            sure
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
     <v-dialog v-model="dialogServe" max-width="290">
       <v-card>
@@ -815,6 +818,7 @@ export default {
       dialogIn: false,
       dialog2: false,
       dialogServe: false,
+      dialogDelivery: false,
       dialog3: false,
       dialogItem: "",
       dialogComp: [],
@@ -836,15 +840,17 @@ export default {
     },
     disableDelivery() {
       const sn = this;
+      let r = null;
       if (sn.order.payment_method === 4 || sn.order.payment_method === 5) {
-        return false;
+        r = false;
       } else if (sn.order.delivery != null) {
         if (sn.order.delivery.id === sn.slide2) {
-          return true;
+          r = true;
         }
       } else {
-        return false;
+        r = false;
       }
+      return r;
     },
     deliverySwitch: {
       get() {
@@ -855,7 +861,7 @@ export default {
           return sn.order.delivery.id === sn.agents[sn.slide2].id;
         }
       },
-      set(val) {
+      set() {
         return;
       }
     },
@@ -873,9 +879,11 @@ export default {
       }
     },
     slider2() {
+      let r = null;
       if (this.agents.length) {
-        return this.agents.length - 1;
+        r = this.agents.length - 1;
       }
+      return r;
     },
     order() {
       return this.$store.getters.getOrderFull;
@@ -908,16 +916,83 @@ export default {
     }
   },
   mounted() {
+    const sn = this;
     if (this.order.items.length) {
-      const sn = this;
       sn.dialogItem = null;
       sn.max_no = sn.order.items.length - 1;
       var n = sn.order.items[sn.item_no];
       sn.dialogIn = true;
       sn.setItem(n);
     }
+    sn.getAgents();
   },
   methods: {
+    getAgents() {
+      const sn = this;
+      sn.load = true;
+      let url = "/delivery/agents";
+      http({
+        url: url,
+        method: "get",
+        params: {
+          id: this.vendor.current_area_id
+        }
+      })
+        .then(response => {
+          sn.load = false;
+          sn.$store.dispatch("setAgents", {
+            agents: response.data.agents
+          });
+        })
+        .catch(function(error) {
+          sn.load = false;
+          console.log(error);
+        });
+    },
+    distance(positionLat, positionLng, askingLat, askingLng, unit) {
+      var radlat1 = (Math.PI * positionLat) / 180;
+      var radlat2 = (Math.PI * askingLat) / 180;
+      var theta = positionLng - askingLng;
+      var radtheta = (Math.PI * theta) / 180;
+      var dist =
+        Math.sin(radlat1) * Math.sin(radlat2) +
+        Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+      if (dist > 1) {
+        dist = 1;
+      }
+      dist = Math.acos(dist);
+      dist = (dist * 180) / Math.PI;
+      dist = dist * 60 * 1.1515;
+      if (unit == "K") {
+        dist = dist * 1.609344;
+      }
+      if (unit == "N") {
+        dist = dist * 0.8684;
+      }
+      return dist;
+    },
+    getAgent() {
+      const sn = this;
+      var lat = sn.vendor.lat;
+      var lng = sn.vendor.lng;
+      var data = sn.agents;
+      var newData = [];
+      data.forEach(element => {
+        var distFrmVendor = sn.distance(
+          lat,
+          lng,
+          element.lat,
+          element.lng,
+          "K"
+        );
+        var ob = { name: element.id, dist: distFrmVendor };
+        newData.push(ob);
+      });
+
+      newData.sort(function(a, b) {
+        return a.dist - b.dist;
+      });
+    },
     setItem(n) {
       const sn = this;
       sn.dialogItem = n;
@@ -957,7 +1032,9 @@ export default {
       }
     },
     serveBtn() {
-      this.dialogServe = true;
+      this.order.payment_method === 4 || this.order.payment_method === 5
+        ? (this.dialogDelivery = true)
+        : (this.dialogServe = true);
     },
     dialogItemBtn(n) {
       const sn = this;
@@ -965,13 +1042,13 @@ export default {
       sn.dialog = true;
       sn.setItem(n);
     },
-    serve() {
+    deliver() {
       const sn = this;
       sn.loading = true;
       if (sn.order.status === 4) {
         sn.$store.dispatch("snack", {
           color: "blue",
-          text: "Order has already been served"
+          text: "Order has already been delivered"
         });
         sn.loading = false;
         return;
@@ -991,30 +1068,46 @@ export default {
           });
       }
     },
-    setDeliveryAgent() {
+    serve() {
       const sn = this;
-      sn.load2 = true;
-      if (sn.order.status === 3) {
+      sn.loading = true;
+      if (sn.order.status === 4) {
         sn.$store.dispatch("snack", {
           color: "blue",
-          text: "Order has already been dispatched for delivery"
+          text: "Order has already been served"
         });
-        sn.load2 = false;
-        sn.dialog3 = false;
+        sn.loading = false;
         return;
       } else {
-        sn.$store.dispatch("order", {
-          id: sn.order.id,
-          delivery_agent_id: sn.agents[sn.slide2].id,
-          action: "transit"
-        });
-        sn.load2 = false;
-        sn.dialog3 = false;
-        sn.$store.dispatch("snack", {
-          color: "green",
-          text: "Customer has been notified"
-        });
+        sn.$store
+          .dispatch("order", {
+            id: sn.order.id,
+            action: "served"
+          })
+          .then(() => {
+            sn.loading = false;
+            sn.$store.dispatch("snack", {
+              color: "green",
+              text: "Customer has been notified"
+            });
+            sn.$router.push("/orders");
+          });
       }
+    },
+    setDeliveryAgent() {
+      const sn = this;
+      sn.$store
+        .dispatch("order", {
+          id: sn.order.id,
+          action: "served"
+        })
+        .then(() => {
+          sn.$store.dispatch("snack", {
+            color: "blue",
+            text: "A delivery agent is on his way"
+          });
+        });
+      return;
     },
     reject() {
       const sn = this;

@@ -927,10 +927,8 @@ export default {
           .post("/options/delete", {
             id: x
           })
-          .then(function(response) {
-            console.log(response.data);
+          .then(() => {
             sn.$store.dispatch("loadOptions");
-            sn.$store.dispatch("loadItems");
             sn.loading7 = false;
             sn.dialog45 = false;
             sn.$store.dispatch("snack", {
@@ -938,7 +936,7 @@ export default {
               text: "Option deleted"
             });
           })
-          .catch(function(error) {
+          .catch(() => {
             sn.dialog45 = false;
             sn.loading7 = false;
             sn.$store.dispatch("snack", {
@@ -1241,8 +1239,8 @@ export default {
           sn.dialog45 = true;
           const fd = new FormData();
           fd.append("name", sn.optionname);
-          fd.append("costprice", sn.optioncostprice);
-          fd.append("markupprice", sn.optionmarkupprice);
+          fd.append("cost_price", sn.optioncostprice);
+          fd.append("mark_up_price", sn.optionmarkupprice);
           for (var i = 0; i < sn.$refs.file.$refs.input.files.length; i++) {
             let file = sn.$refs.file.$refs.input.files[i];
             fd.append("files[" + i + "]", file);

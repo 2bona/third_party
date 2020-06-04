@@ -2,14 +2,47 @@
   <v-app>
     <v-container fluid class="pa-0">
       <Offline @detected-condition="handleConnectivityChange"> </Offline>
-      <v-snackbar
+   <v-snackbar
         :value="snackbar.status"
-        :timeout="6000"
+        :timeout="5000"
         :color="snackbar.color"
-        class="text-center"
         top
+        left
+        multi-line
+        style="z-index:99999"
       >
         {{ snackbar.text }}
+        <v-btn dark icon @click="$store.dispatch('status1', false)">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-snackbar>
+      <v-snackbar
+        style="border-radius: 20px;background-image: url(https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80);
+    background-position: center center;background-size: cover;background-repeat: no-repeat;"
+        :value="snackbar2.status"
+        bottom
+        color="transparent"
+        right
+        vertical
+        :timeout="0"
+      >
+        <p class="title mb-1 font-weight-bold" v-html="snackbar2.title"></p>
+        {{ snackbar2.text }}
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn dark text @click="$store.dispatch('status2', false)">
+            close
+          </v-btn>
+          <v-btn
+            v-if="snackbar2.action && snackbar2.id && snackbar2.actionText"
+            dark
+            text
+            @click="action(snackbar2.action, snackbar2.id)"
+          >
+            {{ snackbar2.actionText }}
+          </v-btn>
+        </v-card-actions>
       </v-snackbar>
       <v-content>
         <router-view></router-view>
@@ -53,13 +86,15 @@ export default {
   },
   data() {
     return {
-      vendor: "chuks world kitchen",
       timeout: 6000
     };
   },
   computed: {
     snackbar() {
       return this.$store.getters.getSnackbar;
+    },
+    snackbar2() {
+      return this.$store.getters.getSnackbar2;
     }
   },
   methods: {
@@ -67,6 +102,19 @@ export default {
       if (!status) {
         this.$router.push("/offlinepage");
       }
+    },
+    action(x, y) {
+      if (x === 1) {
+        this.$store.dispatch("order", {
+          id: y,
+          action: null
+        });
+      } else if (x === 2) {
+        this.$router.push("/adminedit");
+      } else {
+        this.$router.push("/");
+      }
+      this.$store.dispatch("status2", false);
     }
   }
 };

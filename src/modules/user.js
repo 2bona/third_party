@@ -54,8 +54,45 @@ export const user = {
       color: 'green',
       text: 'hello'
     },
+    snackbar2: {
+      color: 'primary',
+      text: '',
+      title: '',
+      action: null,
+      actionText: '',
+      id: null,
+      status: 0,
+    },
   },
   actions: {
+    status1({ commit, state, dispatch }, data) {
+      commit("setSnackbar1Status", {
+           status: data
+         })
+    },
+    status2({ commit, state, dispatch }, data) {
+      commit("setSnackbar2Status", {
+           status: data
+         })
+    },
+    snack2({ commit, state, dispatch }, data) {
+      commit("setSnackbar2", {
+           color: data.color,
+           text: data.text,
+           title: data.title,
+           action: data.action,
+           actionText: data.actionText,
+           id: data.id,
+           status: 1
+         })
+    },
+    snack({ commit, state, dispatch }, data) {
+      commit("setSnackbar", {
+           color: data.color,
+           text: data.text,
+           status: 1
+         })
+    },
     addUser({ commit, state, dispatch }, data) {
       commit("setUserRegisteredStatus", 1)
       axios
@@ -270,13 +307,6 @@ export const user = {
       localStorage.setItem("usercity", JSON.stringify(data.city))
       commit("setUserCity", data.city)
     },
-    snack({ commit, state, dispatch }, data) {
-      commit("setSnackbar", {
-           color: data.color,
-           text: data.text,
-           status: 1
-         })
-    },
     logout({ commit, state, dispatch }, data) {
         axios.get(AXIOS_CONFIG.API_URL + "/logout")
         .then(function(response) {
@@ -293,6 +323,21 @@ export const user = {
   mutations: {
     setLoadStatus(state, status) {
       state.LoadStatus = status
+    },
+    setSnackbar(state, snack) {
+      state.snackbar = snack
+      setTimeout(() => {
+        state.snackbar.status = false
+      }, 5000);
+    },
+    setSnackbar2(state, snack) {
+      state.snackbar2 = snack
+    },
+    setSnackbar1Status(state, snack) {
+      state.snackbar.status = snack.status
+    },
+    setSnackbar2Status(state, snack) {
+      state.snackbar2.status = snack.status
     },
     setUser(state, user) {
       state.user = user
@@ -349,12 +394,6 @@ export const user = {
     setUserRegisterError(state, registerError) {
       state.registerError = registerError
     },
-    setSnackbar(state, snack) {
-      state.snackbar = snack
-      setTimeout(() => {
-        state.snackbar.status = 0
-      }, 4000)
-    },
     setToken(state, token) {
       state.token = token
     },
@@ -405,6 +444,9 @@ export const user = {
     },
     getSnackbar(state) {
       return state.snackbar
+    },
+    getSnackbar2(state) {
+      return state.snackbar2
     },
     getMapNav(state) {
       return state.mapNav

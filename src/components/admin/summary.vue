@@ -91,7 +91,7 @@
     </v-row>
     <v-dialog v-model="dialog" fullscreen>
       <div>
-        <v-card>
+        <v-card min-height="100vh">
           <div
             style="position: sticky; top:0;
                   background: #f7f7f7;
@@ -145,9 +145,14 @@
               >
             </div>
           </div>
-          <div
-            class="text-center"
+
+          <h3
+            v-show="!show"
+            class=" text-center font-weight-light grey--text my-12"
           >
+            No data available
+          </h3>
+          <div v-show="show" class="text-center">
             <h3 class="mb-3 font-weight-light grey--text mt-5">{{ desc }}</h3>
             <div class="py-4 d-flex" style="min-height: 400px; max-width: 400">
               <v-progress-circular
@@ -158,7 +163,7 @@
               ></v-progress-circular>
 
               <la-cartesian
-                v-show="!loading"
+                v-show="!loading && summary.length > 0"
                 :width="300"
                 :height="400"
                 class="ma-auto"
@@ -210,7 +215,7 @@
               <la-polar :width="320" class="ma-auto" :data="pie">
                 <la-pie
                   show-label
-                  font-size="13"
+                  :font-size="13"
                   label-prop="title"
                   prop="value"
                 ></la-pie>
@@ -273,6 +278,7 @@ export default {
     return {
       dialog: false,
       loading: false,
+      show: true,
       content: "",
       tag: "",
       val: "",
@@ -344,6 +350,7 @@ export default {
 
       if (!sn.loading) {
         sn.loading = true;
+        sn.show = true;
         sn.disBtn = x;
         var url =
           "/summary?category=" + sn.category.toLowerCase() + "&type=" + x;
@@ -351,7 +358,9 @@ export default {
           .get(url)
           .then(res => {
             sn.summary = [];
-            sn.summary = res.data.data;
+            var d = res.data.data;
+            sn.summary = d;
+            sn.show = d.length > 0 ? true : false;
             sn.pie = res.data.extra.filter(el => {
               return el.value > 0;
             });

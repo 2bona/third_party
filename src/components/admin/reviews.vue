@@ -686,7 +686,10 @@ export default {
       let url = "/delivery/agents";
       http({
         url: url,
-        method: "get"
+        method: "get",
+        params: {
+          id: this.vendor.current_area_id
+        }
       })
         .then(response => {
           sn.load = false;

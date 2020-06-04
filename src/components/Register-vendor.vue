@@ -65,7 +65,7 @@
                     v-model="name"
                     validate-on-blur
                     color="orange"
-                    :rules="[rules.required, rules.min]"
+                    :rules="[rules.required, rules.required2, rules.min]"
                     label="Business Name"
                     placeholder="Business name. eg. mummy's pot"
                     required
@@ -307,6 +307,9 @@ export default {
       e6: 1,
       rules: {
         required: value => !!value || "Required.",
+        required2: value =>
+          !/[^a-zA-Z0-9&()\s]/.test(value) ||
+          "Only letters, numbers, & and bracket are allowed.",
         min: value => value.length >= 3 || "Min 3 characters",
         c_password: value =>
           this.password === this.c_password || "does not match passoword",

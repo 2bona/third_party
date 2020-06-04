@@ -204,6 +204,8 @@ export const vendor = {
            console.log('....... response.......')
            console.log(res)
            if (res.data.token && res.data.message) {
+            
+             
              axios.post(AXIOS_CONFIG.API_URL + "/notify", {
                receiver_user : res.data.token,
                title: 'Order Update',
@@ -211,7 +213,19 @@ export const vendor = {
                push_type: 'individual',
                payload: JSON.stringify({url: '/cart', id: data.id})
               }).then((res)=>{
-                console.log('....... response.......')
+                if (data.action === "served") {
+                  var agentsToken = data.action === 'served' ? state.agents.map(agents => agents.token) : false
+                  
+                  axios.post(AXIOS_CONFIG.API_URL + "/notify", {
+                    receiver_user : agentsToken,
+                    title: 'New Order',
+                    message: "New Order from " + state.vendor.name+"!!!",
+                    push_type: 'multiple',
+                    payload: JSON.stringify({url: '/adminorder', id: data.id})
+                   }).then((res) =>{
+                     console.log(res)
+                   })
+                }
                 console.log(res)
              }).catch((err)=>{
               console.log(err)

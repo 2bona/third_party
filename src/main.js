@@ -11,7 +11,7 @@ export const loadedGoogleMapsAPI = new Promise((resolve, reject) => {
   );
   document.body.appendChild(GMap);
 });
-import { Plugins, AppUrlOpen } from "@capacitor/core";
+import { Plugins } from "@capacitor/core";
 const {
   Toast,
   SplashScreen,
@@ -116,12 +116,12 @@ PushNotifications.addListener("pushNotificationReceived", res => {
   var id = t.id;
   var actionText = "";
   if (t.id != null) {
-    if (t.url === "/cart") {
+    if (t.url === "/adminorder") {
       action = 1;
       actionText = "open order";
     } else if (t.url === "/vendor") {
       action = 2;
-      actionText = "go to vendor";
+      actionText = "Proceed";
     }
   } else {
     id = null;
@@ -147,12 +147,13 @@ PushNotifications.addListener("pushNotificationActionPerformed", res => {
   var t = JSON.parse(res.notification.data.payload);
 
   if (res.actionId === "tap") {
-    if (t.url === "/cart") {
-      store.dispatch("getUserOrder", {
-        id: t.id
+    if (t.url === "/adminorder") {
+      store.dispatch("order", {
+        id: t.id,
+        action: "read"
       });
     } else if (t.url === "/vendor") {
-      router.push("/vendor/" + t.id);
+      router.push("/adminedit");
     } else if (t.url === "/home") {
       router.push("/");
     }

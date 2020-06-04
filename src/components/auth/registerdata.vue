@@ -9,7 +9,7 @@
           label="First name"
           placeholder="Enter your first name"
           validate-on-blur
-          :rules="[rules.required, rules.min]"
+          :rules="[rules.required, rules.required2, rules.min]"
           @keyup.enter.native="register"
           required
         ></v-text-field>
@@ -28,7 +28,7 @@
           label="Surname"
           validate-on-blur
           placeholder="Enter your surname"
-          :rules="[rules.required, rules.min]"
+          :rules="[rules.required, rules.required2, rules.min]"
           @keyup.enter.native="register"
           required
         ></v-text-field>
@@ -93,6 +93,9 @@ export default {
       },
       rules: {
         required: value => !!value || "Required.",
+              required2: value =>
+          !/[^a-zA-Z0-9&()]/.test(value) ||
+          "Only letters, numbers, & and bracket are allowed.",
         min: value => value.length >= 3 || "Min 3 characters",
         c_password: value =>
           this.password === this.c_password || "does not match passoword",

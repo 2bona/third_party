@@ -1,12 +1,6 @@
 /* eslint-disable no-unused-vars */
 <template>
-  <v-card
-    color=""
-    style="overflow-x: hidden;"
-    flat
-    tile
-    class="pb-9 px-3"
-  >
+  <v-card color="" style="overflow-x: hidden;" flat tile class="pb-9 px-3">
     <div>
       <v-flex>
         <v-spacer></v-spacer>
@@ -120,9 +114,7 @@
     <v-expansion-panels style="border-radius:25px 25px 0 0" accordion>
       <v-expansion-panel>
         <v-expansion-panel-header class="px-3"
-          ><p
-            class="grey--text  font-weight-light  text--darken-1 mb-0 body-1"
-          >
+          ><p class="font-weight-regular mb-0 body-1">
             <v-icon class="mr-2" color="grey lighten-3">mdi-account</v-icon
             >Business Information
           </p>
@@ -136,7 +128,7 @@
                 label="Business name"
                 v-model="vendor.name"
                 placeholder="Your first name"
-                :rules="[rules.required, rules.min]"
+                :rules="[rules.required, rules.min, rules.required2]"
                 color="grey"
                 :loading="loading"
                 :disabled="loading"
@@ -205,13 +197,12 @@
             </v-row>
             <v-row class="my-5 px-3" justify="space-around">
               <v-btn
-                depressed
+                outlined
                 :disabled="editBtn"
                 @click.prevent="edit"
                 :loading="loading"
                 class="px-6"
-                
-                color="primary"
+                color="orange"
                 dark
                 rounded
                 >Edit</v-btn
@@ -222,9 +213,7 @@
       </v-expansion-panel>
       <v-expansion-panel>
         <v-expansion-panel-header @click="overlay = true" class="px-3"
-          ><p
-            class="black--text  font-weight-light  text--darken-1 mb-0 body-1"
-          >
+          ><p class="  font-weight-regular mb-0 body-1">
             <v-icon class="mr-2" color="grey lighten-3">mdi-map-marker</v-icon
             >Delivery
           </p>
@@ -256,10 +245,11 @@
                     :rules="minRule"
                     :loading="loadingFee"
                     :disabled="loadingFee"
-                    solo rounded
+                    solo
+                    rounded
                     @keyup.enter.native="setFee"
                     prepend-inner-icon="mdi-currency-ngn"
-                    ref="fee"  class="caption"
+                    ref="fee"
                     dense
                     color="grey lighten-2"
                     placeholder="Fee"
@@ -272,7 +262,7 @@
           </v-list>
           <v-row class="mb-8 mt-0 px-3" justify="space-around">
             <v-btn
-              depressed
+              outlined
               @click.prevent="setFee"
               :loading="loadingFee"
               class="px-6"
@@ -287,9 +277,7 @@
       </v-expansion-panel>
       <v-expansion-panel>
         <v-expansion-panel-header @click="overlay = true" class="px-3"
-          ><p
-            class="black--text  font-weight-light  text--darken-1 mb-0 body-1"
-          >
+          ><p class="  font-weight-regular mb-0 body-1">
             <v-icon class="mr-2" color="grey lighten-3">mdi-credit-card</v-icon
             >Payment
           </p>
@@ -355,9 +343,10 @@
                   :rules="minRule"
                   :disabled="payLoad"
                   :loading="payLoad"
-                  solo rounded
+                  solo
+                  rounded
                   prepend-inner-icon="mdi-currency-ngn"
-                  dense  class="caption"
+                  dense
                   color="grey"
                   placeholder="Fee"
                   v-model="vendor.minimum_order"
@@ -378,9 +367,10 @@
                 <v-text-field
                   :disabled="payLoad"
                   :loading="payLoad"
-                  solo rounded
+                  solo
+                  rounded
                   prepend-inner-icon="mdi-currency-ngn"
-                  dense  class="caption"
+                  dense
                   color="grey"
                   placeholder="Fee"
                   v-model="vendor.pos_charge"
@@ -407,8 +397,10 @@
                 <v-text-field
                   :disabled="payLoad"
                   :loading="payLoad"
-                  solo rounded
-                  dense  class="caption"
+                  solo
+                  rounded
+                  dense
+                  class="caption"
                   color="grey"
                   placeholder="Bank Name"
                   v-model="vendor.bank_name"
@@ -429,8 +421,10 @@
                 <v-text-field
                   :disabled="payLoad"
                   :loading="payLoad"
-                  solo rounded
-                  dense  class="caption"
+                  solo
+                  rounded
+                  dense
+                  class="caption"
                   color="grey"
                   placeholder="Account name"
                   v-model="vendor.account_name"
@@ -452,8 +446,10 @@
                   :rules="minRule"
                   :disabled="payLoad"
                   :loading="payLoad"
-                  solo rounded
-                  dense  class="caption"
+                  solo
+                  rounded
+                  dense
+                  class="caption"
                   color="grey"
                   placeholder="Account number"
                   v-model="vendor.account_number"
@@ -464,7 +460,7 @@
           </v-list>
           <v-row class="mb-7 mt-0 px-3" justify="space-around">
             <v-btn
-              depressed
+              outlined
               :disabled="isNaN(vendor.minimum_order)"
               @click.prevent="paySet"
               :loading="payLoad"
@@ -482,9 +478,7 @@
     <v-card flat style="border-radius: 0 0 25px 25px" tile class="mb-7">
       <v-list>
         <v-list-item class="pl-2 pr-0">
-          <v-list-item-title
-            class="body-1 px-1 black--text  font-weight-light  text--darken-1"
-          >
+          <v-list-item-title class="body-1 px-1   font-weight-regular">
             <v-icon size="21" class="mr-2" color="grey lighten-3"
               >mdi-information</v-icon
             >
@@ -493,9 +487,9 @@
           </v-list-item-title>
           <v-list-item-action class=" pr-5  ml-0">
             <v-btn
-              depressed
+              outlined
               small
-              color="grey darken-2"
+              color="grey darken-1"
               :href="
                 'https://wa.me/+234' +
                   8033685498 +
@@ -513,9 +507,7 @@
           </v-list-item-action>
         </v-list-item>
         <v-list-item class="pl-2 pr-0">
-          <v-list-item-title
-            class="body-1 px-1 black--text  font-weight-light  text--darken-1"
-          >
+          <v-list-item-title class="body-1 px-1   font-weight-regular">
             <v-icon size="21" class="mr-2" color="grey lighten-3"
               >mdi-refresh-circle</v-icon
             >
@@ -525,9 +517,9 @@
           <v-list-item-action class=" pr-5  ml-0">
             <v-btn
               @click="refreshOffline()"
-              depressed
+              outlined
               small
-              color="grey darken-2"
+              color="grey darken-1"
               rounded
               class="px-3 font-weight-bold"
             >
@@ -538,9 +530,7 @@
           </v-list-item-action>
         </v-list-item>
         <v-list-item class="pl-2 pr-0">
-          <v-list-item-title
-            class="body-1 px-1 black--text  font-weight-light  text--darken-1"
-          >
+          <v-list-item-title class="body-1 px-1   font-weight-regular">
             <v-icon size="21" class="mr-2" color="grey lighten-3"
               >mdi-upload</v-icon
             >
@@ -549,10 +539,10 @@
           </v-list-item-title>
           <v-list-item-action class=" pr-5  ml-0">
             <v-btn
-              depressed
+              outlined
               small
               @click="uploadOfflineOrders()"
-              color="grey darken-2"
+              color="grey darken-1"
               rounded
               class="px-3 font-weight-bold"
             >
@@ -563,9 +553,7 @@
           </v-list-item-action>
         </v-list-item>
         <v-list-item class="pl-2 pr-0">
-          <v-list-item-title
-            class="body-1 px-1 black--text  font-weight-light  text--darken-1"
-          >
+          <v-list-item-title class="body-1 px-1   font-weight-regular">
             <v-icon size="21" class="mr-2" color="grey lighten-3"
               >mdi-network-strength-off-outline</v-icon
             >
@@ -575,9 +563,9 @@
           <v-list-item-action class=" pr-5  ml-0">
             <v-btn
               to="/offlinepage"
-              depressed
+              outlined
               small
-              color="grey darken-2"
+              color="grey darken-1"
               rounded
               class="px-3 font-weight-bold"
             >
@@ -588,9 +576,7 @@
           </v-list-item-action>
         </v-list-item>
         <v-list-item class="pl-2 pr-0">
-          <v-list-item-title
-            class="body-1 px-1 black--text  font-weight-light  text--darken-1"
-          >
+          <v-list-item-title class="body-1 px-1   font-weight-regular">
             <v-icon size="21" class="mr-2" color="grey lighten-3"
               >mdi-cart-outline</v-icon
             >
@@ -600,9 +586,9 @@
           <v-list-item-action class=" pr-5  ml-0">
             <v-btn
               to="/offlineorders"
-              depressed
+              outlined
               small
-              color="grey darken-2"
+              color="grey darken-1"
               rounded
               class="px-3 font-weight-bold"
             >
@@ -614,7 +600,7 @@
         </v-list-item>
         <v-list-item class="pl-2 pr-0">
           <v-spacer></v-spacer>
-            <v-btn   @click="logout" dark  depressed="" rounded color="red lighten-2">Logout</v-btn>
+          <v-btn @click="logout" outlined rounded>Logout</v-btn>
         </v-list-item>
       </v-list>
     </v-card>
@@ -634,6 +620,9 @@
 <style>
 .v-expansion-panel-content__wrap {
   padding: 0px 0px;
+}
+.v-text-field--rounded > .v-input__control > .v-input__slot {
+  padding: 0 8px;
 }
 </style>
 <script>
@@ -678,6 +667,9 @@ export default {
     visible: true,
     rules: {
       required: value => !!value || "Required.",
+      required2: value =>
+        !/[^a-zA-Z0-9&()\s]/.test(value) ||
+        "Only letters, numbers, & and bracket are allowed.",
       min: value => value.length >= 3 || "Min 3 characters",
       minArea: value => value.length > 0 || "Min 1 area",
       minTag: value => value.length > 0 || "Min 1 tag",

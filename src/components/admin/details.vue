@@ -1,44 +1,46 @@
 <template>
   <div>
-      <v-flex xs12 class=" pt-0 px-0">
-        <v-btn
-          v-show="
-            !dialog &&
-              !dialog1 &&
-              !dialog2 &&
-              !dialog3 &&
-              !dialog4 &&
-              !dialog5 &&
-              !dialog6 &&
-              !dialog45
-          "
-          fixed
-          @click="$router.go(-1)"
-          fab
-          bottom
-          right
-          color="white"
-          style="z-index:999"
-          class="mb-12"
-        >
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
-        <v-card flat tile color="white">
-          <v-container fluid>
-            <v-row justify="space-around">
-              <input
-                v-show="false"
-                ref="file81"
-                type="file"
-                @change="itemFieldChange($event)"
-              />
-              <v-col class="" cols="12">
-                <v-card
-                  flat
-                  color="white"
-                  class="pa-4 mx-auto"
-                  max-width="650px"
-                >
+    <v-flex xs12 class=" pt-0 px-0">
+      <v-btn
+        v-show="
+          !dialog &&
+            !dialog1 &&
+            !dialog2 &&
+            !dialog3 &&
+            !dialog4 &&
+            !dialog5 &&
+            !dialog6 &&
+            !dialog45
+        "
+        fixed
+        @click="$router.go(-1)"
+        fab
+        bottom
+        right
+        color="white"
+        style="z-index:999"
+        class="mb-12"
+      >
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <v-card flat tile color="white">
+        <v-container fluid>
+          <v-row justify="space-around">
+            <input
+              v-show="false"
+              ref="file81"
+              type="file"
+              @change="itemFieldChange($event)"
+            />
+            <v-col class="" cols="12">
+              <v-card
+                flat
+                color="white"
+                style="padding-bottom: 300px!important;"
+                class="px-4 pt-4 mx-auto"
+                max-width="650px"
+              >
+                <div>
                   <v-skeleton-loader
                     v-show="$route.params.id != items.id"
                     ref="skeleton"
@@ -78,664 +80,661 @@
                       ><v-icon>mdi-trash-can</v-icon>delete</v-btn
                     >
                   </v-row>
-                  <v-divider class="my-4"></v-divider>
-                  <v-progress-linear
-                    v-if="dialog45"
-                    indeterminate
-                    color="grey lighten-1"
-                  ></v-progress-linear>
-                  <v-skeleton-loader
-                    v-for="n in 4"
-                    :key="n"
-                    v-show="$route.params.id != items.id"
-                    ref="skeleton"
-                    width="100%"
-                    type="list-item-avatar-two-line"
-                  ></v-skeleton-loader>
-                  <v-flex
-                    v-show="$route.params.id == items.id"
-                    class="my-2 px-1"
-                    xs12
-                    v-for="n in items.items"
-                    :key="n.id"
+                </div>
+
+                <v-divider class="my-4"></v-divider>
+                <v-progress-linear
+                  v-if="dialog45"
+                  indeterminate
+                  color="grey lighten-1"
+                ></v-progress-linear>
+                <v-skeleton-loader
+                  v-for="n in 4"
+                  :key="n"
+                  v-show="$route.params.id != items.id"
+                  ref="skeleton"
+                  width="100%"
+                  type="list-item-avatar-two-line"
+                ></v-skeleton-loader>
+                <v-flex
+                  v-show="$route.params.id == items.id"
+                  class="my-2 px-1"
+                  xs12
+                  v-for="n in items.items"
+                  :key="n.id"
+                >
+                  <v-card
+                    :disabled="dialog45"
+                    width="95%"
+                    @click="!n.status ? count(n.id, items.id) : ''"
+                    height="auto"
+                    ripp
+                    max-height
+                    :ripple="false"
+                    min-height
+                    flat
+                    color="grey lighten-5"
+                    style=" border-radius:25px"
+                    class="mx-2 mb-2 py-1 px-1"
                   >
-                    <v-card
-                      :disabled="dialog45"
-                      width="95%"
-                      @click="!n.status ? count(n.id, items.id) : ''"
-                      height="auto"
-                      ripp
-                      max-height
-                      :ripple="false"
-                      min-height
-                      flat
-                      color="grey lighten-5"
-                      style=" border-radius:25px"
-                      class="mx-2 mb-2 py-1 px-1"
-                    >
-                      <v-list-item class="pa-0">
-                        <v-list-item-avatar
-                          size="40"
-                          style="align-self: flex-start; top: 4px;"
-                          class="my-0 elevation-10 mr-2"
+                    <v-list-item class="pa-0">
+                      <v-list-item-avatar
+                        size="40"
+                        style="align-self: flex-start; top: 4px;"
+                        class="my-0 elevation-10 mr-2"
+                      >
+                        <v-img
+                          @click="openItemImageInput(n.id)"
+                          :src="n.image"
+                        ></v-img>
+                        <v-overlay
+                          absolute
+                          opacity="0.3"
+                          z-index="1"
+                          :value="itemAttach === n.id"
                         >
-                          <v-img
-                            @click="openItemImageInput(n.id)"
-                            :src="n.image"
-                          ></v-img>
-                          <v-overlay
-                            absolute
-                            opacity="0.3"
-                            z-index="1"
-                            :value="itemAttach === n.id"
-                          >
-                          </v-overlay>
-                          <v-btn
-                            :loading="loading11"
-                            style="z-index:7"
-                            dark
-                            absolute
-                            x-small
-                            rounded
-                            icon
-                            v-show="itemAttach === n.id"
-                            color="orange"
-                            class="mt-0 mb-0 mx-auto"
-                            @click="editItemImage(items.id, n.id)"
-                          >
-                            <v-icon color="orange lighten-4" dark
-                              >mdi-cloud-upload</v-icon
-                            ></v-btn
-                          >
-                        </v-list-item-avatar>
-                        <v-list-item-title
-                          @click="isLoading ? '' : (n.status = !n.status)"
-                          style=""
-                          class="py-0"
+                        </v-overlay>
+                        <v-btn
+                          :loading="loading11"
+                          style="z-index:7"
+                          dark
+                          absolute
+                          x-small
+                          rounded
+                          icon
+                          v-show="itemAttach === n.id"
+                          color="orange"
+                          class="mt-0 mb-0 mx-auto"
+                          @click="editItemImage(items.id, n.id)"
                         >
-                          <v-layout>
-                            <v-flex xs8>
-                              <h2
-                                style="text-decoration: none;"
-                                class="py-0 body-2 grey--text text-capitalize  text-truncate text--darken-1 font-weight-medium my-0"
-                              >
-                                <v-icon
-                                  size="9px"
-                                  :color="n.available ? 'green' : 'red'"
-                                  >mdi-circle</v-icon
-                                >{{ n.name }}
-                              </h2>
-                            </v-flex>
-                            <v-slide-x-reverse-transition>
-                              <v-flex
-                                v-show="!n.status"
-                                xs5
-                                style="
-            position: absolute; right: -2px; z-index:99; top: -3px;"
-                              >
-                                <v-btn
-                                  @click="
-                                    editCatItem(
-                                      items.id,
-                                      n.id,
-                                      n.name,
-                                      n.cost_price,
-                                      n.description,
-                                      n.main_option,
-                                      n.mark_up_price
-                                    )
-                                  "
-                                  icon
-                                  text
-                                  color="grey lighten-2"
-                                  small
-                                  class="mt-1 mr-1"
-                                >
-                                  <v-icon>mdi-pencil-outline</v-icon>
-                                </v-btn>
-                                <v-btn
-                                  icon
-                                  text
-                                  @click="deleteCatItem(items.id, n.id, n.name)"
-                                  color="grey lighten-2"
-                                  small
-                                  class="mt-1 mr-1"
-                                >
-                                  <v-icon>mdi-trash-can</v-icon>
-                                </v-btn>
-                              </v-flex>
-                            </v-slide-x-reverse-transition>
-                            <v-slide-x-transition>
-                              <v-switch
-                                v-show="!n.status"
-                                @click.prevent="
-                                  offFood(n.available, n.name, n.id, items.id)
-                                "
-                                :style="
-                                  n.status
-                                    ? 'position: absolute;transform: rotate(270deg);top: 15px;right: -25px;'
-                                    : 'position: absolute;transform: rotate(270deg);right: -25px; top: 15px;'
-                                "
-                                v-model="n.available"
-                                color="grey lighten-4"
-                                class="mt-2 mb-0 pb-0"
-                              ></v-switch>
-                            </v-slide-x-transition>
-                          </v-layout>
-                          <p
-                            style="padding-left:10px;"
-                            class="caption font-weight-regular grey--text text--darken-1 mb-0"
-                          >
-                            <v-icon
-                              size="11.5px"
-                              style="width: 4.8px; padding-bottom:1.8px; margin-right:3px"
-                              >mdi-currency-ngn</v-icon
-                            >{{ n.price | price }}
-                          </p>
-                          <p class="mb-0 ">
-                            <span class="d-flex justify mb-0 mt-0"> </span>
-                          </p>
-                          <v-flex xs12>
-                            <v-expand-transition>
-                              <v-layout
-                                v-show="!n.status"
-                                style="width:100%;padding-left: 13px !important;"
-                                row
-                                wrap
-                                class="py-1"
-                              >
-                                <v-flex v-if="n.main_option.length" xs12>
-                                  <p
-                                    class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
-                                  >
-                                    Cumpolsory
-                                  </p>
-                                  <v-divider
-                                    class=" grey lighten-4 mb-1"
-                                  ></v-divider>
-                                  <v-layout row wrap class="pl-3">
-                                    <div
-                                      style="max-width:150px;display: inline-grid;"
-                                      v-show="img.pivot.type === 'compulsory'"
-                                      v-for="img in n.main_option"
-                                      :key="img.id + img.pivot.type"
-                                    >
-                                      <v-chip class="ma-1" x-small>
-                                        {{ img.name }}
-                                      </v-chip>
-                                    </div>
-                                  </v-layout>
-                                </v-flex>
-                                <v-flex xs12 v-if="n.main_option.length">
-                                  <p
-                                    class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
-                                  >
-                                    Optional
-                                  </p>
-                                  <v-divider
-                                    class="grey lighten-4 mb-1"
-                                  ></v-divider>
-                                  <v-layout row wrap class="pl-3">
-                                    <div
-                                      style="max-width:150px;display: inline-grid;"
-                                      v-show="img.pivot.type === 'optional'"
-                                      v-for="img in n.main_option"
-                                      :key="img.id + img.pivot.type"
-                                    >
-                                      <v-chip
-                                        class="ma-1 text-center text-truncate"
-                                        x-small
-                                      >
-                                        {{ img.name }}
-                                      </v-chip>
-                                    </div>
-                                  </v-layout>
-                                </v-flex>
-                                <v-flex xs12>
-                                  <p
-                                    class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
-                                  >
-                                    Sold
-                                  </p>
-                                  <v-progress-linear
-                                    color="grey lighten-1"
-                                    v-show="isLoading && countId === n.id"
-                                    :indeterminate="isLoading"
-                                  ></v-progress-linear>
-                                  <v-divider
-                                    class="grey lighten-4 mb-1"
-                                  ></v-divider>
-                                  <div
-                                    style="width:40px;display: inline-grid;"
-                                    class="mb-0 mr-2"
-                                  >
-                                    <v-avatar
-                                      size="25px"
-                                      class=" mx-auto elevation-2"
-                                      color="green"
-                                    >
-                                      <v-icon small dark
-                                        >mdi-cart-outline</v-icon
-                                      >
-                                    </v-avatar>
-                                    <p
-                                      class="caption mb-0 text-capitalize text-center grey--text"
-                                    >
-                                      {{ counterValue(n.id) }}
-                                    </p>
-                                  </div>
-                                </v-flex>
-                              </v-layout>
-                            </v-expand-transition>
+                          <v-icon color="orange lighten-4" dark
+                            >mdi-cloud-upload</v-icon
+                          ></v-btn
+                        >
+                      </v-list-item-avatar>
+                      <v-list-item-title
+                        @click="isLoading ? '' : (n.status = !n.status)"
+                        style=""
+                        class="py-0"
+                      >
+                        <v-layout>
+                          <v-flex xs8>
+                            <h2
+                              style="text-decoration: none;"
+                              class="py-0 body-2 grey--text text-capitalize  text-truncate text--darken-1 font-weight-medium my-0"
+                            >
+                              <v-icon
+                                size="9px"
+                                :color="n.available ? 'green' : 'red'"
+                                >mdi-circle</v-icon
+                              >{{ n.name }}
+                            </h2>
                           </v-flex>
-                        </v-list-item-title>
-                      </v-list-item>
-                    </v-card>
-                  </v-flex>
-                </v-card>
-              </v-col>
-              <div class="text-center">
-                <v-dialog v-model="dialog" width="500" :persistent="loading">
-                  <v-card>
-                    <v-card-title class="body-1 grey lighten-2" primary-title>
-                      Add Category
-                      <v-spacer></v-spacer>
-                      <v-btn icon @click="dialog = false"
-                        ><v-icon>mdi-close</v-icon></v-btn
-                      >
-                    </v-card-title>
-                    <v-form onSubmit="return false;" ref="form">
-                      <v-card-text>
-                        <v-text-field
-                          v-model="content"
-                          autofocus
-                          @keyup.enter.native="addCategory"
-                          label="Type here"
-                        ></v-text-field>
-                      </v-card-text>
-                      <v-divider></v-divider>
-                      <v-card-actions>
-                        <v-btn
-                          color="orange"
-                          class="px-3 mx-auto"
-                          rounded
-                          :disabled="content.length < 2"
-                          dark
-                          depressed
-                          :loading="loading"
-                          @click="addCategory()"
+                          <v-slide-x-reverse-transition>
+                            <v-flex
+                              v-show="!n.status"
+                              xs5
+                              style="
+            position: absolute; right: -2px; z-index:99; top: -3px;"
+                            >
+                              <v-btn
+                                @click="
+                                  editCatItem(
+                                    items.id,
+                                    n.id,
+                                    n.name,
+                                    n.cost_price,
+                                    n.description,
+                                    n.main_option,
+                                    n.mark_up_price
+                                  )
+                                "
+                                icon
+                                text
+                                color="grey lighten-2"
+                                small
+                                class="mt-1 mr-1"
+                              >
+                                <v-icon>mdi-pencil-outline</v-icon>
+                              </v-btn>
+                              <v-btn
+                                icon
+                                text
+                                @click="deleteCatItem(items.id, n.id, n.name)"
+                                color="grey lighten-2"
+                                small
+                                class="mt-1 mr-1"
+                              >
+                                <v-icon>mdi-trash-can</v-icon>
+                              </v-btn>
+                            </v-flex>
+                          </v-slide-x-reverse-transition>
+                          <v-slide-x-transition>
+                            <v-switch
+                              v-show="!n.status"
+                              @click.prevent="
+                                offFood(n.available, n.name, n.id, items.id)
+                              "
+                              :style="
+                                n.status
+                                  ? 'position: absolute;transform: rotate(270deg);top: 15px;right: -25px;'
+                                  : 'position: absolute;transform: rotate(270deg);right: -25px; top: 15px;'
+                              "
+                              v-model="n.available"
+                              color="grey lighten-4"
+                              class="mt-2 mb-0 pb-0"
+                            ></v-switch>
+                          </v-slide-x-transition>
+                        </v-layout>
+                        <p
+                          style="padding-left:10px;"
+                          class="caption font-weight-regular grey--text text--darken-1 mb-0"
                         >
-                          submit
-                        </v-btn>
-                      </v-card-actions>
-                    </v-form>
+                          <v-icon
+                            size="11.5px"
+                            style="width: 4.8px; padding-bottom:1.8px; margin-right:3px"
+                            >mdi-currency-ngn</v-icon
+                          >{{ n.price | price }}
+                        </p>
+                        <p class="mb-0 ">
+                          <span class="d-flex justify mb-0 mt-0"> </span>
+                        </p>
+                        <v-flex xs12>
+                          <v-expand-transition>
+                            <v-layout
+                              v-show="!n.status"
+                              style="width:100%;padding-left: 13px !important;"
+                              row
+                              wrap
+                              class="py-1"
+                            >
+                              <v-flex v-if="n.main_option.length" xs12>
+                                <p
+                                  class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
+                                >
+                                  Cumpolsory
+                                </p>
+                                <v-divider
+                                  class=" grey lighten-4 mb-1"
+                                ></v-divider>
+                                <v-layout row wrap class="pl-3">
+                                  <div
+                                    style="max-width:150px;display: inline-grid;"
+                                    v-show="img.pivot.type === 'compulsory'"
+                                    v-for="img in n.main_option"
+                                    :key="img.id + img.pivot.type"
+                                  >
+                                    <v-chip class="ma-1" x-small>
+                                      {{ img.name }}
+                                    </v-chip>
+                                  </div>
+                                </v-layout>
+                              </v-flex>
+                              <v-flex xs12 v-if="n.main_option.length">
+                                <p
+                                  class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
+                                >
+                                  Optional
+                                </p>
+                                <v-divider
+                                  class="grey lighten-4 mb-1"
+                                ></v-divider>
+                                <v-layout row wrap class="pl-3">
+                                  <div
+                                    style="max-width:150px;display: inline-grid;"
+                                    v-show="img.pivot.type === 'optional'"
+                                    v-for="img in n.main_option"
+                                    :key="img.id + img.pivot.type"
+                                  >
+                                    <v-chip
+                                      class="ma-1 text-center text-truncate"
+                                      x-small
+                                    >
+                                      {{ img.name }}
+                                    </v-chip>
+                                  </div>
+                                </v-layout>
+                              </v-flex>
+                              <v-flex xs12>
+                                <p
+                                  class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
+                                >
+                                  Sold
+                                </p>
+                                <v-progress-linear
+                                  color="grey lighten-1"
+                                  v-show="isLoading && countId === n.id"
+                                  :indeterminate="isLoading"
+                                ></v-progress-linear>
+                                <v-divider
+                                  class="grey lighten-4 mb-1"
+                                ></v-divider>
+                                <div
+                                  style="width:40px;display: inline-grid;"
+                                  class="mb-0 mr-2"
+                                >
+                                  <v-avatar
+                                    size="25px"
+                                    class=" mx-auto elevation-2"
+                                    color="green"
+                                  >
+                                    <v-icon small dark>mdi-cart-outline</v-icon>
+                                  </v-avatar>
+                                  <p
+                                    class="caption mb-0 text-capitalize text-center grey--text"
+                                  >
+                                    {{ counterValue(n.id) }}
+                                  </p>
+                                </div>
+                              </v-flex>
+                            </v-layout>
+                          </v-expand-transition>
+                        </v-flex>
+                      </v-list-item-title>
+                    </v-list-item>
                   </v-card>
-                </v-dialog>
-
-                <v-dialog v-model="dialog1" width="500" :persistent="loading1">
-                  <v-card>
-                    <v-card-title class="body-1 grey lighten-2" primary-title>
-                      Edit items
-                      <v-spacer></v-spacer>
-                      <v-btn icon @click="dialog1 = false"
-                        ><v-icon>mdi-close</v-icon></v-btn
-                      >
-                    </v-card-title>
-                    <v-form onSubmit="return false;" ref="form2">
-                      <v-card-text>
-                        <v-text-field
-                          v-model="editContent"
-                          autofocus
-                          @keyup.enter.native="
-                            editCategory(editContent, editId)
-                          "
-                        ></v-text-field>
-                      </v-card-text>
-                      <v-divider></v-divider>
-                      <v-card-actions>
-                        <v-btn
-                          color="orange"
-                          class="px-3 mx-auto"
-                          rounded
-                          dark
-                          depressed
-                          :disabled="editContent.length < 2"
-                          :loading="loading1"
-                          @click="editCategory(editContent, editId)"
-                        >
-                          edit
-                        </v-btn>
-                      </v-card-actions>
-                    </v-form>
-                  </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialog2" width="500">
-                  <v-card>
-                    <v-card-title class="body-1 grey lighten-2" primary-title>
-                      Delete category and its Items?
-                      <v-spacer></v-spacer>
-                      <v-btn icon @click="dialog2 = false"
-                        ><v-icon>mdi-close</v-icon></v-btn
-                      >
-                    </v-card-title>
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                      <v-btn
-                        color="blue"
-                        class="px-3 mx-auto"
-                        rounded
-                        dark
-                        depressed
-                        :loading="loading2"
-                        @click="deleteCategory(deleteId)"
-                      >
-                        sure
-                      </v-btn>
-                      <v-btn
-                        color="grey"
-                        class="px-3 mx-auto"
-                        rounded
-                        dark
-                        depressed
-                        @click="dialog2 = false"
-                      >
-                        cancel
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialog3" width="500">
-                  <v-card>
-                    <v-card-title class="body-1 grey lighten-2" primary-title>
-                      Turn {{ offName }}?
-                      <v-spacer></v-spacer>
-                      <v-btn icon @click="dialog3 = false"
-                        ><v-icon>mdi-close</v-icon></v-btn
-                      >
-                    </v-card-title>
-                    <v-divider></v-divider>
-                    <v-card-actions>
-                      <v-btn
-                        color="blue"
-                        class="px-3 mx-auto"
-                        rounded
-                        dark
-                        depressed
-                        :loading="loading3"
-                        @click="offItem()"
-                      >
-                        sure
-                      </v-btn>
-                      <v-btn
-                        color="grey"
-                        class="px-3 mx-auto"
-                        rounded
-                        dark
-                        depressed
-                        @click="dialog3 = false"
-                      >
-                        cancel
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialog4" width="500">
-                  <v-card>
-                    <v-card-title
-                      class="body-1 item-truncate grey lighten-2"
-                      primary-title
+                </v-flex>
+              </v-card>
+            </v-col>
+            <div class="text-center">
+              <v-dialog v-model="dialog" width="500" :persistent="loading">
+                <v-card>
+                  <v-card-title class="body-1 grey lighten-2" primary-title>
+                    Add Category
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="dialog = false"
+                      ><v-icon>mdi-close</v-icon></v-btn
                     >
-                      Delete item?
-                      <v-spacer></v-spacer>
-                      <v-btn icon @click="dialog4 = false"
-                        ><v-icon>mdi-close</v-icon></v-btn
-                      >
-                    </v-card-title>
+                  </v-card-title>
+                  <v-form onSubmit="return false;" ref="form">
+                    <v-card-text>
+                      <v-text-field
+                        v-model="content"
+                        autofocus
+                        @keyup.enter.native="addCategory"
+                        label="Type here"
+                      ></v-text-field>
+                    </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-btn
-                        color="blue"
+                        color="orange"
                         class="px-3 mx-auto"
                         rounded
+                        :disabled="content.length < 2"
                         dark
                         depressed
-                        :loading="loading4"
-                        @click="deleteItem(deleteCatId, deleteCatItemId)"
+                        :loading="loading"
+                        @click="addCategory()"
                       >
-                        sure
-                      </v-btn>
-                      <v-btn
-                        color="grey"
-                        class="px-3 mx-auto"
-                        rounded
-                        dark
-                        depressed
-                        @click="dialog4 = false"
-                      >
-                        cancel
+                        submit
                       </v-btn>
                     </v-card-actions>
-                  </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialog5" width="500">
-                  <v-card flat tile class=" pb-9">
-                    <v-form onSubmit="return false;" ref="form4">
-                      <v-card-title
-                        primary-title
-                        class=" grey lighten-2 body-1 mb-3"
+                  </v-form>
+                </v-card>
+              </v-dialog>
+
+              <v-dialog v-model="dialog1" width="500" :persistent="loading1">
+                <v-card>
+                  <v-card-title class="body-1 grey lighten-2" primary-title>
+                    Edit items
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="dialog1 = false"
+                      ><v-icon>mdi-close</v-icon></v-btn
+                    >
+                  </v-card-title>
+                  <v-form onSubmit="return false;" ref="form2">
+                    <v-card-text>
+                      <v-text-field
+                        v-model="editContent"
+                        autofocus
+                        @keyup.enter.native="editCategory(editContent, editId)"
+                      ></v-text-field>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                      <v-btn
+                        color="orange"
+                        class="px-3 mx-auto"
+                        rounded
+                        dark
+                        depressed
+                        :disabled="editContent.length < 2"
+                        :loading="loading1"
+                        @click="editCategory(editContent, editId)"
                       >
-                        Add new item
-                        <v-spacer></v-spacer>
+                        edit
+                      </v-btn>
+                    </v-card-actions>
+                  </v-form>
+                </v-card>
+              </v-dialog>
+              <v-dialog v-model="dialog2" width="500">
+                <v-card>
+                  <v-card-title class="body-1 grey lighten-2" primary-title>
+                    Delete category and its Items?
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="dialog2 = false"
+                      ><v-icon>mdi-close</v-icon></v-btn
+                    >
+                  </v-card-title>
+                  <v-divider></v-divider>
+
+                  <v-card-actions>
+                    <v-btn
+                      color="blue"
+                      class="px-3 mx-auto"
+                      rounded
+                      dark
+                      depressed
+                      :loading="loading2"
+                      @click="deleteCategory(deleteId)"
+                    >
+                      sure
+                    </v-btn>
+                    <v-btn
+                      color="grey"
+                      class="px-3 mx-auto"
+                      rounded
+                      dark
+                      depressed
+                      @click="dialog2 = false"
+                    >
+                      cancel
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-dialog v-model="dialog3" width="500">
+                <v-card>
+                  <v-card-title class="body-1 grey lighten-2" primary-title>
+                    Turn {{ offName }}?
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="dialog3 = false"
+                      ><v-icon>mdi-close</v-icon></v-btn
+                    >
+                  </v-card-title>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-btn
+                      color="blue"
+                      class="px-3 mx-auto"
+                      rounded
+                      dark
+                      depressed
+                      :loading="loading3"
+                      @click="offItem()"
+                    >
+                      sure
+                    </v-btn>
+                    <v-btn
+                      color="grey"
+                      class="px-3 mx-auto"
+                      rounded
+                      dark
+                      depressed
+                      @click="dialog3 = false"
+                    >
+                      cancel
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-dialog v-model="dialog4" width="500">
+                <v-card>
+                  <v-card-title
+                    class="body-1 item-truncate grey lighten-2"
+                    primary-title
+                  >
+                    Delete item?
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="dialog4 = false"
+                      ><v-icon>mdi-close</v-icon></v-btn
+                    >
+                  </v-card-title>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-btn
+                      color="blue"
+                      class="px-3 mx-auto"
+                      rounded
+                      dark
+                      depressed
+                      :loading="loading4"
+                      @click="deleteItem(deleteCatId, deleteCatItemId)"
+                    >
+                      sure
+                    </v-btn>
+                    <v-btn
+                      color="grey"
+                      class="px-3 mx-auto"
+                      rounded
+                      dark
+                      depressed
+                      @click="dialog4 = false"
+                    >
+                      cancel
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-dialog v-model="dialog5" width="500">
+                <v-card flat tile class=" pb-9">
+                  <v-form onSubmit="return false;" ref="form4">
+                    <v-card-title
+                      primary-title
+                      class=" grey lighten-2 body-1 mb-3"
+                    >
+                      Add new item
+                      <v-spacer></v-spacer>
                       <v-btn icon @click="dialog5 = false"
                         ><v-icon>mdi-close</v-icon></v-btn
                       >
-                      </v-card-title>
-                      <div class="px-5 pb-9">
+                    </v-card-title>
+                    <div class="px-5 pb-9">
+                      <v-flex xs12>
+                        <v-text-field
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Name"
+                          placeholder="eg. Jollof Rice"
+                          color="orange"
+                          v-model="name"
+                          required
+                          :rules="[rules.required, rules.required2]"
+                        ></v-text-field>
+                        <v-text-field
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Cost price"
+                          v-model="cost_price"
+                          placeholder="0"
+                          hint="put only number eg '1000' not '1,000'"
+                          color="orange"
+                          prepend-inner-icon="mdi-currency-ngn"
+                          required
+                          :rules="[rules.required]"
+                        ></v-text-field>
+                        <v-text-field
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Mark up"
+                          v-model="mark_up_price"
+                          placeholder="0"
+                          hint="put only number eg '1000' not '1,000'"
+                          color="orange"
+                          prepend-inner-icon="mdi-currency-ngn"
+                          :rules="markRules"
+                        ></v-text-field>
+                      </v-flex>
+                      <v-row class="px-3" justify="space-between">
                         <v-flex xs12>
-                          <v-text-field
+                          <v-file-input
+                            ref="file2"
+                            @change="fieldChanges"
                             class="font-weight-regular grey--text text--darken-4"
-                            label="Name"
-                            placeholder="eg. Jollof Rice"
-                            color="orange"
-                            v-model="name"
-                            required
-                            :rules="[rules.required]"
-                          ></v-text-field>
-                          <v-text-field
-                            class="font-weight-regular grey--text text--darken-4"
-                            label="Cost price"
-                            v-model="cost_price"
-                            placeholder="0"
-                            hint="put only number eg '1000' not '1,000'"
-                            color="orange"
-                            prepend-inner-icon="mdi-currency-ngn"
-                            required
-                            :rules="[rules.required]"
-                          ></v-text-field>
-                          <v-text-field
-                            class="font-weight-regular grey--text text--darken-4"
-                            label="Mark up"
-                            v-model="mark_up_price"
-                            placeholder="0"
-                            hint="put only number eg '1000' not '1,000'"
-                            color="orange"
-                            prepend-inner-icon="mdi-currency-ngn"
-                            :rules="markRules"
-                          ></v-text-field>
+                            prepend-icon="mdi-camera"
+                            placeholder="Item picture"
+                            label="Image"
+                          ></v-file-input>
                         </v-flex>
-                        <v-row class="px-3" justify="space-between">
-                          <v-flex xs12>
-                            <v-file-input
-                              ref="file2"
-                              @change="fieldChanges"
-                              class="font-weight-regular grey--text text--darken-4"
-                              prepend-icon="mdi-camera"
-                              placeholder="Item picture"
-                              label="Image"
-                            ></v-file-input>
-                          </v-flex>
-                          <v-flex xs12>
-                            <v-textarea
-                              name="description"
-                              label="Description (optional)"
-                              color="orange"
-                              v-model="description"
-                              class="font-weight-regular grey--text text--darken-4"
-                              placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
-                            ></v-textarea>
-                          </v-flex>
-                          <v-flex xs12>
-                            <v-select
-                              class="font-weight-regular grey--text text--darken-4"
-                              :items="mainOptionsList"
-                              attach
-                              v-model="compulsory"
-                              chips
-                              placeholder="eg. meat, fish, garri, fufu"
-                              label="Compulsory extras (optional)"
-                              color="orange"
-                              multiple
-                            ></v-select>
-                          </v-flex>
-                          <v-flex xs12>
-                            <v-select
-                              class="font-weight-regular grey--text text--darken-4"
-                              :items="mainOptionsList"
-                              attach
-                              v-model="optional"
-                              chips
-                              placeholder="eg. plantain, eggs, coleslaw, moi-moi"
-                              label="Optional extras (optional)"
-                              color="orange"
-                              multiple
-                            ></v-select>
-                          </v-flex>
-                        </v-row>
-
-                        <v-row class="my-5 px-3" justify="space-around">
-                          <v-btn
-                            :loading="loading5"
-                            @click="addCategoryItem(addId)"
-                            class="px-6"
+                        <v-flex xs12>
+                          <v-textarea
+                            name="description"
+                            label="Description (optional)"
                             color="orange"
-                            dark
-                            depressed=""
-                            rounded
-                            >add</v-btn
-                          >
-                        </v-row>
-                      </div>
-                    </v-form>
-                  </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialog6" width="500">
-                  <v-card flat tile>
-                    <v-form onSubmit="return false;" ref="form45">
-                      <v-card-title
-                        primary-title
-                        class=" grey lighten-2 body-1 mb-3"
-                      >
-                        Edit item
-                        <v-spacer></v-spacer>
+                            v-model="description"
+                            class="font-weight-regular grey--text text--darken-4"
+                            placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
+                          ></v-textarea>
+                        </v-flex>
+                        <v-flex xs12>
+                          <v-select
+                            class="font-weight-regular grey--text text--darken-4"
+                            :items="mainOptionsList"
+                            attach
+                            v-model="compulsory"
+                            chips
+                            placeholder="eg. meat, fish, garri, fufu"
+                            label="Compulsory extras (optional)"
+                            color="orange"
+                            multiple
+                          ></v-select>
+                        </v-flex>
+                        <v-flex xs12>
+                          <v-select
+                            class="font-weight-regular grey--text text--darken-4"
+                            :items="mainOptionsList"
+                            attach
+                            v-model="optional"
+                            chips
+                            placeholder="eg. plantain, eggs, coleslaw, moi-moi"
+                            label="Optional extras (optional)"
+                            color="orange"
+                            multiple
+                          ></v-select>
+                        </v-flex>
+                      </v-row>
+
+                      <v-row class="my-5 px-3" justify="space-around">
+                        <v-btn
+                          :loading="loading5"
+                          @click="addCategoryItem(addId)"
+                          class="px-6"
+                          color="orange"
+                          dark
+                          depressed=""
+                          rounded
+                          >add</v-btn
+                        >
+                      </v-row>
+                    </div>
+                  </v-form>
+                </v-card>
+              </v-dialog>
+              <v-dialog v-model="dialog6" width="500">
+                <v-card flat tile>
+                  <v-form onSubmit="return false;" ref="form45">
+                    <v-card-title
+                      primary-title
+                      class=" grey lighten-2 body-1 mb-3"
+                    >
+                      Edit item
+                      <v-spacer></v-spacer>
                       <v-btn icon @click="dialog6 = false"
                         ><v-icon>mdi-close</v-icon></v-btn
                       >
-                      </v-card-title>
-                      <div class="px-5 pb-5">
+                    </v-card-title>
+                    <div class="px-5 pb-5">
+                      <v-flex xs12>
+                        <v-text-field
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Name"
+                          placeholder="eg. Jollof Rice"
+                          color="orange"
+                          v-model="editCatItemName"
+                          required
+                          :rules="[rules.required, rules.required2]"
+                        ></v-text-field>
+                        <v-text-field
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Cost price"
+                          v-model="editCatItemCostPrice"
+                          placeholder="0"
+                          hint="put only number eg '1000' not '1,000'"
+                          color="orange"
+                          prepend-inner-icon="mdi-currency-ngn"
+                          required
+                          :rules="numberRules"
+                        ></v-text-field>
+                        <v-text-field
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Mark up"
+                          v-model="editCatItemMarkUp"
+                          placeholder="0"
+                          hint="put only number eg '1000' not '1,000'"
+                          color="orange"
+                          prepend-inner-icon="mdi-currency-ngn"
+                          :rules="markRules"
+                        ></v-text-field>
+                      </v-flex>
+                      <v-row class="px-3" justify="space-between">
                         <v-flex xs12>
-                          <v-text-field
-                            class="font-weight-regular grey--text text--darken-4"
-                            label="Name"
-                            placeholder="eg. Jollof Rice"
+                          <v-textarea
+                            name="description"
+                            label="Description (optional)"
                             color="orange"
-                            v-model="editCatItemName"
-                            required
-                            :rules="[rules.required]"
-                          ></v-text-field>
-                          <v-text-field
+                            v-model="editCatItemDescription"
                             class="font-weight-regular grey--text text--darken-4"
-                            label="Cost price"
-                            v-model="editCatItemCostPrice"
-                            placeholder="0"
-                            hint="put only number eg '1000' not '1,000'"
-                            color="orange"
-                            prepend-inner-icon="mdi-currency-ngn"
-                            required
-                            :rules="numberRules"
-                          ></v-text-field>
-                          <v-text-field
-                            class="font-weight-regular grey--text text--darken-4"
-                            label="Mark up"
-                            v-model="editCatItemMarkUp"
-                            placeholder="0"
-                            hint="put only number eg '1000' not '1,000'"
-                            color="orange"
-                            prepend-inner-icon="mdi-currency-ngn"
-                            :rules="markRules"
-                          ></v-text-field>
+                            placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
+                          ></v-textarea>
                         </v-flex>
-                        <v-row class="px-3" justify="space-between">
-                          <v-flex xs12>
-                            <v-textarea
-                              name="description"
-                              label="Description (optional)"
-                              color="orange"
-                              v-model="editCatItemDescription"
-                              class="font-weight-regular grey--text text--darken-4"
-                              placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
-                            ></v-textarea>
-                          </v-flex>
-                          <v-flex xs12>
-                            <v-select
-                              class="font-weight-regular grey--text text--darken-4"
-                              :items="mainOptionsList"
-                              attach
-                              v-model="compValue"
-                              chips
-                              placeholder="eg. meat, fish, garri, fufu"
-                              label="Compulsory extras (optional)"
-                              color="orange"
-                              multiple
-                            ></v-select>
-                          </v-flex>
-                          <v-flex xs12>
-                            <v-select
-                              class="font-weight-regular grey--text text--darken-4"
-                              :items="mainOptionsList"
-                              attach
-                              v-model="optValue"
-                              chips
-                              placeholder="eg. plantain, eggs, coleslaw, moi-moi"
-                              label="Optional extras (optional)"
-                              color="orange"
-                              multiple
-                            ></v-select>
-                          </v-flex>
-                        </v-row>
-
-                        <v-row class="px-3" justify="space-around">
-                          <v-btn
-                            :loading="loading6"
-                            @click="editCategoryItem()"
-                            class="px-6"
-                            depressed
+                        <v-flex xs12>
+                          <v-select
+                            class="font-weight-regular grey--text text--darken-4"
+                            :items="mainOptionsList"
+                            attach
+                            v-model="compValue"
+                            chips
+                            placeholder="eg. meat, fish, garri, fufu"
+                            label="Compulsory extras (optional)"
                             color="orange"
-                            dark
-                            
-                            rounded
-                            >edit</v-btn
-                          >
-                        </v-row>
-                      </div>
-                    </v-form>
-                  </v-card>
-                </v-dialog>
-              </div>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-flex>
+                            multiple
+                          ></v-select>
+                        </v-flex>
+                        <v-flex xs12>
+                          <v-select
+                            class="font-weight-regular grey--text text--darken-4"
+                            :items="mainOptionsList"
+                            attach
+                            v-model="optValue"
+                            chips
+                            placeholder="eg. plantain, eggs, coleslaw, moi-moi"
+                            label="Optional extras (optional)"
+                            color="orange"
+                            multiple
+                          ></v-select>
+                        </v-flex>
+                      </v-row>
+
+                      <v-row class="px-3" justify="space-around">
+                        <v-btn
+                          :loading="loading6"
+                          @click="editCategoryItem()"
+                          class="px-6"
+                          depressed
+                          color="orange"
+                          dark
+                          rounded
+                          >edit</v-btn
+                        >
+                      </v-row>
+                    </div>
+                  </v-form>
+                </v-card>
+              </v-dialog>
+            </div>
+          </v-row>
+        </v-container>
+      </v-card>
+    </v-flex>
   </div>
 </template>
 <style></style>
@@ -803,7 +802,10 @@ export default {
       counter: [],
       valid: true,
       rules: {
-        required: value => !!value || "Required."
+        required: value => !!value || "Required.",
+        required2: value =>
+          !/[^a-zA-Z0-9&()\s]/.test(value) ||
+          "Only letters, numbers, & and bracket are allowed."
       },
       markRules: [v => /^[0-9]*$/.test(v) || "Price must be only numbers"],
       numberRules: [
