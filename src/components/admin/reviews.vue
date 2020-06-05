@@ -2,10 +2,10 @@
   <div>
     <v-row class=" px-6">
       <v-flex xs12 class="mb-0">
-        <v-card-title class="title  pb-3 pl-0 text--darken-2 pb-2 grey--text">
+        <!-- <v-card-title class="title  pb-3 pl-0 text--darken-2 pb-2 grey--text">
           Delivery agents
-        </v-card-title>
-        <v-card
+        </v-card-title> -->
+        <!-- <v-card
           style="border-radius: 25px;max-height:50vh;overflow-y:auto"
           class="elevation-2 pb-3"
           :loading="load"
@@ -56,7 +56,7 @@
               </tbody>
             </template>
           </v-simple-table>
-        </v-card>
+        </v-card> -->
         <v-card-title
           class="title my-3 pt-2 pl-0 text--darken-2 pb-3 grey--text"
         >

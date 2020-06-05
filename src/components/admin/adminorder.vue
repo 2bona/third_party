@@ -398,7 +398,7 @@
                 @click="
                   order.payment_method === 4 || order.payment_method === 5
                     ? serveBtn()
-                    : setDeliveryAgent()
+                    : getLatestNearestAgentAndAssign()
                 "
                 :class="order.status === 2 ? 'mt-2' : 'mt-2 elevation-10'"
                 rounded=""
@@ -924,12 +924,16 @@ export default {
       sn.dialogIn = true;
       sn.setItem(n);
     }
-    sn.getAgents();
+    if (
+      sn.order.status === 1 &&
+      !(sn.order.payment_method === 4 || sn.order.payment_method === 5)
+    ) {
+      sn.getAgents();
+    }
   },
   methods: {
     getAgents() {
       const sn = this;
-      sn.load = true;
       let url = "/delivery/agents";
       http({
         url: url,
@@ -939,13 +943,11 @@ export default {
         }
       })
         .then(response => {
-          sn.load = false;
           sn.$store.dispatch("setAgents", {
             agents: response.data.agents
           });
         })
         .catch(function(error) {
-          sn.load = false;
           console.log(error);
         });
     },
@@ -971,27 +973,30 @@ export default {
       }
       return dist;
     },
-    getAgent() {
+    getLatestNearestAgentAndAssign() {
       const sn = this;
-      var lat = sn.vendor.lat;
-      var lng = sn.vendor.lng;
-      var data = sn.agents;
+      sn.loading = true;
+      var lat = parseFloat(sn.vendor.lat);
+      var lng = parseFloat(sn.vendor.lng);
+      var data = JSON.parse(JSON.stringify(sn.agents));
       var newData = [];
       data.forEach(element => {
         var distFrmVendor = sn.distance(
           lat,
           lng,
-          element.lat,
-          element.lng,
+          parseFloat(element.lat),
+          parseFloat(element.lng),
           "K"
         );
-        var ob = { name: element.id, dist: distFrmVendor };
+        var ob = { id: element.id, dist: distFrmVendor };
         newData.push(ob);
       });
-
-      newData.sort(function(a, b) {
-        return a.dist - b.dist;
-      });
+      if (data.length > 1) {
+        newData.sort(function(a, b) {
+          return a.dist - b.dist;
+        });
+      }
+      sn.setDeliveryAgent(newData[0].id);
     },
     setItem(n) {
       const sn = this;
@@ -1018,7 +1023,7 @@ export default {
           return;
         } else {
           sn.item_no++;
-          var n = sn.order.items[sn.item_no];
+          let n = sn.order.items[sn.item_no];
           sn.setItem(n);
         }
       } else {
@@ -1026,7 +1031,7 @@ export default {
           return;
         } else {
           sn.item_no--;
-          var n = sn.order.items[sn.item_no];
+          let n = sn.order.items[sn.item_no];
           sn.setItem(n);
         }
       }
@@ -1094,18 +1099,20 @@ export default {
           });
       }
     },
-    setDeliveryAgent() {
+    setDeliveryAgent(x) {
       const sn = this;
       sn.$store
         .dispatch("order", {
           id: sn.order.id,
-          action: "served"
+          action: "served",
+          delivery_agent_id: x
         })
         .then(() => {
           sn.$store.dispatch("snack", {
             color: "blue",
             text: "A delivery agent is on his way"
           });
+          sn.loading = false;
         });
       return;
     },

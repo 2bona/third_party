@@ -8,31 +8,21 @@
           <v-btn
             depressed
             rounded
-            class="mx-auto caption font-weight-black orange--text px-7 text--darken-4 "
+            class="mx-auto elevation-8 caption font-weight-black white--text px-7 "
             dark
             @click="dialog = true"
-            color="grey lighten-3"
+            color="orange darken-4"
           >
             <v-icon>mdi-plus</v-icon> category
-          </v-btn>
-          <v-btn
-            class="mx-auto caption font-weight-black blue--text text--darken-4 px-7"
-            @click="dialog5 = true"
-            depressed
-            rounded
-            dark
-            color="grey lighten-3"
-          >
-            <v-icon>mdi-plus</v-icon> option
           </v-btn>
         </v-card-title>
         <v-card flat tile color="white">
           <v-container fluid>
             <v-row justify="space-around">
-              <v-col class="text-center pa-0" cols="12">
+              <v-col v-if="!type" class="text-center pa-0" cols="12">
                 <mainOptions />
               </v-col>
-              <v-col class="px-3 text-center py-1" cols="12">
+              <v-col v-if="!type" class="px-3 text-center py-1" cols="12">
                 <v-card
                   color="transparent"
                   flat
@@ -52,6 +42,15 @@
                         </h3>
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
+                        <v-row justify="space-around">
+                          <v-btn
+                            @click="dialog5 = true"
+                            text
+                            x-small
+                            color="grey"
+                            ><v-icon>mdi-plus</v-icon>add option</v-btn
+                          >
+                        </v-row>
                         <v-divider class="my-4"></v-divider>
                         <v-progress-linear
                           v-if="dialog45"
@@ -307,7 +306,6 @@
                         ></v-text-field>
                         <v-flex xs12>
                           <v-file-input
-                            :rules="[rules.pic]"
                             class="font-weight-regular grey--text text--darken-4"
                             ref="file"
                             multiple
@@ -695,7 +693,6 @@ export default {
       valid: true,
       rules: {
         required: value => !!value || "Required.",
-        pic: value => value.length > 0 || "Required."
       },
       numberRules: [v => /^[0-9]*$/.test(v) || "Price must be only numbers"],
       radios: "Thank you soo much, we will keep improving"
@@ -722,6 +719,9 @@ export default {
     },
     items() {
       return this.$store.getters.getItems;
+    },
+    type() {
+      return !(this.vendor.type.toLowerCase() === "food");
     }
   },
   created() {
@@ -1159,57 +1159,83 @@ export default {
         var comp = [];
         var compa = [];
         if (sn.compulsory) {
-          var g = sn.compulsory.forEach(element => {
-            comp.push(
-              smain_s.find(item => {
-                return item.name === element;
-              })
-            );
-          });
           compa = comp.map(item => {
             return item.id;
           });
         }
         var opt = [];
         var opta = [];
-        if (smain_al) {
-          var h = smain_al.forEach(element => {
-            opt.push(
-              smain_s.find(item => {
-                return item.name === element;
-              })
-            );
+
+        opta = opt.map(item => {
+          return item.id;
+        });
+      }
+      const fd = new FormData();
+      fd.append("name", sn.name);
+      fd.append("cost_price", sn.cost_price);
+      fd.append("mark_up_price", sn.mark_up_price);
+      fd.append("description", sn.description);
+      fd.append("compulsory", JSON.stringify(compa));
+      fd.append("optional", JSON.stringify(opta));
+      fd.append("generic", sn.name);
+      fd.append("category_id", sn.addId);
+      fd.append("category_name", sn.addContent);
+      for (var i = 0; i < sn.$refs.file2.$refs.input.files.length; i++) {
+        let file = sn.$refs.file2.$refs.input.files[i];
+        fd.append("files[" + i + "]", file);
+      }
+      const config = { headers: { "Content-Type": "multipart/form-data" } };
+      sn.dialog4 = false;
+      axios
+        .post("/item/save", fd, config)
+        .then(res => {
+          sn.$store.dispatch("loadItems");
+          sn.attachments = [];
+          sn.loading4 = false;
+          sn.dialog45 = false;
+          sn.$store.dispatch("snack", {
+            color: "green",
+            text: "Item added successfully"
           });
-          opta = opt.map(item => {
-            return item.id;
+        })
+        .catch(err => {
+          sn.attachments = [];
+          sn.$store.dispatch("snack", {
+            color: "red",
+            text: err
           });
-        }
+          sn.loading4 = false;
+          sn.dialog4 = false;
+          sn.dialog45 = false;
+        });
+    },
+    addOptionItem() {
+      const sn = this;
+      if (sn.$refs.form5.validate()) {
+        sn.loading5 = true;
+        sn.dialog5 = false;
+        sn.dialog45 = true;
         const fd = new FormData();
-        fd.append("name", sn.name);
-        fd.append("cost_price", sn.cost_price);
-        fd.append("mark_up_price", sn.mark_up_price);
-        fd.append("description", sn.description);
-        fd.append("compulsory", JSON.stringify(compa));
-        fd.append("optional", JSON.stringify(opta));
-        fd.append("generic", sn.name);
-        fd.append("category_id", sn.addId);
-        fd.append("category_name", sn.addContent);
-        for (var i = 0; i < sn.$refs.file2.$refs.input.files.length; i++) {
-          let file = sn.$refs.file2.$refs.input.files[i];
-          fd.append("files[" + i + "]", file);
+        fd.append("name", sn.optionname);
+        fd.append("cost_price", sn.optioncostprice);
+        fd.append("mark_up_price", sn.optionmarkupprice);
+        if (sn.$refs.file.$refs.input.files.length) {
+          for (var i = 0; i < sn.$refs.file.$refs.input.files.length; i++) {
+            let file = sn.$refs.file.$refs.input.files[i];
+            fd.append("files[" + i + "]", file);
+          }
         }
         const config = { headers: { "Content-Type": "multipart/form-data" } };
-        sn.dialog4 = false;
         axios
-          .post("/item/save", fd, config)
-          .then(res => {
-            sn.$store.dispatch("loadItems");
+          .post("/options/save", fd, config)
+          .then(() => {
+            sn.$store.dispatch("loadOptions");
             sn.attachments = [];
-            sn.loading4 = false;
+            sn.loading5 = false;
             sn.dialog45 = false;
             sn.$store.dispatch("snack", {
               color: "green",
-              text: "Item added successfully"
+              text: "Option item added"
             });
           })
           .catch(err => {
@@ -1218,57 +1244,9 @@ export default {
               color: "red",
               text: err
             });
-            sn.loading4 = false;
-            sn.dialog4 = false;
+            sn.loading5 = false;
             sn.dialog45 = false;
           });
-      }
-    },
-    addOptionItem() {
-      var sn = this;
-      if (sn.$refs.form5.validate()) {
-        if (!sn.$refs.file.$refs.input.files.length) {
-          sn.$store.dispatch("snack", {
-            color: "red",
-            text: "Image is required"
-          });
-          return;
-        } else {
-          sn.loading5 = true;
-          sn.dialog5 = false;
-          sn.dialog45 = true;
-          const fd = new FormData();
-          fd.append("name", sn.optionname);
-          fd.append("cost_price", sn.optioncostprice);
-          fd.append("mark_up_price", sn.optionmarkupprice);
-          for (var i = 0; i < sn.$refs.file.$refs.input.files.length; i++) {
-            let file = sn.$refs.file.$refs.input.files[i];
-            fd.append("files[" + i + "]", file);
-          }
-          const config = { headers: { "Content-Type": "multipart/form-data" } };
-          axios
-            .post("/options/save", fd, config)
-            .then(res => {
-              var d = res.data;
-              sn.$store.dispatch("loadOptions");
-              sn.attachments = [];
-              sn.loading5 = false;
-              sn.dialog45 = false;
-              sn.$store.dispatch("snack", {
-                color: "green",
-                text: "Option item added"
-              });
-            })
-            .catch(err => {
-              sn.attachments = [];
-              sn.$store.dispatch("snack", {
-                color: "red",
-                text: err
-              });
-              sn.loading5 = false;
-              sn.dialog45 = false;
-            });
-        }
       }
     },
     editOptionImage(x, i) {

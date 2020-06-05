@@ -192,17 +192,18 @@ export const vendor = {
       else{
          if(data.reason){
           url = "/order/" + data.action + "?id=" + data.id + "&reason=" + data.reason + "&delivery_agent_id=" + data.delivery
-       } 
+       }
         else if (data.delivery_agent_id) {
           url = "/order/" + data.action + "?id=" + data.id + "&delivery_agent_id=" + data.delivery_agent_id
        } 
         else if (data.action) {
           url = "/order/" + data.action + "?id=" + data.id
        } 
-      axios.get(AXIOS_CONFIG.API_URL + url)
+      axios.get(AXIOS_CONFIG.API_URL + url )
          .then(res => {
            console.log('....... response.......')
            console.log(res)
+           const agentsToken = res.data.agentsToken;
            if (res.data.token && res.data.message) {
             
              
@@ -214,14 +215,12 @@ export const vendor = {
                payload: JSON.stringify({url: '/cart', id: data.id})
               }).then((res)=>{
                 if (data.action === "served") {
-                  var agentsToken = data.action === 'served' ? state.agents.map(agents => agents.token) : false
-                  
                   axios.post(AXIOS_CONFIG.API_URL + "/notify", {
                     receiver_user : agentsToken,
                     title: 'New Order',
                     message: "New Order from " + state.vendor.name+"!!!",
-                    push_type: 'multiple',
-                    payload: JSON.stringify({url: '/adminorder', id: data.id})
+                    push_type: 'individual',
+                    payload: JSON.stringify({url: '/delivery', id: data.id})
                    }).then((res) =>{
                      console.log(res)
                    })

@@ -248,7 +248,11 @@
                               wrap
                               class="py-1"
                             >
-                              <v-flex v-if="n.main_option.length" xs12>
+                              <v-flex
+                                v-show="!type"
+                                v-if="n.main_option.length"
+                                xs12
+                              >
                                 <p
                                   class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
                                 >
@@ -270,7 +274,11 @@
                                   </div>
                                 </v-layout>
                               </v-flex>
-                              <v-flex xs12 v-if="n.main_option.length">
+                              <v-flex
+                                v-show="!type"
+                                xs12
+                                v-if="n.main_option.length"
+                              >
                                 <p
                                   class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
                                 >
@@ -585,7 +593,7 @@
                             placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
                           ></v-textarea>
                         </v-flex>
-                        <v-flex xs12>
+                        <v-flex xs12 v-if="!type">
                           <v-select
                             class="font-weight-regular grey--text text--darken-4"
                             :items="mainOptionsList"
@@ -598,7 +606,7 @@
                             multiple
                           ></v-select>
                         </v-flex>
-                        <v-flex xs12>
+                        <v-flex xs12 v-if="!type">
                           <v-select
                             class="font-weight-regular grey--text text--darken-4"
                             :items="mainOptionsList"
@@ -686,7 +694,7 @@
                             placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
                           ></v-textarea>
                         </v-flex>
-                        <v-flex xs12>
+                        <v-flex v-if="!type" xs12>
                           <v-select
                             class="font-weight-regular grey--text text--darken-4"
                             :items="mainOptionsList"
@@ -699,7 +707,7 @@
                             multiple
                           ></v-select>
                         </v-flex>
-                        <v-flex xs12>
+                        <v-flex v-if="!type" xs12>
                           <v-select
                             class="font-weight-regular grey--text text--darken-4"
                             :items="mainOptionsList"
@@ -819,12 +827,16 @@ export default {
     vendor() {
       return this.$store.getters.getVendor;
     },
+    type() {
+      return !(this.vendor.type.toLowerCase() === "food");
+    },
     menu() {
       return this.$store.getters.getMenu;
     },
     options() {
       return this.$store.getters.getOptions;
     },
+    // eslint-disable-next-line vue/return-in-computed-property
     filtered() {},
     list() {
       return this.$store.getters.getList;
@@ -1238,84 +1250,78 @@ export default {
     addCategoryItem(x) {
       var sn = this;
       if (sn.$refs.form4.validate()) {
-        if (!sn.$refs.file2.$refs.input.files.length) {
-          sn.$store.dispatch("snack", {
-            color: "red",
-            text: "Image is required"
+        sn.loading5 = true;
+        sn.dialog45 = true;
+        var comp = [];
+        var compa = [];
+        if (sn.compulsory) {
+          var g = sn.compulsory.forEach(element => {
+            comp.push(
+              smain_s.find(item => {
+                return item.name === element;
+              })
+            );
           });
-          return;
-        } else {
-          sn.loading5 = true;
-          sn.dialog45 = true;
-          var comp = [];
-          var compa = [];
-          if (sn.compulsory) {
-            var g = sn.compulsory.forEach(element => {
-              comp.push(
-                smain_s.find(item => {
-                  return item.name === element;
-                })
-              );
-            });
-            compa = comp.map(item => {
-              return item.id;
-            });
-          }
-          var opt = [];
-          var opta = [];
-          if (sn.optional) {
-            var h = sn.optional.forEach(element => {
-              opt.push(
-                sn.options.find(item => {
-                  return item.name === element;
-                })
-              );
-            });
-            opta = opt.map(item => {
-              return item.id;
-            });
-          }
-          const fd = new FormData();
-          fd.append("name", sn.name);
-          fd.append("cost_price", sn.cost_price);
-          fd.append("mark_up_price", sn.mark_up_price);
-          fd.append("description", sn.description);
-          fd.append("compulsory", JSON.stringify(compa));
-          fd.append("optional", JSON.stringify(opta));
-          fd.append("generic", sn.name);
-          fd.append("category_id", sn.addId);
-          fd.append("category_name", sn.addContent);
+          compa = comp.map(item => {
+            return item.id;
+          });
+        }
+        var opt = [];
+        var opta = [];
+        if (sn.optional) {
+          var h = sn.optional.forEach(element => {
+            opt.push(
+              sn.options.find(item => {
+                return item.name === element;
+              })
+            );
+          });
+          opta = opt.map(item => {
+            return item.id;
+          });
+        }
+        const fd = new FormData();
+        fd.append("name", sn.name);
+        fd.append("cost_price", sn.cost_price);
+        fd.append("mark_up_price", sn.mark_up_price);
+        fd.append("description", sn.description);
+        fd.append("compulsory", JSON.stringify(compa));
+        fd.append("optional", JSON.stringify(opta));
+        fd.append("generic", sn.name);
+        fd.append("category_id", sn.addId);
+        fd.append("category_name", sn.addContent);
+        if (sn.$refs.file2.$refs.input.files.length) {
           for (var i = 0; i < sn.$refs.file2.$refs.input.files.length; i++) {
             let file = sn.$refs.file2.$refs.input.files[i];
             fd.append("files[" + i + "]", file);
           }
-          const config = { headers: { "Content-Type": "multipart/form-data" } };
-          sn.dialog5 = false;
-          axios
-            .post("/item/save", fd, config)
-            .then(res => {
-              sn.$store.dispatch("loadItems", {
-                id: sn.$route.params.id
-              });
-              sn.attachments = [];
-              sn.loading5 = false;
-              sn.dialog45 = false;
-              sn.$store.dispatch("snack", {
-                color: "green",
-                text: "Item added successfully"
-              });
-            })
-            .catch(err => {
-              sn.attachments = [];
-              sn.$store.dispatch("snack", {
-                color: "red",
-                text: "Image file is invalid"
-              });
-              sn.loading5 = false;
-              sn.dialog5 = false;
-              sn.dialog45 = false;
-            });
         }
+        const config = { headers: { "Content-Type": "multipart/form-data" } };
+        sn.dialog5 = false;
+        axios
+          .post("/item/save", fd, config)
+          .then(() => {
+            sn.$store.dispatch("loadItems", {
+              id: sn.$route.params.id
+            });
+            sn.attachments = [];
+            sn.loading5 = false;
+            sn.dialog45 = false;
+            sn.$store.dispatch("snack", {
+              color: "green",
+              text: "Item added successfully"
+            });
+          })
+          .catch(() => {
+            sn.attachments = [];
+            sn.$store.dispatch("snack", {
+              color: "red",
+              text: "An error occured"
+            });
+            sn.loading5 = false;
+            sn.dialog5 = false;
+            sn.dialog45 = false;
+          });
       }
     },
     editItemImage(x, y) {
