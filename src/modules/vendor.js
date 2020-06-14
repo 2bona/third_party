@@ -205,9 +205,7 @@ export const vendor = {
            console.log(res)
            const agentsToken = res.data.agentsToken;
            if (res.data.token && res.data.message) {
-            
-             
-             axios.post(AXIOS_CONFIG.API_URL + "/notify", {
+                         axios.post(AXIOS_CONFIG.API_URL + "/notify", {
                receiver_user : res.data.token,
                title: 'Order Update',
                message: res.data.message,
@@ -322,7 +320,7 @@ loadOptions({
       axios.get(AXIOS_CONFIG.API_URL + url)
       .then(function (response) {
         let tags = response.data.tags;
-        commit("setTags", tags)
+        commit("setTags", tags);
       }).catch(function (error) {
         console.log(error);
         })
@@ -430,7 +428,5 @@ loadOptions({
     getVendorLoadStatus(state) {
       return state.vendorLoadStatus
     },
-
-
   }
 };

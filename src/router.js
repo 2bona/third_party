@@ -4,13 +4,12 @@ import VueRouter from "vue-router";
 const router = new VueRouter({
   mode: "history",
   routes: [
-
     {
       path: "/Regvendor",
       component: () =>
         import(
           /* webpackChunkName: "Register-vendor" */ "./components/Register-vendor.vue"
-        ),
+        )
       // meta: {
       //   requiresAuth: true
       // }
@@ -35,8 +34,7 @@ const router = new VueRouter({
         import(
           /* webpackChunkName: "offlinepage" */
           "./components/offlinepage.vue"
-        ),
-      
+        )
     },
     {
       path: "/offlineorders",
@@ -44,8 +42,7 @@ const router = new VueRouter({
         import(
           /* webpackChunkName: "offlineorders" */
           "./components/offlineorders.vue"
-        ),
-      
+        )
     },
     {
       path: "/offlinepage/:id",
@@ -54,8 +51,7 @@ const router = new VueRouter({
         import(
           /* webpackChunkName: "offlinepage" */
           "./components/offlinepage.vue"
-        ),
-      
+        )
     },
     {
       path: "/vendorreviews",
@@ -79,10 +75,10 @@ const router = new VueRouter({
       children: [
         {
           path: "",
-            meta: {
-              requiresAuth: true,
-              role: true
-            },
+          meta: {
+            requiresAuth: true,
+            role: true
+          },
           component: () =>
             import(
               /* webpackChunkName: "items" */ "./components/admin/itemadmin.vue"
@@ -91,10 +87,9 @@ const router = new VueRouter({
         },
         {
           path: "item/:id",
-            meta: {
-              requiresAuth: true,
-              
-            },
+          meta: {
+            requiresAuth: true
+          },
           component: () =>
             import(
               /* webpackChunkName: "items" */ "./components/admin/details.vue"
@@ -103,10 +98,9 @@ const router = new VueRouter({
         },
         {
           path: "summary",
-            meta: {
-              requiresAuth: true,
-              
-            },
+          meta: {
+            requiresAuth: true
+          },
           component: () =>
             import(
               /* webpackChunkName: "summary" */ "./components/admin/summary.vue"
@@ -115,10 +109,9 @@ const router = new VueRouter({
         },
         {
           path: "adminorder",
-            meta: {
-              requiresAuth: true,
-              
-            },
+          meta: {
+            requiresAuth: true
+          },
           component: () =>
             import(
               /* webpackChunkName: "adminorder" */
@@ -128,10 +121,9 @@ const router = new VueRouter({
         },
         {
           path: "orders",
-            meta: {
-              requiresAuth: true,
-              
-            },
+          meta: {
+            requiresAuth: true
+          },
           component: () =>
             import(
               /* webpackChunkName: "orders" */ "./components/admin/orders.vue"
@@ -140,10 +132,9 @@ const router = new VueRouter({
         },
         {
           path: "reviews",
-            meta: {
-              requiresAuth: true,
-              
-            },
+          meta: {
+            requiresAuth: true
+          },
           component: () =>
             import(
               /* webpackChunkName: "reviews" */ "./components/admin/reviews.vue"
@@ -152,10 +143,10 @@ const router = new VueRouter({
         },
         {
           path: "adminedit",
-            meta: {
-              requiresAuth: true,
-              role: true
-            },
+          meta: {
+            requiresAuth: true,
+            role: true
+          },
           component: () =>
             import(
               /* webpackChunkName: "adminedit" */ "./components/admin/adminedit.vue"
@@ -166,9 +157,9 @@ const router = new VueRouter({
     },
     {
       path: "/auth",
-        meta: {
-          guest: true
-        },
+      meta: {
+        guest: true
+      },
       component: () =>
         import(
           /* webpackChunkName: "authpage" */ "./components/auth/authpage.vue"
@@ -275,21 +266,23 @@ const router = new VueRouter({
     },
     {
       path: "*",
-      name: '404',
+      name: "404",
       component: () =>
-        import(/* webpackChunkName: "vendoradmin" */ "./components/vendoradmin.vue")
+        import(
+          /* webpackChunkName: "vendoradmin" */ "./components/vendoradmin.vue"
+        )
     }
   ],
   scrollBehavior(to, from, savedPosition) {
-  if(savedPosition){
-    return savedPosition
-  } else{
-    return {
-    x: 0,
-    y: 0
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return {
+        x: 0,
+        y: 0
+      };
+    }
   }
-  }
-}
 });
 
 router.beforeEach((to, from, next) => {
@@ -300,19 +293,18 @@ router.beforeEach((to, from, next) => {
         query: {
           nextUrl: to.fullPath
         }
-      })
-    } else{
-      next()
+      });
+    } else {
+      next();
     }
-  }
-    else if (to.matched.some(record => record.meta.role)) {
-        if (localStorage.getItem("vendor")) {
-          next();
-        } else {
-          localStorage.removeItem('token');
-          next({
-            path: "/Regvendor"
-          });
+  } else if (to.matched.some(record => record.meta.role)) {
+    if (localStorage.getItem("vendor")) {
+      next();
+    } else {
+      localStorage.removeItem("token");
+      next({
+        path: "/Regvendor"
+      });
     }
   } else if (to.matched.some(record => record.meta.guest)) {
     if (localStorage.getItem("token") == null) {
@@ -320,10 +312,10 @@ router.beforeEach((to, from, next) => {
     } else {
       next({
         path: "/"
-      })
+      });
     }
   } else {
-    next()
+    next();
   }
 });
 export default router;

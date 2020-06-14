@@ -89,7 +89,8 @@ PushNotifications.addListener("registration", fcm => {
       if (vendor.id) {
         axios
           .post("/setfcm", {
-            token: fcm.value
+            token: fcm.value,
+            type: "vendor"
           })
           .then(res => {
             console.log(res);

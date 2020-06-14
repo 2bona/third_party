@@ -186,7 +186,10 @@
                                     n.cost_price,
                                     n.description,
                                     n.main_option,
-                                    n.mark_up_price
+                                    n.mark_up_price,
+                                    n.tel,
+                                    n.address,
+                                    n.ig
                                   )
                                 "
                                 icon
@@ -226,7 +229,7 @@
                             ></v-switch>
                           </v-slide-x-transition>
                         </v-layout>
-                        <p
+                        <p v-if="serve"
                           style="padding-left:10px;"
                           class="caption font-weight-regular grey--text text--darken-1 mb-0"
                         >
@@ -303,7 +306,7 @@
                                   </div>
                                 </v-layout>
                               </v-flex>
-                              <v-flex xs12>
+                              <v-flex v-if="serve" xs12>
                                 <p
                                   class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
                                 >
@@ -544,13 +547,46 @@
                         <v-text-field
                           class="font-weight-regular grey--text text--darken-4"
                           label="Name"
-                          placeholder="eg. Jollof Rice"
+                          :placeholder="
+                            serve ? 'eg. Jollof Rice' : 'Name of business'
+                          "
                           color="orange"
                           v-model="name"
                           required
                           :rules="[rules.required, rules.required2]"
                         ></v-text-field>
                         <v-text-field
+                          v-if="!serve"
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Phone number"
+                          v-model="tel"
+                          placeholder="08033685498"
+                          hint="put only valid number eg '08033685498' not '+234803323455'"
+                          color="orange"
+                          required
+                          :rules="[rules.required]"
+                        ></v-text-field>
+                                        <v-text-field
+                          v-if="!serve"
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Instagram handle"
+                          v-model="ig"
+                          placeholder="app_money_1"
+                          hint="put only valid instagram handle without '@'"
+                          color="orange"
+                        ></v-text-field>
+                        <v-text-field
+                          v-if="!serve"
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Address"
+                          v-model="address"
+                          placeholder="No 5 ben oranusim Ifite Awka."
+                          hint="Enter Service persons' address"
+                          color="orange"
+                          required
+                        ></v-text-field>
+                        <v-text-field
+                          v-if="serve"
                           class="font-weight-regular grey--text text--darken-4"
                           label="Cost price"
                           v-model="cost_price"
@@ -562,6 +598,7 @@
                           :rules="[rules.required]"
                         ></v-text-field>
                         <v-text-field
+                          v-if="serve"
                           class="font-weight-regular grey--text text--darken-4"
                           label="Mark up"
                           v-model="mark_up_price"
@@ -579,7 +616,7 @@
                             @change="fieldChanges"
                             class="font-weight-regular grey--text text--darken-4"
                             prepend-icon="mdi-camera"
-                            placeholder="Item picture"
+                            placeholder="Picture"
                             label="Image"
                           ></v-file-input>
                         </v-flex>
@@ -590,7 +627,11 @@
                             color="orange"
                             v-model="description"
                             class="font-weight-regular grey--text text--darken-4"
-                            placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
+                            :placeholder="
+                              serve
+                                ? 'eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more.'
+                                : 'A little info about the service person'
+                            "
                           ></v-textarea>
                         </v-flex>
                         <v-flex xs12 v-if="!type">
@@ -662,6 +703,37 @@
                           :rules="[rules.required, rules.required2]"
                         ></v-text-field>
                         <v-text-field
+                          v-if="!serve"
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Phone number"
+                          v-model="editCatItemTel"
+                          placeholder="08033685498"
+                          hint="put only valid number eg '08033685498' not '+234803323455'"
+                          color="orange"
+                          required
+                          :rules="[rules.required]"
+                        ></v-text-field>
+                        <v-text-field
+                          v-if="!serve"
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Instagram handle"
+                          v-model="editCatItemIg"
+                          placeholder="08033685498"
+                          hint="put only valid instagram handle without '@'"
+                          color="orange"
+                        ></v-text-field>
+                        <v-text-field
+                          v-if="!serve"
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Address"
+                          v-model="editCatItemAddress"
+                          placeholder="No 5 ben oranusim Ifite Awka."
+                          hint="Enter Service persons' address"
+                          color="orange"
+                          required
+                        ></v-text-field>
+                        <v-text-field
+                          v-if="serve"
                           class="font-weight-regular grey--text text--darken-4"
                           label="Cost price"
                           v-model="editCatItemCostPrice"
@@ -673,6 +745,7 @@
                           :rules="numberRules"
                         ></v-text-field>
                         <v-text-field
+                          v-if="serve"
                           class="font-weight-regular grey--text text--darken-4"
                           label="Mark up"
                           v-model="editCatItemMarkUp"
@@ -691,7 +764,11 @@
                             color="orange"
                             v-model="editCatItemDescription"
                             class="font-weight-regular grey--text text--darken-4"
-                            placeholder="eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more."
+                            :placeholder="
+                              serve
+                                ? 'eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more.'
+                                : 'A little info about the service person'
+                            "
                           ></v-textarea>
                         </v-flex>
                         <v-flex v-if="!type" xs12>
@@ -756,7 +833,9 @@ export default {
       description: "",
       category_name: "",
       generic: "",
-      cost_price: "",
+      address: "",
+      tel: "",
+      ig: "",
       mark_up_price: "",
       editCatId: "",
       editCatitemId: "",
@@ -764,6 +843,9 @@ export default {
       editCatItemDescription: "",
       editCatItemCostPrice: "",
       editCatItemMarkUp: "",
+      editCatItemTel: "",
+      editCatItemIg: "",
+      editCatItemAddress: "",
       editContent: "",
       editId: "",
       optionname: "",
@@ -829,6 +911,12 @@ export default {
     },
     type() {
       return !(this.vendor.type.toLowerCase() === "food");
+    },
+    cost_price() {
+      return this.serve ? "" : 0;
+    },
+    serve() {
+      return !(this.vendor.type.toLowerCase() === "services");
     },
     menu() {
       return this.$store.getters.getMenu;
@@ -1020,7 +1108,10 @@ export default {
             optional: JSON.stringify(opta),
             cost_price: sn.editCatItemCostPrice,
             mark_up_price: sn.editCatItemMarkUp,
-            description: sn.editCatItemDescription
+            description: sn.editCatItemDescription,
+            tel: sn.editCatItemTel,
+            ig: sn.editCatItemIg,
+            address: sn.editCatItemAddress
           })
           .then(function(response) {
             console.log(response.data);
@@ -1158,7 +1249,7 @@ export default {
           });
         });
     },
-    editCatItem(u, v, x, y, z, a, b) {
+    editCatItem(u, v, x, y, z, a, b, c, d, e) {
       var sn = this;
       sn.compValue = [];
       sn.optValue = [];
@@ -1187,6 +1278,9 @@ export default {
       sn.editCatItemCostPrice = y;
       sn.editCatItemMarkUp = b;
       sn.editCatItemDescription = z;
+      sn.editCatItemTel = c;
+      sn.editCatItemIg = e;
+      sn.editCatItemAddress = d;
       sn.dialog6 = true;
     },
     addCat(x, y) {
@@ -1288,6 +1382,9 @@ export default {
         fd.append("compulsory", JSON.stringify(compa));
         fd.append("optional", JSON.stringify(opta));
         fd.append("generic", sn.name);
+        fd.append("tel", sn.tel);
+        fd.append("ig", sn.ig);
+        fd.append("address", sn.address);
         fd.append("category_id", sn.addId);
         fd.append("category_name", sn.addContent);
         if (sn.$refs.file2.$refs.input.files.length) {

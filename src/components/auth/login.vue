@@ -133,7 +133,7 @@ export default {
         url: url,
         method: "post",
         params: {
-          fcm: token,
+          token: token,
           type: "vendor"
         }
       }).then(() => {
@@ -170,23 +170,15 @@ export default {
               });
               return;
             } else {
-              var token = localStorage.getItem("token");
               sn.$store.dispatch("setUser", d);
-              if (sn.ios || sn.android) {
-                if (d.token != token) {
-                  sn.setFcm();
-                } else {
-                  sn.go();
-                }
-              } else {
-                sn.go();
-              }
-              sn.$store.dispatch("setToken", response.data.success.token);
+
               sn.$store
                 .dispatch("setToken", response.data.success.token)
                 .then(() => {
                   sn.$store.dispatch("loadVendor");
-                  sn.go();
+                  if (sn.ios || sn.android) {
+                    sn.setFcm();
+                  }
                 });
             }
           })

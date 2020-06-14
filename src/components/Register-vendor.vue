@@ -295,6 +295,14 @@ export default {
         {
           text: "Pharmacy",
           value: "Pharmacy"
+        },
+        {
+          text: "Services",
+          value: "Services"
+        },
+        {
+          text: "Laundry",
+          value: "Laundry"
         }
       ],
       areas: [],

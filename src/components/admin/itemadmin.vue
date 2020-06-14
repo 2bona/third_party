@@ -8,12 +8,12 @@
           <v-btn
             depressed
             rounded
-            class="mx-auto elevation-8 caption font-weight-black white--text px-7 "
+            class="mx-auto elevation-5 caption font-weight-black white--text "
             dark
             @click="dialog = true"
             color="orange darken-4"
           >
-            <v-icon>mdi-plus</v-icon> category
+            add category <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-card-title>
         <v-card flat tile color="white">

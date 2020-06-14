@@ -17,7 +17,7 @@
         </v-btn>
       </v-snackbar>
       <v-snackbar
-        style="border-radius: 20px;background-image: url(https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80);
+        style="border-radius: 20px;background-image: url('https://res.cloudinary.com/dnqw7x4bp/image/upload/c_scale,w_720/v1590919715/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg');
     background-position: center center;background-size: cover;background-repeat: no-repeat;"
         :value="snackbar2.status"
         bottom

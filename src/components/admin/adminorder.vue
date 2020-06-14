@@ -366,7 +366,7 @@
         <v-divider></v-divider>
         <div>
           <v-layout
-            v-if="!(order.status === 4 || order.status === 5)"
+            v-if="order.status < 2"
             style="position:fixed; bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9"
             row
             wrap
@@ -391,8 +391,6 @@
             </v-flex>
             <v-flex xs6 class="px-2">
               <v-btn
-                :depressed="order.status === 2"
-                :disabled="order.status === 2"
                 :loading="loading"
                 block
                 @click="
@@ -410,13 +408,6 @@
                     ? "deliver"
                     : "available"
                 }}
-                <v-scale-transition origin="center center">
-                  <v-icon
-                    v-if="order.status === 2 || order.status === 3"
-                    color=""
-                    >mdi-check-decagram</v-icon
-                  >
-                </v-scale-transition>
               </v-btn>
             </v-flex>
           </v-layout>
@@ -1076,14 +1067,6 @@ export default {
     serve() {
       const sn = this;
       sn.loading = true;
-      if (sn.order.status === 4) {
-        sn.$store.dispatch("snack", {
-          color: "blue",
-          text: "Order has already been served"
-        });
-        sn.loading = false;
-        return;
-      } else {
         sn.$store
           .dispatch("order", {
             id: sn.order.id,
@@ -1097,7 +1080,6 @@ export default {
             });
             sn.$router.push("/orders");
           });
-      }
     },
     setDeliveryAgent(x) {
       const sn = this;
