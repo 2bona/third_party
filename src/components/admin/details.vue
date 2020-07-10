@@ -229,7 +229,8 @@
                             ></v-switch>
                           </v-slide-x-transition>
                         </v-layout>
-                        <p v-if="serve"
+                        <p
+                          v-if="serve"
                           style="padding-left:10px;"
                           class="caption font-weight-regular grey--text text--darken-1 mb-0"
                         >
@@ -388,7 +389,7 @@
               <v-dialog v-model="dialog1" width="500" :persistent="loading1">
                 <v-card>
                   <v-card-title class="body-1 grey lighten-2" primary-title>
-                    Edit items
+                    Edit category
                     <v-spacer></v-spacer>
                     <v-btn icon @click="dialog1 = false"
                       ><v-icon>mdi-close</v-icon></v-btn
@@ -548,7 +549,11 @@
                           class="font-weight-regular grey--text text--darken-4"
                           label="Name"
                           :placeholder="
-                            serve ? 'eg. Jollof Rice' : 'Name of business'
+                            serve && !type
+                              ? 'eg. Jollof Rice'
+                              : !serve
+                              ? 'Name of business'
+                              : 'eg. Shirt'
                           "
                           color="orange"
                           v-model="name"
@@ -566,7 +571,7 @@
                           required
                           :rules="[rules.required]"
                         ></v-text-field>
-                                        <v-text-field
+                        <v-text-field
                           v-if="!serve"
                           class="font-weight-regular grey--text text--darken-4"
                           label="Instagram handle"
@@ -696,7 +701,13 @@
                         <v-text-field
                           class="font-weight-regular grey--text text--darken-4"
                           label="Name"
-                          placeholder="eg. Jollof Rice"
+                          :placeholder="
+                            serve && !type
+                              ? 'eg. Jollof Rice'
+                              : !serve
+                              ? 'Name of business'
+                              : 'eg. Shirt'
+                          "
                           color="orange"
                           v-model="editCatItemName"
                           required
@@ -718,7 +729,7 @@
                           class="font-weight-regular grey--text text--darken-4"
                           label="Instagram handle"
                           v-model="editCatItemIg"
-                          placeholder="08033685498"
+                          placeholder="app_money_1"
                           hint="put only valid instagram handle without '@'"
                           color="orange"
                         ></v-text-field>
@@ -765,9 +776,11 @@
                             v-model="editCatItemDescription"
                             class="font-weight-regular grey--text text--darken-4"
                             :placeholder="
-                              serve
+                              serve && !type
                                 ? 'eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more.'
-                                : 'A little info about the service person'
+                                : !serve
+                                ? 'A little info about the service person'
+                                : 'A little info on the laundry process'
                             "
                           ></v-textarea>
                         </v-flex>

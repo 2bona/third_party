@@ -153,8 +153,29 @@
             No data available
           </h3>
           <div v-show="show" class="text-center">
-            <h3 class="mb-3 font-weight-light grey--text mt-5">{{ desc }}</h3>
-            <div class="py-4 d-flex" style="min-height: 400px; max-width: 400">
+            <div
+              v-if="loading"
+              class="py-4 d-flex"
+              style="min-height: 400px; max-width: 400"
+            >
+              <v-progress-circular
+                indeterminate
+                v-show="loading"
+                class="ma-auto"
+                color="primary"
+              ></v-progress-circular>
+            </div>
+            <h3
+              v-if="!loading && summary.length > 0"
+              class="mb-3 font-weight-light grey--text mt-5"
+            >
+              {{ desc }}
+            </h3>
+            <div
+              v-if="!loading && summary.length > 0"
+              class="py-4 d-flex"
+              style="min-height: 400px; max-width: 400"
+            >
               <v-progress-circular
                 indeterminate
                 v-show="loading"
@@ -175,7 +196,12 @@
                 <la-tooltip></la-tooltip>
               </la-cartesian>
             </div>
-            <div class="p2-2 mx-auto" style="max-width: 400px;width:80%">
+            <div
+              v-if="!loading && summary.length > 0"
+              s
+              class="p2-2 mx-auto"
+              style="max-width: 400px;width:80%"
+            >
               <v-data-table
                 v-show="!loading"
                 :headers="headers"
@@ -201,7 +227,7 @@
               </v-data-table>
             </div>
             <h3
-              v-if="pie.length"
+              v-if="!loading && pie.length > 0"
               class="mt-5 font-weight-light grey--text"
               style="position:relative;top:40px"
             >
@@ -359,11 +385,13 @@ export default {
           .then(res => {
             sn.summary = [];
             var d = res.data.data;
+            var e = res.data.extra;
             sn.summary = d;
-            sn.show = d.length > 0 ? true : false;
-            sn.pie = res.data.extra.filter(el => {
+            sn.pie = e.filter(el => {
               return el.value > 0;
             });
+            sn.show = d.length > 0 || sn.pie.length > 0 ? true : false;
+            console.log(sn.pie);
             this.loading = false;
           })
           .catch(err => {

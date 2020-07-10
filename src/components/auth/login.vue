@@ -178,6 +178,8 @@ export default {
                   sn.$store.dispatch("loadVendor");
                   if (sn.ios || sn.android) {
                     sn.setFcm();
+                  } else {
+                    sn.go();
                   }
                 });
             }
