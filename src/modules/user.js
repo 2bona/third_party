@@ -308,15 +308,17 @@ export const user = {
       commit("setUserCity", data.city)
     },
     logout({ commit, state, dispatch }, data) {
-        axios.get(AXIOS_CONFIG.API_URL + "/logout")
-        .then(function(response) {
-          localStorage.removeItem("token")
+       localStorage.removeItem("token")
           localStorage.removeItem("user")
           localStorage.removeItem("vendor")
           delete axios.defaults.headers.common["Authorization"]
-        router.push("/auth/login")
-      }).catch(()=>{
-        router.push("/auth/login")
+          router.push("/auth")
+        axios.get(AXIOS_CONFIG.API_URL + "/logout")
+        .then(function(res) {
+         
+        console.log(res)
+      }).catch((err)=>{
+        console.log(err)
       })   
     }
   },
