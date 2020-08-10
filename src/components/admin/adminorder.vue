@@ -930,7 +930,7 @@ export default {
         url: url,
         method: "get",
         params: {
-          id: this.vendor.current_area_id
+          city: this.vendor.city
         }
       })
         .then(response => {

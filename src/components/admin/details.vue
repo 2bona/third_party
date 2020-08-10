@@ -849,6 +849,7 @@ export default {
       address: "",
       tel: "",
       ig: "",
+      cost_price: "",
       mark_up_price: "",
       editCatId: "",
       editCatitemId: "",
@@ -925,9 +926,7 @@ export default {
     type() {
       return !(this.vendor.type.toLowerCase() === "food");
     },
-    cost_price() {
-      return this.serve ? "" : 0;
-    },
+  
     serve() {
       return !(this.vendor.type.toLowerCase() === "services");
     },
@@ -1387,9 +1386,10 @@ export default {
             return item.id;
           });
         }
+        var cost = !sn.serve ? 0 : sn.cost_price
         const fd = new FormData();
         fd.append("name", sn.name);
-        fd.append("cost_price", sn.cost_price);
+        fd.append("cost_price", cost);
         fd.append("mark_up_price", sn.mark_up_price);
         fd.append("description", sn.description);
         fd.append("compulsory", JSON.stringify(compa));
