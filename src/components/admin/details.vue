@@ -1379,8 +1379,7 @@ export default {
             opt.push(
               sn.options.find(item => {
                 return item.name === element;
-              })
-            );
+              }));
           });
           opta = opt.map(item => {
             return item.id;
