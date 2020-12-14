@@ -319,8 +319,7 @@ export default {
           align: "left",
           value: "id"
         },
-        { text: "Order ID", value: "tracking_id" },
-        { text: "Type  ", value: "payment_method" },
+        { text: "Vendor", value: "vendor.name" },
         { text: "When  ", value: "created_at" },
         { text: "Status", value: "status" }
       ],
@@ -360,16 +359,15 @@ export default {
         }
     },
     clicker(e) {
-    console.log(e)
-    return
-        axios.post('/auth_user', {
-          phone: x
-        })
-        .then(res => {
- this.orderLoad = true; 
-            this.$store.dispatch("setUser", res.data.success.user);
-            this.$store.dispatch("setToken", res.data.success.token);
-    if (!this.orderLoad) {
+        console.log(e)
+            if (!this.orderLoad) {
+    this.orderLoad = true; 
+    axios.post('/auth_user2', {
+        vendor_id: e.vendor.id
+    })
+    .then(res => {
+        this.$store.dispatch("setUser", res.data.success.user);
+        this.$store.dispatch("setToken", res.data.success.token);
     this.orderLoad = true;
       if (!e.status) {
         this.$store.dispatch("order", {
@@ -382,8 +380,8 @@ export default {
           action: null
         });
       }
-    }
         })
+    }
     }
   }
 };
