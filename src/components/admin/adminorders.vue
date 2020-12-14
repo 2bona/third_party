@@ -333,7 +333,7 @@ export default {
   },
   computed: {
     orders() {
-      return this.$store.getters.getOrderList;
+      return this.$store.getters.getAdminOrderList;
     },
     loading() {
       return this.$store.getters.getVendorLoadStatus;
@@ -342,113 +342,35 @@ export default {
       return this.$store.getters.getReplys;
     }
   },
-  beforeDestroy() {
-    clearInterval(this.intervalId);
-    this.pageClose = false;
-  },
-  beforeRouteLeave(to, from, next) {
-    this.pageClose = false;
-    setTimeout(() => {
-      next();
-    }, 50);
-  },
   mounted() {
-    this.pageClose = true;
     const sn = this;
-    sn.$store
-      .dispatch("vendorOrderPage", {})
-      .then(() => {
-        sn.$store.dispatch("setVendorOrderList", null);
-      })
-      .then(() => {
-        sn.$store.dispatch("orderList");
-        sn.navb();
-      });
-    sn.intervalId = setInterval(() => {
-      sn.$store
-        .dispatch("vendorOrderPage", {})
-        .then(() => {
-          sn.$store.dispatch("setVendorOrderList", null);
-        })
-        .then(() => {
-          sn.$store.dispatch("orderList");
-          sn.navb();
-        });
-    }, 90000);
+    sn.pageClose = true;
+    if(!sn.orders.length){
+        sn.$store.dispatch("setAdminOrderList");
+    }
   },
   methods: {
     start() {
       const sn = this;
-      sn.pageClose = true;
-      sn.$store
-        .dispatch("vendorOrderPage", {})
-        .then(() => {
-          sn.$store.dispatch("setVendorOrderList", null);
-        })
-        .then(() => {
-          sn.$store.dispatch("orderList");
-          sn.navb();
-        });
-    },
-    async onDecode(decodedString) {
-      const sn = this;
-      if (
-        decodedString != null &&
-        decodedString.indexOf("/adminorder") !== -1
-      ) {
-        sn.$store
-          .dispatch("order", {
-            id: decodedString.substring(12),
-            action: null
-          })
-          .then(() => {
-            sn.dialog = false;
-          })
-          .catch(err => {
-            alert("Wrong restaurant or order id");
-          });
-      } else {
-        alert("Invalid QR code, Scan a valid Food Republic QR code");
-        sn.dialog = false;
-      }
-    },
-    async onInit(promise) {
-      try {
-        await promise;
-      } catch (error) {
-        if (error.name === "NotAllowedError") {
-          this.error = "ERROR: you need to grant camera access permisson";
-        } else if (error.name === "NotFoundError") {
-          this.error = "ERROR: no camera on this device";
-        } else if (error.name === "NotSupportedError") {
-          this.error = "ERROR: secure context required (HTTPS, localhost)";
-        } else if (error.name === "NotReadableError") {
-          this.error = "ERROR: is the camera already in use?";
-        } else if (error.name === "OverconstrainedError") {
-          this.error = "ERROR: installed cameras are not suitable";
-        } else if (error.name === "StreamApiNotSupportedError") {
-          this.error = "ERROR: Stream API is not supported in this browser";
-        }
-      }
-    },
-    scrollTop() {
-      window.scrollTo(0, 0);
+        sn.$store.dispatch("setAdminOrderList");
     },
     navb() {
-      window.onscroll = () => {
-        let bottomOfWindow =
-          document.documentElement.scrollTop + window.innerHeight >=
-          document.documentElement.offsetHeight - 200;
-        if (bottomOfWindow && !this.loading && this.pageClose) {
-          this.$store.dispatch("orderList");
+        if(!this.orders.length){
+            this.$store.dispatch("setAdminOrderList");
         }
-      };
     },
-
-
     clicker(e) {
-if (!this.orderLoad) {
-this.orderLoad = true;
+    console.log(e)
+    return
+        axios.post('/auth_user', {
+          phone: x
+        })
+        .then(res => {
+ this.orderLoad = true; 
+            this.$store.dispatch("setUser", res.data.success.user);
+            this.$store.dispatch("setToken", res.data.success.token);
+    if (!this.orderLoad) {
+    this.orderLoad = true;
       if (!e.status) {
         this.$store.dispatch("order", {
           id: e.id,
@@ -461,6 +383,7 @@ this.orderLoad = true;
         });
       }
     }
+        })
     }
   }
 };

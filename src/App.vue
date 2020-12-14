@@ -78,6 +78,14 @@ html {
 </style>
 <script>
 import Offline from "v-offline";
+import axios from "axios";
+import wrapper from "axios-cache-plugin";
+
+let http = wrapper(axios, {
+  maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
+  ttl: 60000, // time to live. if you set this option the cached item will be auto deleted after ttl(ms).
+  excludeHeaders: true // should headers be ignored in cache key, helpful for ignoring tracking headers
+});
 
 export default {
   name: "App",
@@ -97,10 +105,29 @@ export default {
       return this.$store.getters.getSnackbar2;
     }
   },
+  mounted(){
+ this.navb2()
+  },
   methods: {
+        navb2() {
+      const sn = this;
+        let url = "/reply/all";
+        http({
+          url: url,
+          method: "get"
+        })
+          .then(response => {
+            sn.$store.dispatch("setReplys", {
+              replys: response.data.replys
+            });
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+    },
     handleConnectivityChange(status) {
       if (!status) {
-        this.$router.push("/offlinepage");
+        // this.$router.push("/offlinepage");
       }
     },
     action(x, y) {
@@ -116,6 +143,6 @@ export default {
       }
       this.$store.dispatch("status2", false);
     }
-  }
+  } 
 };
 </script>

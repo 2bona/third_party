@@ -123,7 +123,7 @@
                                   style="max-width:40px;display: inline-grid;"
                                   class="mb-2 mr-2"
                                   v-for="d in n.option"
-                                  :key="d.image"
+                                  :key="d.name"
                                 >
                                   <v-avatar
                                     size="25px"

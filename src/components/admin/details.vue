@@ -403,6 +403,32 @@
                         @keyup.enter.native="editCategory(editContent, editId)"
                       ></v-text-field>
                     </v-card-text>
+                    <v-flex>
+            <div style="width:100%; " class="py-2 text-center">
+              <span>Tag this category</span>
+              <v-layout
+                style="padding: 0 0px;overflow: visible;width:100%;height:;position: relative;"
+              >
+                <div
+                  style="top: 0;bottom: 0;
+                left: 10px; display: flex;overflow-y: hidden; height:100%;
+                  flex-wrap: wrap;box-sizing:content;overflow-x: scroll !important;width:100%; padding: 0 19px 12px 19px !important;"
+                  xs12
+                >
+                
+                  <v-chip
+                  v-for="n in tags" :key="n.id"
+                    style="flex: 0 0 auto;"
+                    class=" px-5 text-capitalize mx-2 my-2  text--lighten-0
+                     font-weight-bold body-1"
+                     :color="taggedText == n.text ? 'lighten-2 orange': ''"
+                     @click="tagged(n.text)"
+                    >{{n.text}}</v-chip
+                  >
+                </div></v-layout
+              >
+            </div>
+          </v-flex>
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-btn
@@ -851,6 +877,7 @@ export default {
       ig: "",
       cost_price: "",
       mark_up_price: "",
+      taggedText: "",
       editCatId: "",
       editCatitemId: "",
       editCatItemName: "",
@@ -923,6 +950,16 @@ export default {
     vendor() {
       return this.$store.getters.getVendor;
     },
+    tagsList() {
+      return this.$store.getters.getTags;
+    },
+    tags() {
+      const sn = this;
+      var tags = sn.tagsList.filter(item => {
+        return item.type.toLowerCase() === sn.vendor.type.toLowerCase();
+      });
+      return tags;
+    },
     type() {
       return !(this.vendor.type.toLowerCase() === "food");
     },
@@ -964,6 +1001,9 @@ export default {
     });
   },
   methods: {
+    tagged(x){
+      this.taggedText = x
+    },
     counterValue(x) {
       const sn = this;
       var item = sn.counter.find(element => {
@@ -980,38 +1020,36 @@ export default {
       sn.countId = x;
       if (!sn.counter.length && !sn.isloading) {
         var d = {};
-        sn.isLoading = true;
-        axios.get("/item/count_orders?id=" + x + "&cat_id=" + y).then(res => {
-          d.id = x;
-          d.count = res.data.count;
-          sn.counter.push(d);
-          setTimeout(() => {
-            sn.isLoading = false;
-          }, 1000);
-        });
+        sn.isLoading = false;
+        // axios.get("/item/count_orders?id=" + x + "&cat_id=" + y).then(res => {
+        //   d.id = x;
+        //   d.count = res.data.count;
+        //   sn.counter.push(d);
+        //   setTimeout(() => {
+        //     sn.isLoading = false;
+        //   }, 1000);
+        // });
       } else {
         var isCounted = sn.counter.find(element => {
           return element.id === x;
         });
-        setTimeout(() => {
           if (isCounted && !sn.isLoading) {
             return;
           } else {
-            sn.isLoading = true;
+            sn.isLoading = false;
             var d = {};
-            axios
-              .get("/item/count_orders?id=" + x + "&cat_id=" + y)
-              .then(res => {
-                d.id = x;
-                d.count = res.data.count;
-                sn.counter.push(d);
-                setTimeout(() => {
-                  sn.isLoading = false;
-                }, 1000);
-              });
+            // axios
+            //   .get("/item/count_orders?id=" + x + "&cat_id=" + y)
+            //   .then(res => {
+            //     d.id = x;
+            //     d.count = res.data.count;
+            //     sn.counter.push(d);
+            //     setTimeout(() => {
+            //       sn.isLoading = false;
+            //     }, 1000);
+            //   });
             return;
           }
-        }, 1000);
       }
     },
     addCategory() {
@@ -1053,7 +1091,8 @@ export default {
         axios
           .post("/category/update", {
             id: y,
-            content: x
+            content: x,
+            tag: sn.taggedText
           })
           .then(function(response) {
             console.log(response.data);
@@ -1212,6 +1251,7 @@ export default {
     },
     editCat(x, y) {
       var sn = this;
+      this.taggedText = null
       sn.editContent = x;
       sn.editId = y;
       sn.dialog1 = true;
@@ -1362,8 +1402,8 @@ export default {
         var compa = [];
         if (sn.compulsory) {
           var g = sn.compulsory.forEach(element => {
-            comp.push(
-              smain_s.find(item => {
+           comp.push(
+              sn.mainOptions.find(item => {
                 return item.name === element;
               })
             );
@@ -1377,7 +1417,7 @@ export default {
         if (sn.optional) {
           var h = sn.optional.forEach(element => {
             opt.push(
-              sn.options.find(item => {
+              sn.mainOptions.find(item => {
                 return item.name === element;
               }));
           });

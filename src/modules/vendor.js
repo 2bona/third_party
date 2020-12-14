@@ -16,10 +16,12 @@ import {
 } from "./../config.js";
 export const vendor = {
   state: {
+    vendorList: [],
     vendors: [],
     tags: [],
     replys: [] || ["We don't have food anymore"],
     agents: [],
+    adminOrderList: [],
     orderList: [],
     vendor: JSON.parse(localStorage.getItem("vendor")) || "",
     mainOptions: JSON.parse(localStorage.getItem("mainOptions")) || "",
@@ -34,6 +36,13 @@ export const vendor = {
     platform: JSON.parse(localStorage.getItem("platform"))|| '' 
   },
   actions: {
+     setVendorList({
+       commit,
+       state,
+       dispatch
+     }, data) {
+           commit("setVendorList", data)
+     },
      addVendor({
        commit,
        state,
@@ -85,6 +94,20 @@ export const vendor = {
           commit("setItems", items)
         }).catch(function (error) {
         })
+    },
+    setAdminOrderList({
+      commit,
+      state,
+      dispatch
+    }, data) {
+    var url = "/order/adminorderlist"
+    http({
+        url: url,
+        method: 'get'
+      })
+      .then(function (response) {
+        commit("setAdminOrderList", response.data.orders)
+      })
     },
   async orderList({
       commit,
@@ -158,7 +181,7 @@ export const vendor = {
       state,
       dispatch
     }, data) {
-      commit("setOrder", {})
+      // commit("setOrder", {})
       let url = "/order/find?id=" + data.id
       axios.get(AXIOS_CONFIG.API_URL + url)
         .then(function (response) {
@@ -203,32 +226,32 @@ export const vendor = {
          .then(res => {
            console.log('....... response.......')
            console.log(res)
-           const agentsToken = res.data.agentsToken;
-           if (res.data.token && res.data.message) {
-                         axios.post(AXIOS_CONFIG.API_URL + "/notify", {
-               receiver_user : res.data.token,
-               title: 'Order Update',
-               message: res.data.message,
-               push_type: 'individual',
-               payload: JSON.stringify({url: '/cart', id: data.id})
-              }).then((res)=>{
-                if (data.action === "served") {
-                  axios.post(AXIOS_CONFIG.API_URL + "/notify", {
-                    receiver_user : agentsToken,
-                    title: 'New Order',
-                    message: "New Order from " + state.vendor.name+"!!!",
-                    push_type: 'individual',
-                    payload: JSON.stringify({url: '/delivery', id: data.id})
-                   }).then((res) =>{
-                     console.log(res)
-                   })
-                }
-                console.log(res)
-             }).catch((err)=>{
-              console.log(err)
-             })
+          //  const agentsToken = res.data.agentsToken;
+          //  if (res.data.token && res.data.message) {
+          //     axios.post(AXIOS_CONFIG.API_URL + "/notify", {
+          //      receiver_user : res.data.token,
+          //      title: 'Order Update',
+          //      message: res.data.message,
+          //      push_type: 'individual',
+          //      payload: JSON.stringify({url: '/cart', id: data.id, status: data.status})
+          //     }).then((res)=>{
+          //       if (data.action === "served") {
+          //         axios.post(AXIOS_CONFIG.API_URL + "/notify", {
+          //           receiver_user : agentsToken,
+          //           title: 'New Order',
+          //           message: "New Order from " + state.vendor.name+"!!!",
+          //           push_type: 'individual',
+          //           payload: JSON.stringify({url: '/delivery', id: data.id, status: data.status})
+          //          }).then((res) =>{
+          //            console.log(res)
+          //          })
+          //       }
+          //       console.log(res)
+          //    }).catch((err)=>{
+          //     console.log(err)
+          //    })
              
-           }
+          //  }
            dispatch("getOrder", {
              id: data.id,
              action: data.action
@@ -327,6 +350,9 @@ loadOptions({
     }
 },
   mutations: {
+    setVendorList(state, data) {
+      state.vendorList = data
+    },
     setVendor(state, data) {
       state.vendor = data
     },
@@ -372,11 +398,17 @@ loadOptions({
     setItems(state, items) {
       state.items = items
     },
+    setAdminOrderList(state, data) {
+      state.adminOrderList = data
+    },
     setVendorOrderListLoading(state, status) {
       state.vendorLoadStatus = status
     },
   },
   getters: {
+    getAdminOrderList(state) {
+      return state.adminOrderList
+    },
     getMenu(state) {
       return state.menu
     },
@@ -409,6 +441,9 @@ loadOptions({
     },
     getItems(state) {
       return state.items
+    },
+    getVendorList(state) {
+      return state.vendorList
     },
     getVendor(state) {
       return state.vendor

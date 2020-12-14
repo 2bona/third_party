@@ -171,7 +171,7 @@
               <v-select
                 :items="tags"
                 attach
-                :rules="[rules.minTag]"
+                :rules="vendor.type !== 'Errands'? [rules.minTag]: ''"
                 chips
                 :loading="loading"
                 :disabled="loading"
@@ -600,6 +600,7 @@
         </v-list-item>
         <v-list-item class="pl-2 pr-0">
           <v-spacer></v-spacer>
+          <v-btn to="/adminuser" outlined rounded>admin</v-btn>
           <v-btn @click="logout" outlined rounded>Logout</v-btn>
         </v-list-item>
       </v-list>
@@ -668,7 +669,7 @@ export default {
     rules: {
       required: value => !!value || "Required.",
       required2: value =>
-        !/[^a-zA-Z0-9&()\s]/.test(value) ||
+        !/[^a-zA-Z0-9&'()\s]/.test(value) ||
         "Only letters, numbers, & and bracket are allowed.",
       min: value => value.length >= 3 || "Min 3 characters",
       minArea: value => value.length > 0 || "Min 1 area",

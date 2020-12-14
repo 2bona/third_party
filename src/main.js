@@ -18,7 +18,7 @@ const {
   PushNotifications,
   App,
   LocalNotifications,
-  Device
+  Device,
 } = Plugins;
 App.removeAllListeners();
 SplashScreen.hide();
@@ -34,7 +34,7 @@ import Vuex from "vuex";
 import store from "./store.js";
 import axios from "axios";
 import moment from "moment";
-const platform = JSON.stringify(localStorage.getItem("platform"));
+const platform = JSON.parse(localStorage.getItem("platform"));
 
 // LocalNotifications.schedule({
 //   notifications: [
@@ -50,120 +50,123 @@ const platform = JSON.stringify(localStorage.getItem("platform"));
 //     }
 //   ]
 // });
-LocalNotifications.addListener("localNotificationReceived", lcm => {
+LocalNotifications.addListener("localNotificationReceived", (lcm) => {
   console.log(lcm);
 });
 
-Device.getInfo().then(res => {
+Device.getInfo().then((res) => {
   console.log(JSON.stringify(res));
   console.log(res.platform);
   if (!platform.platform) {
     console.log("getting platform..............");
     localStorage.setItem("platform", JSON.stringify(res));
   }
+  platform = res
 });
-
-PushNotifications.requestPermission().then(result => {
-  if (result.granted) {
-    // Register with Apple / Google to receive push via APNS/FCM
-    PushNotifications.register();
-  } else {
-    // Show some error
-    alert(
-      "Push notification is disabled, you will not recieve any notifications."
-    );
-  }
-});
-
-// Set up push notification for vendor
-// and round it oup then do the same for delivery agent
-
-PushNotifications.addListener("registration", fcm => {
-  console.log("Push registration success, token: " + fcm.value);
-  var token = localStorage.getItem("fcm");
-  var vendor = JSON.parse(localStorage.getItem("vendor"));
-  if (token) {
-    if (token != fcm.value) {
-      localStorage.removeItem("fcm");
-      localStorage.setItem("fcm", fcm.value);
-      if (vendor.id) {
-        axios
-          .post("/setfcm", {
-            token: fcm.value,
-            type: "vendor"
-          })
-          .then(res => {
-            console.log(res);
-          })
-          .catch(err => {
-            console.log(err);
-          });
+if (platform) {
+  if (platform.platform !== "web") {
+    PushNotifications.requestPermission().then((result) => {
+      if (result.granted) {
+        // Register with Apple / Google to receive push via APNS/FCM
+        PushNotifications.register();
+      } else {
+        // Show some error
+        alert(
+          "Push notification is disabled, you will not recieve any notifications."
+        );
       }
-    }
-  } else {
-    localStorage.setItem("fcm", fcm.value);
-  }
-});
+    });
 
-PushNotifications.addListener("registrationError", error => {
-  console.log("Error on registration: " + JSON.stringify(error));
-});
+    // Set up push notification for vendor
+    // and round it oup then do the same for delivery agent
 
-PushNotifications.addListener("pushNotificationReceived", res => {
-  console.log("Push received: " + JSON.stringify(res));
-  // alert(res.title + " : " + res.body);
-  var t = JSON.parse(res.data.payload);
-  var action = null;
-  var id = t.id;
-  var actionText = "";
-  if (t.id != null) {
-    if (t.url === "/adminorder") {
-      action = 1;
-      actionText = "open order";
-    } else if (t.url === "/vendor") {
-      action = 2;
-      actionText = "Proceed";
-    }
-  } else {
-    id = null;
-    action = null;
-    actionText = null;
-  }
-  store.dispatch("snack2", {
-    color: "primary",
-    text: res.body,
-    title: res.title,
-    action: action,
-    actionText: actionText,
-    id: id,
-    status: 1
-  });
-  //id data title body
-});
+    PushNotifications.addListener("registration", (fcm) => {
+      console.log("Push registration success, token: " + fcm.value);
+      var token = localStorage.getItem("fcm");
+      var vendor = JSON.parse(localStorage.getItem("vendor"));
+      if (token) {
+        if (token != fcm.value) {
+          localStorage.removeItem("fcm");
+          localStorage.setItem("fcm", fcm.value);
+          if (vendor.id) {
+            axios
+              .post("/setfcm", {
+                token: fcm.value,
+                type: "vendor",
+              })
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        }
+      } else {
+        localStorage.setItem("fcm", fcm.value);
+      }
+    });
 
-PushNotifications.addListener("pushNotificationActionPerformed", res => {
-  console.log("Push action performed: " + JSON.stringify(res));
-  store.getters.getBusy ? "" : store.dispatch("busy");
+    PushNotifications.addListener("registrationError", (error) => {
+      console.log("Error on registration: " + JSON.stringify(error));
+    });
 
-  var t = JSON.parse(res.notification.data.payload);
-
-  if (res.actionId === "tap") {
-    if (t.url === "/adminorder") {
-      store.dispatch("order", {
-        id: t.id,
-        action: "read"
+    PushNotifications.addListener("pushNotificationReceived", (res) => {
+      console.log("Push received: " + JSON.stringify(res));
+      // alert(res.title + " : " + res.body);
+      var t = JSON.parse(res.data.payload);
+      var action = null;
+      var id = t.id;
+      var actionText = "";
+      if (t.id != null) {
+        if (t.url === "/adminorder") {
+          action = 1;
+          actionText = "open order";
+        } else if (t.url === "/vendor") {
+          action = 2;
+          actionText = "Proceed";
+        }
+      } else {
+        id = null;
+        action = null;
+        actionText = null;
+      }
+      store.dispatch("snack2", {
+        color: "primary",
+        text: res.body,
+        title: res.title,
+        action: action,
+        actionText: actionText,
+        id: id,
+        status: 1,
       });
-    } else if (t.url === "/vendor") {
-      router.push("/adminedit");
-    } else if (t.url === "/home") {
-      router.push("/");
-    }
-    store.dispatch("status2", false);
+      //id data title body
+    });
+
+    PushNotifications.addListener("pushNotificationActionPerformed", (res) => {
+      console.log("Push action performed: " + JSON.stringify(res));
+      store.getters.getBusy ? "" : store.dispatch("busy");
+
+      var t = JSON.parse(res.notification.data.payload);
+
+      if (res.actionId === "tap") {
+        if (t.url === "/adminorder") {
+          store.dispatch("order", {
+            id: t.id,
+            action: "read",
+          });
+        } else if (t.url === "/vendor") {
+          router.push("/adminedit");
+        } else if (t.url === "/home") {
+          router.push("/");
+        }
+        store.dispatch("status2", false);
+      }
+
+      // actionId notification obj {id data
+    });
   }
-
-  // actionId notification obj {id data
-});
-
+}
 document.cookie = "cross-site-cookie=image; SameSite=None; Secure";
 
 axios.defaults.baseURL = "https://foodrepublic.herokuapp.com/api";
@@ -272,5 +275,5 @@ new Vue({
   store,
   router,
 
-  render: h => h(Apps)
+  render: (h) => h(Apps),
 }).$mount("#app");

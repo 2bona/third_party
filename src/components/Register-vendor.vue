@@ -301,6 +301,10 @@ export default {
           value: "Services"
         },
         {
+          text: "Errands",
+          value: "Errands"
+        },
+        {
           text: "Laundry",
           value: "Laundry"
         }

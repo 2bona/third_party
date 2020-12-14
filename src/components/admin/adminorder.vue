@@ -1,6 +1,29 @@
 <template>
   <div>
-    <div class="container mt-3" style="margin-bottom: 100px;">
+    <div class="container mt-0" style="margin-bottom: 100px;">
+     <a style="text-decoration:none" 
+     :href="'tel:' + order.vendor.phone
+     ">
+      <v-btn
+        bottom
+        right
+        dark
+        class="mx-2"
+        color="orange darken-3"
+        style="z-index:10;margin-bottom: 10px;">
+      <span class="font-weight-bold"> Call Vendor</span> 
+      </v-btn>
+      </a>
+<a style="text-decoration:none" :href="'tel:' + order.user.phone">
+            <v-btn
+        right
+         dark
+        color="primary"
+        style="z-index:10;margin-bottom: 10px;"
+      >
+      <span class="font-weight-bold"> Call User</span> 
+      </v-btn>
+                                 </a>
       <v-btn
         fixed
         @click="$router.go(-1)"
@@ -12,6 +35,7 @@
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
+
       <v-layout row wrap class="px-3">
         <v-flex xs6>
           <p class="overline mb-2  font-weight-bold grey--text text--darken-1">
@@ -172,7 +196,7 @@
                     order.delivery.phone.substring(1) +
                     '?text=Hello,%20this%20is%20' +
                     vendor.name +
-                    '%20,%20I%20just%20want%20to%20confirm%20your%20location%20for%20a%20food%20delivery.'
+                    '%20,%20I%20just%20want%20to%20confirm%20your%20Request%20for%20a%20food%20delivery.'
                 "
                 target="_blank"
               >
@@ -180,9 +204,9 @@
                   <v-icon>mdi-whatsapp</v-icon>
                 </v-btn>
               </a>
-              <v-btn fab dark depressed color="white" x-small>
+              <!-- <v-btn fab dark depressed color="white" x-small>
                 <v-icon color="primary">mdi-map-marker</v-icon>
-              </v-btn>
+              </v-btn> -->
             </v-list-item-content>
             <p
               v-if="order.transit_time"
@@ -253,6 +277,11 @@
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             class="title text--darken-2 grey--text  font-weight-bold"
             >ETA - {{ order.duration | duration }}</v-list-item-subtitle
+          >
+               <v-list-item-subtitle
+            v-show="order.discount"
+            class="title orange--text text--darken-3 font-weight-bold"
+            ><v-icon color="orange darken-4" style="padding-bottom:3px">mdi-sale</v-icon> Discount Rate</v-list-item-subtitle
           >
         </v-list-item-content>
       </v-list-item>
@@ -1052,6 +1081,7 @@ export default {
         sn.$store
           .dispatch("order", {
             id: sn.order.id,
+            status: sn.order.status,
             action: "delivered"
           })
           .then(() => {
@@ -1070,6 +1100,7 @@ export default {
         sn.$store
           .dispatch("order", {
             id: sn.order.id,
+            status: sn.order.status,
             action: "served"
           })
           .then(() => {
@@ -1085,6 +1116,7 @@ export default {
       const sn = this;
       sn.$store
         .dispatch("order", {
+          status: sn.order.status,
           id: sn.order.id,
           action: "served",
           delivery_agent_id: x
@@ -1120,6 +1152,7 @@ export default {
           }
           sn.$store.dispatch("order", {
             id: sn.order.id,
+            status: sn.order.status,
             action: "rejected",
             delivery: n,
             reason: sn.replys[sn.slide].content

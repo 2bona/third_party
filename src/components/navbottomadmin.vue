@@ -21,6 +21,12 @@
       <v-btn to="/adminedit" icon class="mx-auto">
         <v-icon>mdi-account</v-icon>
       </v-btn>
+      <v-btn to="/adminuser" color="red" icon class="mx-auto">
+        <v-icon>mdi-account-details-outline</v-icon>
+      </v-btn>
+      <v-btn to="/godorders" color="red" icon class="mx-auto">
+        <v-icon>mdi-cart</v-icon>
+      </v-btn>
      
     
      

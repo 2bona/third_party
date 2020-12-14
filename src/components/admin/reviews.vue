@@ -213,13 +213,9 @@
               <v-list-item-content>
                 <v-flex d-flex align-center class="pl-1">
                   <div class="font-weight-bold caption  text-capitalize">
-                    {{
-                      n.user.surname +
-                        " " +
-                        n.user.middle_name +
-                        " " +
-                        n.user.first_name
-                    }}
+                        {{n.user.surname !== null ?  n.user.surname + ' ' : '' }} 
+                            {{n.user.middle_name !==  null ?  n.user.middle_name + ' ' : '' }}
+                            {{n.user.first_name !== null ?  n.user.first_name  : '' }}
                     <br />
                     <p class="overline mb-0 grey--text text--darken-2">
                       {{ n.created_at | myDate }}

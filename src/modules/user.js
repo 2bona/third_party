@@ -35,7 +35,6 @@ export const user = {
     userOrder: {},
     userOrderList: [],
     addresses: {},
-    vendorList: [],
     userAddStatus: 0,
     userRegisteredStatus: 0,
     isLoggedIn: false,
@@ -145,13 +144,7 @@ export const user = {
     setAreaList({ commit, state, dispatch }, data) {
       commit("setUserAreaList", data.items)
     },
-    setVendorList({
-        commit,
-        state,
-        dispatch
-      }, data) {
-      commit("setVendorList", data.items)
-    },
+
     async userOrderList({
         commit,
         state,
@@ -372,9 +365,6 @@ export const user = {
     setVendorLoading(state, data) {
       state.vendorLoading = data
     },
-    setVendorList(state, vendorList) {
-      state.vendorList = vendorList
-    },
     setUserCity(state, city) {
       state.city = city
     },
@@ -428,9 +418,6 @@ export const user = {
       },
     getUserOrderList(state) {
         return state.userOrderList
-    },
-    getVendorList(state) {
-      return state.vendorList
     },
     getItem(state) {
       return state.item

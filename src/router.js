@@ -108,6 +108,18 @@ const router = new VueRouter({
           props: true
         },
         {
+          path: "godorders",
+          meta: {
+            requiresAuth: true
+          },
+          component: () =>
+            import(
+              /* webpackChunkName: "adminorder" */
+              "./components/admin/adminorders.vue"
+            ),
+          props: true
+        },
+        {
           path: "adminorder",
           meta: {
             requiresAuth: true
@@ -127,6 +139,17 @@ const router = new VueRouter({
           component: () =>
             import(
               /* webpackChunkName: "orders" */ "./components/admin/orders.vue"
+            ),
+          props: true
+        },
+        {
+          path: "adminuser",
+          meta: {
+            requiresAuth: true
+          },
+          component: () =>
+            import(
+              /* webpackChunkName: "reviews" */ "./components/godview.vue"
             ),
           props: true
         },

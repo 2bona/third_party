@@ -143,7 +143,8 @@
                                             n.id,
                                             n.name,
                                             n.cost_price,
-                                            n.mark_up_price
+                                            n.mark_up_price,
+                                            n.extra_fee
                                           )
                                         "
                                         icon
@@ -297,6 +298,15 @@
                         ></v-text-field>
                         <v-text-field
                           class="font-weight-regular grey--text text--darken-4"
+                          label="Extra fee"
+                          v-model="optionextrafee"
+                          placeholder="10000"
+                          :rules="numberRules"
+                          color="orange"
+                          prepend-inner-icon="mdi-currency-ngn"
+                        ></v-text-field>
+                        <v-text-field
+                          class="font-weight-regular grey--text text--darken-4"
                           label="Mark up"
                           v-model="optionmarkupprice"
                           placeholder="10000"
@@ -355,6 +365,17 @@
                           class="font-weight-regular grey--text text--darken-4"
                           label="Cost price"
                           v-model="editoptioncostprice"
+                          :rules="numberRules"
+                          placeholder="0"
+                          hint="put only number eg '1000' not '1,000'"
+                          color="orange"
+                          prepend-inner-icon="mdi-currency-ngn"
+                        ></v-text-field>
+                        <v-text-field
+                          @keyup.enter.native="editOptionItem"
+                          class="font-weight-regular grey--text text--darken-4"
+                          label="Extra fee"
+                          v-model="editoptionextrafee"
                           :rules="numberRules"
                           placeholder="0"
                           hint="put only number eg '1000' not '1,000'"
@@ -620,6 +641,7 @@ export default {
       generic: "",
       price: "",
       editoptioncostprice: "",
+      editoptionextrafee: "",
       editoptionmarkupprice: "",
       editoptionname: "",
       editoptionid: "",
@@ -633,6 +655,7 @@ export default {
       editId: "",
       optionname: "",
       optional: [],
+      optionextrafee: "",
       optionmarkupprice: "",
       optioncostprice: "",
       compulsory: [],
@@ -725,6 +748,8 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("loadVendor")
+    this.$store.dispatch("loadTags");
     this.$store.dispatch("loadPage");
   },
   methods: {
@@ -956,6 +981,7 @@ export default {
           .post("/options/update", {
             name: sn.editoptionname,
             cost_price: sn.editoptioncostprice,
+            extra_fee: sn.editoptionextrafee,
             mark_up_price: sn.editoptionmarkupprice,
             id: sn.editoptionid
           })
@@ -1071,8 +1097,9 @@ export default {
         });
     },
 
-    editOption(x, y, z) {
+    editOption(x, y, z, b,  a) {
       var sn = this;
+      sn.editoptionextrafee = a;
       sn.editoptionid = x;
       sn.editoptionname = y;
       if (z === null) {
@@ -1219,6 +1246,7 @@ export default {
         fd.append("name", sn.optionname);
         fd.append("cost_price", sn.optioncostprice);
         fd.append("mark_up_price", sn.optionmarkupprice);
+        fd.append("extra_fee", sn.optionextrafee);
         if (sn.$refs.file.$refs.input.files.length) {
           for (var i = 0; i < sn.$refs.file.$refs.input.files.length; i++) {
             let file = sn.$refs.file.$refs.input.files[i];
@@ -1251,7 +1279,7 @@ export default {
     },
     editOptionImage(x, i) {
       var sn = this;
-      if (smain_Attachments.length) {
+      if (sn.optionAttachments.length) {
         sn.loading8 = true;
         const fd = new FormData();
         fd.append("id", x);
@@ -1263,7 +1291,7 @@ export default {
           .then(res => {
             var d = res.data;
             sn.$store.dispatch("loadOptions");
-            smain_Attachments = [];
+            sn.optionAttachments = [];
             sn.loading8 = false;
             sn.attach = null;
             sn.$store.dispatch("snack", {
@@ -1272,7 +1300,7 @@ export default {
             });
           })
           .catch(err => {
-            smain_Attachments = [];
+            sn.optionAttachments = [];
             sn.attach = null;
             sn.$store.dispatch("snack", {
               color: "red",
