@@ -2,7 +2,7 @@ import VueRouter from "vue-router";
 // import store from "./store";
 
 const router = new VueRouter({
-  mode: "history",
+  // mode: "history",
   routes: [
     {
       path: "/Regvendor",
