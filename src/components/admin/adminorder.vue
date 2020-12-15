@@ -11,7 +11,7 @@
         class="mx-2"
         color="orange darken-3"
         style="z-index:10;margin-bottom: 10px;">
-      <span class="font-weight-bold"> Call Vendor</span> 
+      <span class="font-weight-bold"> Call Vendor {{order.vendor.phone}}</span> 
       </v-btn>
       </a>
 <a style="text-decoration:none" :href="'tel:' + order.user.phone">
@@ -21,7 +21,7 @@
         color="primary"
         style="z-index:10;margin-bottom: 10px;"
       >
-      <span class="font-weight-bold"> Call User</span> 
+      <span class="font-weight-bold"> Call User {{order.user.phone}}</span> 
       </v-btn>
                                  </a>
       <v-btn

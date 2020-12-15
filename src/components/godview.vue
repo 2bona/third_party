@@ -46,7 +46,7 @@
             :headers="headers"
             v-model="selected"
             :items="users"
-            dense
+            
             :expanded.sync="expanded"
             :no-data-text="users.length ? 'The end' : ''"
             :search="search"
