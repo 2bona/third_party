@@ -28,6 +28,7 @@ import Apps from "./App.vue";
 import VueRouter from "vue-router";
 import vuetify from "./plugins/vuetify";
 import router from "./router";
+import {Howl, Howler} from 'howler';
 import VueMeta from "vue-meta";
 import "./registerServiceWorker";
 import Vuex from "vuex";
@@ -268,6 +269,42 @@ Vue.filter("duration", function(value) {
     // return val > 0 ? val + (val == 1 ? "min" : "mins") : "";
   } else {
     return "0";
+  }
+});
+window.Pusher = require('pusher-js');
+
+var pusher = new Pusher("d2e70c8ff384657760d1", {
+  cluster: "eu",
+  encrypted: true,
+  authEndpoint: 'https://edeyapp.com/api/broadcasting/auth',
+  auth: {
+    headers: {
+        Authorization: 'Bearer ' + store.getters.getToken
+    }
+},
+});
+window.OrderSoundPlaying = false
+  window.OrderSound = new Howl({
+    src: 'http://soundbible.com/mp3/Air Plane Ding-SoundBible.com-496729130.mp3',
+    loop: true,
+    onplay: function() {
+      OrderSoundPlaying = true
+    },
+    onstop: function() {
+      OrderSoundPlaying = false
+    }
+  });
+  
+window.Channel2 = pusher.subscribe('private-orders2');
+ Channel2.bind('order_event2', (data) => {
+if (!OrderSoundPlaying) {
+  OrderSound.play();
+}
+  
+  if (data.status === 0) {
+    store.dispatch('addItem', data.order)
+  } else{
+    store.dispatch('removeItem', data.order)
   }
 });
 new Vue({

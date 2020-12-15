@@ -2,7 +2,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import router from "../router";
-import NProgress from "nprogress";
 const axios = require("axios");
 import wrapper from 'axios-cache-plugin'
 
@@ -155,6 +154,27 @@ export const vendor = {
           console.log(error)
           commit("setVendorOrderListLoading", false)
         })
+    },
+    removeItem({ commit, state, dispatch }, data) {
+      console.log(data);
+      var orderList = state.adminOrderList.filter((el) => {
+        return el.id !== data;
+      });
+      state.adminOrderList = orderList;
+    },
+    addItem({ commit, state, dispatch }, data) {
+      console.log("getItem");
+      const hasId = state.adminOrderList.some((el) => {
+        el.id == data;
+      });
+      if (hasId) return;
+      axios
+        .get(AXIOS_CONFIG.API_URL + "/order/admin_find?id=" + data)
+        .then((res) => {
+          var order = res.data;
+          console.log(order);
+          state.adminOrderList.unshift(order);
+        });
     },
     vendorOrderPage({
       commit,

@@ -63,9 +63,9 @@
 
               <v-icon>mdi-wallet</v-icon>
               </v-btn> -->
-              <!-- <v-btn  color="blue" @click="clearOrders(item.id)" icon>
+              <v-btn  color="blue" @click="clearOrders(item.id)" icon>
               <v-icon>mdi-cart-off</v-icon>
-              </v-btn> -->
+              </v-btn>
               <v-btn  color="blue" @click="getLastOrder(item.id)" icon>
               <v-icon>mdi-cart</v-icon>
               </v-btn>
