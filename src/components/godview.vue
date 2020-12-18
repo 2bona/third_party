@@ -63,15 +63,23 @@
 
               <v-icon>mdi-wallet</v-icon>
               </v-btn> -->
-              <v-btn  color="blue" @click="clearOrders(item.id)" icon>
+              <!-- <v-btn  color="blue" @click="clearOrders(item.id)" icon>
               <v-icon>mdi-cart-off</v-icon>
-              </v-btn>
+              </v-btn> -->
               <v-btn  color="blue" @click="getLastOrder(item.id)" icon>
               <v-icon>mdi-cart</v-icon>
               </v-btn>
               <v-btn  color="blue" @click="auth(item.user.phone)" icon>
               <v-icon>mdi-login</v-icon>
               </v-btn>
+                   <v-switch
+                   style="display: inline-flex;"
+                color="grey lighten-2"
+                @change="setStatus(item.user.phone, item.id, item.status)"
+                :loading="statusLoad"
+                :disabled="statusLoad"
+                v-model="item.status"
+                ></v-switch>
            </template>
            <template v-slot:item.orders_count="{ item }">{{item.orders_count | price}}
            </template>
@@ -196,6 +204,7 @@ export default {
     return {
       dialog: false,
       orderLoad: false,
+      statusLoad: false,
       content: "",
       expanded: [],
       loadingNow: false,
@@ -231,6 +240,9 @@ export default {
     users() {
       return this.$store.getters.getVendorList;
     },
+      vendor() {
+      return this.$store.getters.getVendor;
+    },
   },
   destroyed(){
     // this.listener.remove();
@@ -247,6 +259,28 @@ export default {
   methods: {
     scrollTop() {
       window.scrollTo(0, 0);
+    },
+        setStatus2(x) {
+      const sn = this;
+      sn.statusLoad = true;
+      const url = "/vendor/changeStatus";
+     axios.post(url, {
+          status: x? 1 : 0
+        })
+        .then(() => {
+          sn.statusLoad = false;
+          sn.$store.dispatch("snack", {
+            color: "green",
+            text: "Vendor Status has been Updated"
+          });
+        })
+        .catch(err => {
+          sn.statusLoad = false;
+          sn.$store.dispatch("snack", {
+            color: "red",
+            text: err
+          });
+        });
     },
     clearOrders(x){
       this.loadingNow = true
@@ -274,6 +308,33 @@ export default {
         axios.get('/flushCache').then(()=>{
 
           this.loadingNow = false
+        })
+    },
+    setStatus(a, x, y){
+      this.statusLoad = true
+      if (this.x === this.vendor.id) {
+        this.setStatus2(y)
+        return
+      }
+      // this.delDialog = true
+        axios.post('/auth_user', {
+          phone: a
+        })
+        .then(res => {
+            this.$store.dispatch("setUser", res.data.success.user);
+            this.$store.dispatch("setToken", res.data.success.token);
+           
+            this.$store.dispatch("snack", {
+                color: "green",
+              text: "logged in as vendor"
+            });
+            this.setStatus2(y)
+        })
+        .catch(()=>{
+        this.delDialog = false
+            this.loadingNow = false
+            this.delLoader = false
+            alert('couldnt login as vendor before setting their status')
         })
     },
     auth(x){
@@ -354,8 +415,8 @@ this.$store.dispatch("loadTags");
       axios
         .get("/get_vendors")
         .then(res => {
-          this.$store.dispatch('setVendorList', res.data.users);
           this.loading = false
+          this.$store.dispatch('setVendorList', res.data.users);
         })
         }
     },

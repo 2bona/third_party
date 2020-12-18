@@ -15,7 +15,7 @@
       </v-btn>
       </a>
 <a style="text-decoration:none" :href="'tel:' + order.user.phone">
-            <v-btn
+        <v-btn
         right
          dark
         color="primary"

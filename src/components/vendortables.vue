@@ -16,11 +16,11 @@
           <td>Sales today</td>
           <td>200</td>
         </tr>
-       <tr >
+       <tr>
           <td>Sales this week</td>
           <td>200</td>
         </tr>
-         <tr >
+         <tr>
           <td>Sales this month</td>
           <td>200</td>
         </tr>

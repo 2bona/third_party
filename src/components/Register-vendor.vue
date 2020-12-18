@@ -105,20 +105,6 @@
                     label="City"
                     color="orange"
                   ></v-select>
-                  <v-select
-                    class="font-weight-medium grey--text text--darken-4"
-                    :items="areas"
-                    attach
-                    :disabled="disable"
-                    chips
-                    :loading="load"
-                    v-model="area"
-                    placeholder
-                    cache-items
-                    label="Areas you can deliver to"
-                    color="orange"
-                    multiple
-                  ></v-select>
                 </v-form>
               </v-card-text>
               <div class="text-right pr-5">
@@ -289,6 +275,26 @@ export default {
           value: "Food Stuff"
         },
         {
+          text: "Furniture",
+          value: "Furniture"
+        },
+        {
+          text: "Gadgets",
+          value: "Gadgets"
+        },
+        {
+          text: "Pharmacy",
+          value: "Pharmacy"
+        },
+        {
+          text: "Cosmetics",
+          value: "Cosmetics"
+        },
+        {
+          text: "Cosmetics",
+          value: "Cosmetics"
+        },
+        {
           text: "Shop",
           value: "Shop"
         },
@@ -303,7 +309,7 @@ export default {
         {
           text: "Errands",
           value: "Errands"
-        },
+        }, 
         {
           text: "Laundry",
           value: "Laundry"
@@ -380,28 +386,7 @@ export default {
       return tags;
     }
   },
-  watch: {
-    city(val) {
-      if (!val) {
-        this.areas = [];
-        this.disable = true;
-      } else if (val) {
-        this.areas = [];
-        this.load = true;
-        var sn = this;
-        axios.get("/city/areas?id=" + sn.city).then(function(response) {
-          sn.areas = response.data.areas;
-          sn.disable = false;
-          axios
-            .get("/city/vendorarea?city=" + sn.city)
-            .then(function(response) {
-              sn.results = response.data.result;
-              sn.load = false;
-            });
-        });
-      }
-    }
-  },
+
   methods: {
     initMap() {
       var markers = [];
@@ -732,44 +717,7 @@ export default {
       sn.loading = true;
       if (sn.$refs.form.validate() && sn.address.length > 6) {
         var d = sn.results;
-        var e = [];
-        sn.area.forEach(element => {
-          e.push(
-            d.find(item => {
-              return item.id === element;
-            })
-          );
-        });
-        console.log(e);
-        console.log(d);
-        const origin = [];
-        var set = [];
-        e.forEach(item => {
-          set = new google.maps.LatLng(item.lat, item.lng);
-          origin.push(set);
-        });
-        var service = new google.maps.DistanceMatrixService();
-        service.getDistanceMatrix(
-          {
-            origins: [new google.maps.LatLng(sn.lat, sn.long)],
-            destinations: origin,
-            travelMode: "DRIVING",
-            unitSystem: google.maps.UnitSystem.METRIC,
-            avoidHighways: false,
-            avoidTolls: false
-          },
-          function(response, status) {
-            const duration = [];
-            const distance = [];
-            if (status !== "OK") {
-              alert("Error was: " + status);
-            } else {
-              var answer = response.rows[0].elements;
-              answer.forEach(element => {
-                distance.push(element.distance.value);
-                duration.push(element.duration.value);
-              });
-            }
+
             axios
               .post("/vendor/save", {
                 name: sn.name,
@@ -779,9 +727,6 @@ export default {
                 bio: sn.bio,
                 tags: sn.tag,
                 city: sn.city,
-                areas: sn.area,
-                duration: duration,
-                distance: distance,
                 lat: sn.lat,
                 lng: sn.long,
                 place_id: sn.place_id,
@@ -806,8 +751,8 @@ export default {
                   text: "An error occured"
                 });
               });
-          }
-        );
+          
+        
       } else {
         sn.loading = false;
         sn.e6 = 1;

@@ -262,8 +262,8 @@
     <div style="position:fixed;width:100%; bottom:49px">
       <v-progress-linear
         color="grey"
-        v-show="orderLoad || !orders.length"
-        :indeterminate="orderLoad || !orders.length"
+        v-show="orderLoad"
+        :indeterminate="orderLoad"
       ></v-progress-linear>
     </div>
     <v-dialog
@@ -347,9 +347,11 @@ export default {
         this.orderLoad = true; 
     if(!sn.orders.length){
         sn.$store.dispatch("setAdminOrderList");
-    }
-      console.log(sn.orders)
         this.orderLoad = false; 
+    }else{
+        this.orderLoad = false; 
+
+    }
   },
   methods: {
     start() {
@@ -360,27 +362,28 @@ export default {
         })
     },
     navb() {
+        this.orderLoad = true; 
         if(!this.orders.length){
-            this.orderLoad = true; 
             this.$store.dispatch("setAdminOrderList").then(()=>{
-                this.orderLoad = false; 
-                });
+            this.orderLoad = false; 
+            });
         }
     },
     clicker(e) {
     console.log(e)
     OrderSound.stop()
         if (!this.orderLoad) {
-    this.orderLoad = true; 
+            this.orderLoad = true; 
     axios.post('/auth_user2', {
         vendor_id: e.vendor.id
     })
     .then(res => {
+        this.orderLoad = false; 
         this.$store.dispatch("setUser", res.data.success.user);
         this.$store.dispatch("setToken", res.data.success.token);
       if (!e.status) {
           this.$store.dispatch("order", {
-          id: e.id,
+              id: e.id,
           action: "read"
         });
       } else {
