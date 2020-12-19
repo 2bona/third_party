@@ -395,7 +395,7 @@
         <v-divider></v-divider>
         <div>
           <v-layout
-            v-if="order.status < 2"
+            v-if="order.status < 3"
             style="position:fixed; bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9"
             row
             wrap

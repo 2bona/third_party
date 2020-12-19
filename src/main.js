@@ -285,7 +285,7 @@ var pusher = new Pusher("d2e70c8ff384657760d1", {
 });
 window.OrderSoundPlaying = false
   window.OrderSound = new Howl({
-    src: 'http://soundbible.com/mp3/Air Plane Ding-SoundBible.com-496729130.mp3',
+    src: 'https://res.cloudinary.com/dnqw7x4bp/video/upload/v1608357177/Air_Plane_Ding-SoundBible.com-496729130.mp3',
     loop: true,
     onplay: function() {
       OrderSoundPlaying = true
