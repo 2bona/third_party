@@ -437,6 +437,11 @@
                     ? "deliver"
                     : "available"
                 }}
+                 <v-scale-transition origin="center center">
+                  <v-icon class="mx-3" v-if="order.status === 2" color=""
+                    >mdi-check-decagram</v-icon
+                  >
+                </v-scale-transition>
               </v-btn>
             </v-flex>
           </v-layout>
