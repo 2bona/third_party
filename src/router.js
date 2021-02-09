@@ -86,6 +86,17 @@ const router = new VueRouter({
           props: true
         },
         {
+          path: "item2/:id",
+          meta: {
+            requiresAuth: true
+          },
+          component: () =>
+            import(
+              /* webpackChunkName: "items" */ "./components/admin/details2.vue"
+            ),
+          props: true
+        },
+        {
           path: "item/:id",
           meta: {
             requiresAuth: true

@@ -53,47 +53,48 @@
       <v-layout width="100%" class=" mx-0" style="overflow-x:hidden; ">
         <v-container class=" px-0 pt-0">
           <v-card
-            class="mx-auto"
+            class="py-6 mx-auto"
             style="position:relative;display:flex;justify-content: center;"
             flat
             tile
             color="transparent"
             max-width="600px"
-            min-height="116px"
+            min-height="196px"
           >
             <v-card
               width="100%"
               height="110px"
               max-width="450px"
-              min-height="100px"
+              min-height="180px"
               tile
               color="transparent"
               flat
               style="position:absolute;padding-top: 19px !important; bottom: 0px; border-radius:0px; overflow-x:scroll;"
-              class=" mb-0 px-2  pt-2 pb-2 mx-auto"
+              class=" mb-0 px-2  pt-7 pb-7 mx-auto"
             >
               <v-list-item class="pa-0">
                 <v-list-item-avatar
                   v-for="(n, i) in order.items"
                   :key="i"
-                  size="70"
+                  size="80"
                   v-ripple
+                  tile
                   @click="dialogItemBtn(n)"
                   class="my-auto elevation-5 mx-2"
                   style="overflow:inherit;"
                 >
-                  <v-img :src="n.image"> </v-img>
+                  <v-img contain :src="n.image"> </v-img>
                   <p
-                    class="caption grey--text font-weight-bold"
+                    class="body-2 grey--text font-weight-bold"
                     style="position:absolute; top: -19px"
                   >
                     {{ n.pivot.qty }}x
                   </p>
                   <p
-                    class="caption grey--text font-weight-bold"
+                    class="body-2 grey--text font-weight-bold"
                     style="position:absolute; bottom:-36px"
                   >
-                    <v-icon color="grey" style="padding-bottom:2px" size="11">
+                    <v-icon color="grey" style="padding-bottom:1px" size="14">
                       mdi-currency-ngn
                     </v-icon>
                     {{ n.pivot.total | price }}
@@ -314,6 +315,38 @@
             ></v-list-item-subtitle
           >
           <v-list-item-subtitle
+            v-if="order.payment_method === 3 && !(order.status === 5) && order.grand_total > (order.pos_amt + order.transfer_amt)"
+            class=" text-wrap title grey--text  font-weight-bold"
+            >Cash  <span v-show="order.grand_total - order.pos_amt - order.transfer_amt > 1">
+               - <v-icon style="padding-bottom:2px" color="grey" size="17"
+                >mdi-currency-ngn</v-icon
+              > {{ order.grand_total - order.pos_amt - order.transfer_amt | price }}</span
+            ></v-list-item-subtitle
+          >
+          <v-list-item-subtitle
+            v-if="order.pos && !(order.status === 5)"
+            class=" text-wrap title grey--text  font-weight-bold"
+            >POS  <span v-show="order.pos_amt > 1">
+               - <v-icon style="padding-bottom:2px" color="grey" size="17"
+                >mdi-currency-ngn</v-icon
+              >  {{ order.pos_amt | price }}</span
+            ></v-list-item-subtitle
+          >
+          <v-list-item-subtitle
+            v-if="order.transfer && !(order.status === 5)"
+            class=" text-wrap title grey--text  font-weight-bold"
+            >Transfer <span v-show="order.transfer_amt > 1">
+               - <v-icon style="padding-bottom:2px" color="grey" size="17"
+                >mdi-currency-ngn</v-icon
+              > {{ order.transfer_amt | price }}</span
+            ></v-list-item-subtitle
+          >
+          <v-list-item-subtitle
+            v-if="order.creditor"
+            class=" text-wrap title grey--text  font-weight-bold"
+            >CREDIT - {{order.creditor}}</v-list-item-subtitle
+          >
+          <v-list-item-subtitle
             v-if="order.paid && !(order.status === 5)"
             class=" text-wrap title green--text  font-weight-bold"
             >PAID</v-list-item-subtitle
@@ -393,11 +426,15 @@
           </v-flex>
         </v-row>
         <v-divider></v-divider>
-        <div>
+        <div style="position: fixed;
+    width: 100%;
+    left: 0;
+    z-index: 99;
+    bottom: 2px;">
           <v-layout
             v-if="order.status < 3"
-            style="position:fixed; bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9"
-            row
+            style=" bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9"
+            
             wrap
             class=" pb-2 px-2"
           >
@@ -406,9 +443,9 @@
                 :loading="loading"
                 block
                 @click="dialog2 = true"
-                class="mt-2 elevation-10"
+                class="mt-2 elevation-10 font-weight-black"
                 rounded=""
-                dark
+                dark large
                 color="orange darken-4"
                 >reject
                 <v-scale-transition origin="center center">
@@ -429,7 +466,7 @@
                 "
                 :class="order.status === 2 ? 'mt-2' : 'mt-2 elevation-10'"
                 rounded=""
-                dark
+                dark large class=" font-weight-black'"
                 color="primary"
               >
                 {{
@@ -517,7 +554,6 @@
               <v-divider></v-divider>
             </div>
           </v-card-text>
-
           <v-layout row wrap style="width:100%" class="px-3 py-3">
             <v-flex xs6 class="px-2">
               <v-btn
@@ -932,9 +968,9 @@ export default {
       } else if (this.order.payment_method === 3) {
         var t = this.order.offline ? "" : "on delivery";
         if (this.order.change_amount > 1) {
-          d = "Paying Cash " + t + ", expecting change of ";
+          d = this.order.offline ? "" : "Paying Cash " + t + ", expecting change of ";
         } else {
-          d = "Paying Cash " + t;
+          d = this.order.offline ? "" : "Paying Cash " + t;
         }
       }
       return d;

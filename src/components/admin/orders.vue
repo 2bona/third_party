@@ -50,7 +50,6 @@
             ></v-text-field>
           </v-card-title>
           <v-data-table
-            dense
             :mobile-breakpoint="30"
             :headers="headers"
             v-model="selected"

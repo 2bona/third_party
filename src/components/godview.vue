@@ -221,7 +221,7 @@ export default {
       search: "",
       headers: [
         { align: "left", text: "Name", value: "name" },
-        { align: "center", text: "Phone", value: "phone" },
+        { align: "center", text: "Phone", value: "user.phone" },
         { align: "center", text: "Wallet", value: "orders_sum" },
         // { text: 'When  ', value: 'created_at' },
         { align: "right", text: "Orders", value: "orders_count" },

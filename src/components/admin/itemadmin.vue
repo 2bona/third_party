@@ -217,7 +217,7 @@
               >
                 <router-link
                   style="text-decoration:none;"
-                  :to="'/item/' + category.id"
+                  :to="preorderLink + category.id"
                 >
                   <v-card
                     flat
@@ -634,6 +634,7 @@ export default {
   },
   data() {
     return {
+      preorderLink: '/item/',
       content: "",
       name: "",
       description: "",
