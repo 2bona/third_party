@@ -35,6 +35,9 @@ import Vuex from "vuex";
 import store from "./store.js";
 import axios from "axios";
 import moment from "moment";
+import VueCountdownTimer from "vuejs-countdown-timer";
+
+Vue.use(VueCountdownTimer);
 const platform = JSON.parse(localStorage.getItem("platform"));
 
 // LocalNotifications.schedule({

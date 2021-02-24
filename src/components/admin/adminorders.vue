@@ -61,6 +61,32 @@
             disable-pagination
             hide-default-footer
           >
+              <template v-slot:item.preorder="{ item, index }">
+       <countdown 
+        v-if="item.preorder_value && item.preorder"
+        v-bind:orderPage="true"
+        v-bind:minDate_="minDate_"
+        v-bind:index="index"
+        v-bind:item="item"
+        @startCallBack="startCallBack"
+        @endCallBack="endCallBack"
+        @checktimer="checktimer"
+        />    
+    <h2 v-else  class="title text-capitalize"
+                :class="
+                  item.status === 1
+                    ? 'blue--text'
+                    : item.status === 2
+                    ? 'green--text'
+                    : item.status === 3
+                    ? 'orange--text'
+                    : item.status === 4
+                    ? 'grey--text text--lighten-1'
+                    : item.status === 5
+                    ? 'red--text'
+                    : ''
+                "> Instant </h2>    
+     </template>
             <template v-slot:item.status="{ item }">
               <span
                 class="overline"
@@ -288,6 +314,7 @@
 import axios from "axios";
 import wrapper from "axios-cache-plugin";
 import { QrcodeStream } from "vue-qrcode-reader";
+import countdown from "./countdown"
 
 let http = wrapper(axios, {
   maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
@@ -297,7 +324,8 @@ let http = wrapper(axios, {
 
 export default {
   components: {
-    QrcodeStream
+    QrcodeStream,
+    countdown
   },
   data() {
     return {
@@ -307,6 +335,7 @@ export default {
       expanded: [],
       dialog2: false,
       selected: [],
+      minDate_: new Date(),
       pageClose: false,
       dialog3: false,
       valid: true,
@@ -320,6 +349,7 @@ export default {
           value: "id"
         },
         { text: "Vendor", value: "vendor.name" },
+        { text: "", value: "preorder" },
         { text: "When  ", value: "created_at" },
         { text: "Status", value: "status" }
       ],
@@ -354,6 +384,29 @@ export default {
     }
   },
   methods: {
+      startCallBack: function(x) {
+      console.log(x);
+      this
+    },
+    endCallBack: function(x) {
+      console.log(x);
+    },
+     checktimer(x, y) {
+      return !x && !y;
+    },
+    start() {
+      const sn = this;
+      sn.pageClose = true;
+      sn.$store
+        .dispatch("vendorOrderPage", {})
+        .then(() => {
+          sn.$store.dispatch("setVendorOrderList", null);
+        })
+        .then(() => {
+          sn.$store.dispatch("orderList");
+          sn.navb();
+        });
+    },
     start() {
       const sn = this;
         this.orderLoad = true; 
