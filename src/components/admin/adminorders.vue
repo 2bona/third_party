@@ -88,8 +88,8 @@
                 "> Instant </h2>    
      </template>
             <template v-slot:item.status="{ item }">
-              <span
-                class="overline"
+              <h2
+                class="title text-capitalize"
                 :class="
                   item.status === 1
                     ? 'blue--text'
@@ -116,11 +116,11 @@
                     ? 'rejected'
                     : 'unread'
                 "
-              ></span>
+              ></h2>
             </template>
-            <template v-slot:item.created_at="{ item }">
-              <span
-                class="overline"
+            <template v-slot:item.vendor.name="{ item }">
+              <h2
+                class="title text-capitalize"
                 :class="
                   item.status === 1
                     ? 'blue--text'
@@ -134,12 +134,31 @@
                     ? 'red--text'
                     : ''
                 "
-                >{{ item.created_at | nowDate }}</span
+                >{{ item.vendor.name }}</h2
+              >
+            </template>
+            <template v-slot:item.created_at="{ item }">
+              <h2
+                class="title text-capitalize"
+                :class="
+                  item.status === 1
+                    ? 'blue--text'
+                    : item.status === 2
+                    ? 'green--text'
+                    : item.status === 3
+                    ? 'orange--text'
+                    : item.status === 4
+                    ? 'grey--text'
+                    : item.status === 5
+                    ? 'red--text'
+                    : ''
+                "
+                >{{ item.created_at | nowDate }}</h2
               >
             </template>
             <template v-slot:item.id="{ item }">
-              <span
-                class="overline d-flex"
+              <h2
+                class="title text-capitalize d-flex"
                 :class="
                   item.status === 1
                     ? 'blue--text'
@@ -159,12 +178,12 @@
                   class=" mr-2"
                   :color="item.status === 3 ? 'green' : 'orange'"
                   >mdi-circle</v-icon
-                >{{ item.id }}</span
+                >{{ item.id }}</h2
               >
             </template>
             <template v-slot:item.tracking_id="{ item }">
-              <span
-                class=" overline"
+              <h2
+                class=" title text-capitalize"
                 :class="
                   item.status === 1
                     ? 'blue--text'
@@ -178,7 +197,7 @@
                     ? 'red--text'
                     : ''
                 "
-                >{{ item.tracking_id }}</span
+                >{{ item.tracking_id }}</h2
               >
             </template>
             <template v-slot:item.payment_method="{ item }">
