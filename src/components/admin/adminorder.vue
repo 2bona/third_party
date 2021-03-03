@@ -39,7 +39,7 @@
       <v-layout row wrap class="px-3">
         <v-flex xs6>
           <p class="overline mb-2  font-weight-bold grey--text text--darken-1">
-            order ID: {{ order.tracking_id }}
+          {{orderErrand ? 'ERRAND': 'ORDER'}} ID: {{ order.tracking_id }}
           </p>
         </v-flex>
         <v-flex xs6>
@@ -50,7 +50,7 @@
           </p>
         </v-flex>
       </v-layout>
-      <v-layout width="100%" class=" mx-0" style="overflow-x:hidden; ">
+      <v-layout v-if="!orderErrand" width="100%" class=" mx-0" style="overflow-x:hidden; ">
         <v-container class=" px-0 pt-0">
           <v-card
             class="py-6 mx-auto"
@@ -105,6 +105,205 @@
           </v-card>
         </v-container>
       </v-layout>
+       <div v-if="orderErrand">
+       <keep-alive>
+          <v-card
+            width="100%"
+            max-width="490px"
+            class="py-3 mx-auto px-2 mb-10 mt-2"
+            flat
+            tile
+            color="transparent"
+          >
+       <keep-alive>
+            <v-timeline align-top dense>
+              <v-timeline-item
+                :color="order.errand.address[0].pivot.status ? 'green' : 'red'"
+                small
+              >
+                <v-row class="pt-1">
+                  <v-col class="grey--text text--darken-2 pa-1">
+                    <strong class="text-capitalize" v-if="order.errand.address[0].lat && !order.errand.address[0].name">
+                      Current location
+                    </strong>
+                    <strong class="text-capitalize" v-if="order.errand.address[0].name">{{
+                      order.errand.address[0].name
+                    }}</strong>
+                    <div class="body-1 mb-0">
+                      {{ order.errand.address[0].address_person_name }}
+                    </div>
+                    <div class="body-1 mb-0">
+                      {{ order.errand.address[0].phone }}
+                    </div>
+                        <strong class="text-capitalize" v-if="order.errand.address[0].pivot.task">{{
+                      order.errand.address[0].pivot.task
+                    }}</strong>
+                  </v-col>
+                  <v-col
+                    style="
+                        display: flex;
+                        align-items: center;
+                    "
+                    class="pa-1"
+                    cols="4"
+                  >
+                    <strong class="grey--text">   
+                      {{ order.errand.address[0].pivot.type }}
+</strong>
+  <v-btn class="mx-1" x-small 
+                    dark
+                    :loading="taskLoading"
+                    @click="markTask(order.errand, 0)"
+                   :color="order.errand.address[0].pivot.status ? 'green' : 'red'"
+                    fab>
+                      <v-icon>
+                       mdi-check
+                      </v-icon>
+                       </v-btn>
+                  </v-col>
+                </v-row>
+              </v-timeline-item>
+            
+              <v-timeline-item
+                v-if="order.errand.address.length == 3"
+                :color="order.errand.address[2].pivot.status ? 'green' : 'red'"
+                small
+              >
+                <v-row class="pt-1">
+                  <v-col class="grey--text text--darken-2 pa-1">
+                    <strong class="text-capitalize" v-if="order.errand.address[2].lat && !order.errand.address[2].name">
+                      Current location
+                    </strong>
+                    <strong class="text-capitalize" v-if="order.errand.address[2].name">{{
+                      order.errand.address[2].name
+                    }}</strong>
+                    <div class="body-1 mb-0">
+                      {{ order.errand.address[2].address_person_name }}
+                    </div>
+                    <div class="body-1 mb-0">
+                      {{ order.errand.address[2].phone }}
+                    </div>
+                          <strong class="text-capitalize" v-if="order.errand.address[2].pivot.task">
+                            {{order.errand.address[2].pivot.task}}</strong>
+                  </v-col>
+                  <v-col
+                  style="
+                  display: flex;
+                  align-items: center;"
+                  class="px-1"
+                  cols="4"
+                  >
+                    <strong class="grey--text">
+                      {{ order.errand.address[2].pivot.type }}
+                    </strong>
+                      <v-btn class="mx-1" x-small 
+                    dark
+                    :loading="taskLoading"
+                    @click="markTask(order.errand, 2)"
+                   :color="order.errand.address[2].pivot.status ? 'green' : 'red'"
+                    fab>
+                      <v-icon>
+                       mdi-check
+                      </v-icon>
+                       </v-btn>
+                  </v-col>
+                </v-row>
+              </v-timeline-item>
+              
+               <v-timeline-item
+              color="grey"
+                small
+                v-else
+                hide-dot
+              >
+                <v-row class="pt-1">
+                  <v-col class="pa-1">
+                    <div class="body-1 grey--text text--darken-2 font-weight-medium mb-2">
+                     <v-btn block @click="order.errand.address.length < 3 ? dialogAddMore = true : gotToErrand()"  outlined>
+                    add  stop-over (<v-icon size="14">mdi-currency-ngn</v-icon>250)
+                     </v-btn>
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-timeline-item>
+              <v-timeline-item
+                :color="order.errand.address[1].pivot.status ? 'green' : 'red'"
+                small
+              >
+                <v-row class="pt-1">
+                  <v-col class="grey--text text--darken-2 pa-1">
+                    <strong class="text-capitalize" v-if="order.errand.address[1].lat && !order.errand.address[1].name">
+                      Current location
+                    </strong>
+                    <strong class="text-capitalize" v-if="order.errand.address[1].name">{{
+                      order.errand.address[1].name
+                    }}</strong>
+                    <div class="body-1 mb-0">
+                      {{ order.errand.address[1].address_person_name }}
+                    </div>
+                    <div class="body-1 mb-2">
+                      {{ order.errand.address[1].phone }}
+                    </div>
+                  </v-col>
+                  <v-col
+                    style="
+            display: flex;
+            align-items: center;
+        "
+                    class="px-1"
+                    cols="4"
+                  >
+                    <strong class="grey--text">
+                        {{ order.errand.address[1].pivot.type }}
+                    </strong>
+                    <v-btn class="mx-1" x-small 
+                    dark
+                    :loading="taskLoading"
+                    @click="markTask(order.errand, 1)"
+                   :color="order.errand.address[1].pivot.status ? 'green' : 'red'"
+                    fab>
+                      <v-icon>
+                       mdi-check
+                      </v-icon>
+                       </v-btn>
+                  </v-col>
+                </v-row>
+              </v-timeline-item>
+              
+              <v-timeline-item v-if="order.status === 5" color="red" small>
+                <v-row class="pt-1">
+                  <v-col class="px-0">
+                    <div class="overline  text-truncate grey--text">
+                      {{ order.vendor.name | vendorname }}
+                    </div>
+                    <strong class="grey--text text--darken-2"
+                      >Errand canceled</strong
+                    >
+                    <p v-if="order.rejected_time" class="caption mb-0">
+                      <v-icon size="12" color="">mdi-clock</v-icon>
+                      {{ order.rejected_time | trackDate }}
+                    </p>
+                    <p
+                      v-if="order.paid"
+                      class="green--text text--lighten-1 mb-0 caption"
+                    >
+                      <v-icon size="17" color="green">mdi-cash</v-icon> Money
+                      refunded
+                    </p>
+                    <p class="orange--text text--lighten-1 caption">
+                      <v-icon size="12" color="orange">mdi-alert-circle</v-icon>
+                      <span class="pl-1" style="position:absolute">
+                        {{ order.reject_reason }}
+                      </span>
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-timeline-item>
+            </v-timeline>
+       </keep-alive>
+          </v-card>
+           </keep-alive>
+        </div>
       <div
         v-if="order.reviews"
         class="elevation-2 my-2"
@@ -158,15 +357,16 @@
           </v-list-item>
         </v-list>
       </div>
+
       <span
-        v-if="order.delivery != null || order.status === 5"
+        v-if="(order.delivery != null || order.status === 5 ) && !orderErrand"
         class="overline grey--text  text--darken-1 font-weight-bold"
       >
         Dispatch Timeline
       </span>
       <v-card-text
         style="margin-left:-30px"
-        v-if="order.delivery != null || order.status === 5"
+        v-if="(order.delivery != null || order.status === 5)  && !orderErrand"
         class="pa-0 my-3"
       >
         <v-timeline align-top dense>
@@ -874,6 +1074,7 @@ export default {
       load2: false,
       loading: false,
       loading2: false,
+      taskLoading: false,
       payBtn: false,
       dialog: false,
       dialogIn: false,
@@ -949,6 +1150,9 @@ export default {
     order() {
       return this.$store.getters.getOrderFull;
     },
+      orderErrand() {
+      return this.order.type == "Errands";
+    },
     paymentMethod() {
       let d = "";
       if (this.order.payment_method === 1) {
@@ -993,6 +1197,36 @@ export default {
     }
   },
   methods: {
+    markTask(x, y){
+      this.taskLoading = true
+         const sn = this;
+      let url = "/errands/change_status";
+      http({
+        url: url,
+        method: "get",
+        params: {
+          id: x.id,
+          address_id: x.address[y].id,
+          status: !x.address[y].pivot.status? 1 : 0,
+        }
+      }).then(()=>{
+        this.taskLoading = false
+            this.$store.dispatch("snack", {
+              color: "green",
+              text: "Task completed successfully"
+            });
+              this.$store.dispatch("order", {
+          id: this.order.id,
+          action: null
+        });
+      }).catch(()=>{
+        this.taskLoading = false
+        this.$store.dispatch("snack", {
+              color: "red",
+              text: "Something went wrong"
+            });
+      })
+    },
     getAgents() {
       const sn = this;
       let url = "/delivery/agents";

@@ -80,9 +80,11 @@
                 v-model="item.status"
                 ></v-switch>
            </template>
-           <template v-slot:item.orders_count="{ item }">{{item.orders_count | price}}
+           <template class="title" v-slot:item.name="{ item }">{{item.name}}
            </template>
-           <template v-slot:item.orders_sum="{ item }">
+           <template class="title" v-slot:item.orders_count="{ item }">{{item.orders_count | price}}
+           </template>
+           <template class="title" v-slot:item.orders_sum="{ item }">
               <v-icon size="12">mdi-currency-ngn</v-icon>{{item.orders_sum | price}}
            </template>
            <template v-slot:item.created_at="{ item }">
@@ -225,7 +227,7 @@ export default {
         { align: "center", text: "Wallet", value: "orders_sum" },
         // { text: 'When  ', value: 'created_at' },
         { align: "right", text: "Orders", value: "orders_count" },
-        { align: "right", text: "Joined", value: "created_at" },
+        // { align: "right", text: "Joined", value: "created_at" },
         { align: "right", text: "", value: "updated_at" }
       ],
       dialog4: false,
