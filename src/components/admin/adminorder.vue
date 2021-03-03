@@ -210,22 +210,6 @@
                 </v-row>
               </v-timeline-item>
               
-               <v-timeline-item
-              color="grey"
-                small
-                v-else
-                hide-dot
-              >
-                <v-row class="pt-1">
-                  <v-col class="pa-1">
-                    <div class="body-1 grey--text text--darken-2 font-weight-medium mb-2">
-                     <v-btn block @click="order.errand.address.length < 3 ? dialogAddMore = true : gotToErrand()"  outlined>
-                    add  stop-over (<v-icon size="14">mdi-currency-ngn</v-icon>250)
-                     </v-btn>
-                    </div>
-                  </v-col>
-                </v-row>
-              </v-timeline-item>
               <v-timeline-item
                 :color="order.errand.address[1].pivot.status ? 'green' : 'red'"
                 small
@@ -655,7 +639,7 @@
                 </v-scale-transition>
               </v-btn>
             </v-flex>
-            <v-flex xs6 class="px-2">
+            <v-flex v-if=" !orderErrand" xs6 class="px-2">
               <v-btn
                 :loading="loading"
                 block
@@ -1208,6 +1192,7 @@ export default {
           id: x.id,
           address_id: x.address[y].id,
           status: !x.address[y].pivot.status? 1 : 0,
+          task: x.address[y].pivot.type
         }
       }).then(()=>{
         this.taskLoading = false
