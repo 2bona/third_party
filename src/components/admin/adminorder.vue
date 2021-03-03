@@ -1194,7 +1194,7 @@ export default {
           status: !x.address[y].pivot.status? 1 : 0,
           task: x.address[y].pivot.type
         }
-      }).then(()=>{
+      }).then(()=>{ 
         this.taskLoading = false
             this.$store.dispatch("snack", {
               color: "green",
