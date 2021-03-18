@@ -36,7 +36,19 @@ import store from "./store.js";
 import axios from "axios";
 import moment from "moment";
 import VueCountdownTimer from "vuejs-countdown-timer";
-
+import Cohere from "cohere-js";
+Cohere.init("sqObFCvhZF8ro19ItzNDBgFU");
+const vendor = store.getters.getVendor;
+if (vendor.id) {
+  Cohere.identify(
+    vendor.id ,// Required: can be any unique ID
+    {
+      displayName: vendor.name, // Optional
+      email: vendor.phone, // Optional
+    }
+  );
+  
+}
 Vue.use(VueCountdownTimer);
 const platform = JSON.parse(localStorage.getItem("platform"));
 
@@ -304,7 +316,7 @@ if (!OrderSoundPlaying) {
   OrderSound.play();
 }
   
-  if (data.status === 0) {
+  if (data.status === 0 && data.status == 2) {
     store.dispatch('addItem', data.order)
   } else{
     store.dispatch('removeItem', data.order)

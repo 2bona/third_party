@@ -426,6 +426,21 @@
         </v-timeline>
       </v-card-text>
       <span
+        v-if="orderErrand"
+        class="overline grey--text  text--darken-1 font-weight-bold"
+      >
+        Vehicle Type
+      </span>
+            <v-list-item v-if="orderErrand" class="my-1" two-line>
+        <v-list-item-content>
+          <v-list-item-title
+            class="body-1 grey--text text--darken-1 text-wrap font-weight-bold"
+            v-if="orderErrand"
+            >{{ order.errand.bike_carrier == 1 ? 'BIke': 'Keke'}}</v-list-item-title
+          >
+        </v-list-item-content></v-list-item>
+      
+      <span
         v-if="order.address"
         class="overline grey--text  text--darken-1 font-weight-bold"
       >
