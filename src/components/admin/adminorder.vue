@@ -436,7 +436,7 @@
           <v-list-item-title
             class="body-1 grey--text text--darken-1 text-wrap font-weight-bold"
             v-if="orderErrand"
-            >{{ order.errand.bike_carrier == 1 ? 'BIke': 'Keke'}}</v-list-item-title
+            >{{ order.errand.bike_carrier == 1 ? 'Bike': 'Keke'}}</v-list-item-title
           >
         </v-list-item-content></v-list-item>
       

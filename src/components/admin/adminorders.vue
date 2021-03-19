@@ -181,6 +181,25 @@
                 >{{ item.id }}</h2
               >
             </template>
+            <template v-slot:item.payment_method="{ item }">
+              <h2
+                class=" title text-capitalize"
+                :class="
+                  item.status === 1
+                    ? 'blue--text'
+                    : item.status === 2
+                    ? 'green--text'
+                    : item.status === 3
+                    ? 'orange--text'
+                    : item.status === 4
+                    ? 'grey--text'
+                    : item.status === 5
+                    ? 'red--text'
+                    : ''
+                "
+                >{{ paymentMethod(item.payment_method) }}</h2
+              >
+            </template>
             <template v-slot:item.tracking_id="{ item }">
               <h2
                 class=" title text-capitalize"
@@ -200,9 +219,9 @@
                 >{{ item.tracking_id }}</h2
               >
             </template>
-            <template v-slot:item.payment_method="{ item }">
-              <v-icon
-                size="16"
+            <template v-slot:item.grand_total="{ item }">
+            <h2
+                class=" title text-capitalize"
                 :class="
                   item.status === 1
                     ? 'blue--text'
@@ -216,81 +235,24 @@
                     ? 'red--text'
                     : ''
                 "
-                v-if="item.payment_method === 6"
-                >mdi-wallet-outline
-              </v-icon>
-              <v-icon
-                size="16"
-                :class="
+                ><v-icon 
+                size="16" 
+                
+                class="pb-1"
+                       :color="
                   item.status === 1
-                    ? 'blue--text'
+                    ? 'blue'
                     : item.status === 2
-                    ? 'green--text'
+                    ? 'green'
                     : item.status === 3
-                    ? 'orange--text'
+                    ? 'orange'
                     : item.status === 4
-                    ? 'grey--text'
+                    ? 'grey'
                     : item.status === 5
-                    ? 'red--text'
+                    ? 'red'
                     : ''
-                "
-                v-if="item.payment_method === 1"
-                >mdi-credit-card-outline
-              </v-icon>
-              <v-icon
-                size="16"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
-                v-if="item.payment_method === 2"
-                >mdi-cellphone-wireless
-              </v-icon>
-              <v-icon
-                size="16"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
-                v-if="item.payment_method === 3"
-                >{{ item.offline ? "mdi-cash" : "mdi-cash-marker" }}
-              </v-icon>
-              <v-icon
-                size="16"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
-                v-if="item.payment_method === 4 || item.payment_method === 5"
-                >mdi-table-chair
-              </v-icon>
+                ">mdi-currency-ngn</v-icon>{{ item.grand_total | price }}</h2
+              >
             </template>
             <template v-slot:expanded-item="{ headers, item }">
               <td :colspan="headers.length">{{ item }}</td>
@@ -370,7 +332,9 @@ export default {
         { text: "Vendor", value: "vendor.name" },
         { text: "", value: "preorder" },
         { text: "When  ", value: "created_at" },
-        { text: "Status", value: "status" }
+        { text: "Status", value: "status" },
+        { text: "Method", value: "payment_method" },
+        { text: "Total", value: "grand_total" }
       ],
       dialog4: false,
       rules: {
@@ -403,6 +367,21 @@ export default {
     }
   },
   methods: {
+       paymentMethod(x) {
+      let d = "";
+      if (x === 1) {
+        d = "App Paid";
+      } else if (x === 2) {
+        d = "Transfer";
+      } else if (x === 4) {
+        d = "Over the counter or use P.O.S";
+      } else if (x === 6) {
+        d = "App Paid";
+      } else if (x === 3) {
+          d = "Cash";
+        }
+      return d;
+    },
       startCallBack: function(x) {
       console.log(x);
       this
