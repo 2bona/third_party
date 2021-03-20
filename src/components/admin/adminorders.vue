@@ -219,6 +219,41 @@
                 >{{ item.tracking_id }}</h2
               >
             </template>
+            <template v-slot:item.mark_up="{ item }">
+            <h2
+                class=" title text-capitalize"
+                :class="
+                  item.status === 1
+                    ? 'blue--text'
+                    : item.status === 2
+                    ? 'green--text'
+                    : item.status === 3
+                    ? 'orange--text'
+                    : item.status === 4
+                    ? 'grey--text'
+                    : item.status === 5
+                    ? 'red--text'
+                    : ''
+                "
+                ><v-icon 
+                size="16" 
+                
+                class="pb-1"
+                       :color="
+                  item.status === 1
+                    ? 'blue'
+                    : item.status === 2
+                    ? 'green'
+                    : item.status === 3
+                    ? 'orange'
+                    : item.status === 4
+                    ? 'grey'
+                    : item.status === 5
+                    ? 'red'
+                    : ''
+                ">mdi-currency-ngn</v-icon>{{ item.mark_up | price }}</h2
+              >
+            </template>
             <template v-slot:item.grand_total="{ item }">
             <h2
                 class=" title text-capitalize"
@@ -334,7 +369,8 @@ export default {
         { text: "When  ", value: "created_at" },
         { text: "Status", value: "status" },
         { text: "Method", value: "payment_method" },
-        { text: "Total", value: "grand_total" }
+        { text: "Total", value: "grand_total" },
+        { text: "Mark Up", value: "mark_up" }
       ],
       dialog4: false,
       rules: {
