@@ -20,6 +20,9 @@ export const vendor = {
     tags: [],
     replys: [] || ["We don't have food anymore"],
     agents: [],
+    end: '',
+    start: '',
+    range: false,
     adminOrderList: [],
     orderList: [],
     vendor: JSON.parse(localStorage.getItem("vendor")) || "",
@@ -35,6 +38,13 @@ export const vendor = {
     platform: JSON.parse(localStorage.getItem("platform"))|| '' 
   },
   actions: {
+     setOrderDate({
+       commit,
+       state,
+       dispatch
+     }, data) {
+           commit("setOrderDate", data)
+     },
      setVendorList({
        commit,
        state,
@@ -131,7 +141,11 @@ export const vendor = {
       }
       http({
           url: url,
-          method: 'get'
+          method: 'get',
+          params: {
+            start: '' ,
+            end: ''
+          }
         })
         .then(function (response) {
           var orderList = response.data.orders;
@@ -370,6 +384,10 @@ loadOptions({
     }
 },
   mutations: {
+    setOrderDate(state, data) {
+      state.start = data.start
+      state.end = data.end
+    },
     setVendorList(state, data) {
       state.vendorList = data
     },

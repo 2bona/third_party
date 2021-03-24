@@ -18,8 +18,22 @@
 
           <v-flex xs6 class="pl-3">
             <h1 class="title text--darken-2  mb-3 grey--text">
-              Orders
+              Orders <br/>
+              <span
+            v-if="dates.length"
+            class="font-weight-bold body-1 text-capitalize"
+            >({{
+              !dates.length
+                ? ""
+                : dates.length > 1
+                ? "" + sorted_dates[0] + " - " + sorted_dates[1]
+                : "on " + sorted_dates[0]
+            }})</span
+          >
             </h1>
+             <v-btn :loading="loadingHist" @click="showCalender()" dark x-large absolute top right icon>
+          <v-icon>mdi-history</v-icon>
+        </v-btn>
           </v-flex>
           <v-flex xs6>
             <v-btn
@@ -90,19 +104,7 @@
             <template v-slot:item.status="{ item }">
               <h2
                 class="title text-capitalize"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+               :class="setColor(item.status)"
                 v-text="
                   item.status === 1
                     ? 'read'
@@ -121,57 +123,21 @@
             <template v-slot:item.vendor.name="{ item }">
               <h2
                 class="title text-capitalize"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+               :class="setColor(item.status)"
                 >{{ item.vendor.name }}</h2
               >
             </template>
             <template v-slot:item.created_at="{ item }">
               <h2
                 class="title text-capitalize"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+               :class="setColor(item.status)"
                 >{{ item.created_at | nowDate }}</h2
               >
             </template>
             <template v-slot:item.id="{ item }">
               <h2
                 class="title text-capitalize d-flex"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+               :class="setColor(item.status)"
                 ><v-icon
                   v-if="item.status === 3 || item.status === 1"
                   size="8"
@@ -184,57 +150,21 @@
             <template v-slot:item.payment_method="{ item }">
               <h2
                 class=" title text-capitalize"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+               :class="setColor(item.status)"
                 >{{ paymentMethod(item.payment_method) }}</h2
               >
             </template>
             <template v-slot:item.tracking_id="{ item }">
               <h2
                 class=" title text-capitalize"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+               :class="setColor(item.status)"
                 >{{ item.tracking_id }}</h2
               >
             </template>
             <template v-slot:item.mark_up="{ item }">
             <h2
                 class=" title text-capitalize"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+               :class="setColor(item.status)"
                 ><v-icon 
                 size="16" 
                 
@@ -257,19 +187,7 @@
             <template v-slot:item.grand_total="{ item }">
             <h2
                 class=" title text-capitalize"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+               :class="setColor(item.status)"
                 ><v-icon 
                 size="16" 
                 
@@ -323,6 +241,58 @@
         ></qrcode-stream>
       </v-card>
     </v-dialog>
+        <v-dialog
+      max-width="450"
+      style="background:white;"
+      background-color="white"
+      persistent
+      class="white pa-"
+      v-model="calender"
+    >
+      <v-row
+        style="    height: 100%;
+    margin: 0!important;
+    background: #b7b7b7;"
+        class="mx-auto py-3  "
+      >
+        <v-expand-transition>
+          <v-col cols="12" class="d-flex" v-show="calender">
+          <keep-alive>
+            <v-date-picker
+              v-model="dates"
+              range
+              class="mx-auto"
+              color="orange darken-3"
+            ></v-date-picker>
+          </keep-alive>
+          </v-col>
+        </v-expand-transition>
+        <v-col cols="12" v-if="calender" class="d-flex">
+          <v-btn
+            @click="calender = false"
+            color="grey lighten-3"
+            small
+            rounded
+            v-if="dates.length < 1 && calender"
+            class="mx-auto "
+            >close</v-btn
+          >
+          <v-btn
+            @click="dialog ? setDateAndCloseCalender() : getValues()"
+            small
+            rounded
+            v-if="dates.length > 0 && calender"
+            class="mx-auto"
+            >Load record <br />
+            {{
+              sorted_dates.length > 1
+                ? "between " + sorted_dates[0] + " & " + sorted_dates[1]
+                : "on " + sorted_dates[0]
+            }}</v-btn
+          >
+        </v-col>
+      </v-row>
+    </v-dialog>
   </div>
 </template>
 <style></style>
@@ -345,6 +315,12 @@ export default {
   },
   data() {
     return {
+      dates: [],
+      minDate2: new Date(),
+      minDate: new Date().toISOString(),
+      dialogLoad: false,
+      dialog: false,
+      calender: false,
       dialog: false,
       orderLoad: false,
       content: "",
@@ -383,6 +359,9 @@ export default {
     orders() {
       return this.$store.getters.getAdminOrderList;
     },
+       sorted_dates() {
+      return this.dates.sort();
+    },
     loading() {
       return this.$store.getters.getVendorLoadStatus;
     },
@@ -403,6 +382,46 @@ export default {
     }
   },
   methods: {
+    getDatedOrders(){
+   this.calender = false;
+      const when_date =
+        this.sorted_dates.length > 0
+          ? this.sorted_dates.length > 1
+            ? "?type=range&from=" +
+              this.sorted_dates[0] +
+              "&to=" +
+              this.sorted_dates[1]
+            : "?type=single&on=" + this.sorted_dates[0]
+          : "?type=single&on=" + this.minDate;
+             axios
+        .get("/vendor/values" + when_date)
+        .then((res) => {
+          
+                })
+        .catch(() => {
+          this.$store.dispatch("snack", {
+            color: "red",
+            text: "An error occured",
+          });
+        });
+    },
+    setColor(x){
+      return  x === 1
+                    ? 'blue--text'
+                    : x === 2
+                    ? 'green--text'
+                    : x === 3
+                    ? 'orange--text'
+                    : x === 4
+                    ? 'grey--text'
+                    : x === 5
+                    ? 'red--text'
+                    : ''
+    },
+        showCalender() {
+      this.dates = []
+      this.calender = true;
+    },
        paymentMethod(x) {
       let d = "";
       if (x === 1) {
