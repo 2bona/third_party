@@ -441,6 +441,20 @@
         </v-list-item-content></v-list-item>
       
       <span
+        class="overline grey--text  text--darken-1 font-weight-bold"
+      >
+        Vendor
+      </span>
+          <v-list-item v-if="order.vendor.name" class="my-1" two-line>
+        <v-list-item-content>
+          <v-list-item-title
+            class="body-1 grey--text text--darken-1 text-wrap font-weight-bold"
+            >{{ order.vendor.name }}</v-list-item-title
+          >
+        </v-list-item-content>
+          </v-list-item>
+        
+      <span
         v-if="order.address"
         class="overline grey--text  text--darken-1 font-weight-bold"
       >

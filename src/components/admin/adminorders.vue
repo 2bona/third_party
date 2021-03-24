@@ -16,9 +16,9 @@
             <v-icon color="grey darken-1">mdi-camera</v-icon>
           </v-btn>
 
-          <v-flex xs6 class="pl-3">
+          <v-flex xs7 class="pl-3">
             <h1 class="title text--darken-2  mb-3 grey--text">
-              Orders <br/>
+              Orders({{orders.length || 0}}) <br/>
               <span
             v-if="dates.length"
             class="font-weight-bold body-1 text-capitalize"
@@ -31,28 +31,27 @@
             }})</span
           >
             </h1>
-             <v-btn :loading="loadingHist" @click="showCalender()" dark x-large absolute top right icon>
-          <v-icon>mdi-history</v-icon>
-        </v-btn>
           </v-flex>
-          <v-flex xs6>
+          <v-flex xs5>
+             <v-btn 
+             class="mx-3"
+             rounded :loading="loadingHist" @click="showCalender()"  x-large  >
+          <v-icon>mdi-history</v-icon>history
+        </v-btn>
             <v-btn
               absolute
               @click="start()"
-              depressed
-              icon
-              right
-              dark
-              style="top:8px"
-              fab
-              small
-              class="mb-2"
-              ><v-icon color="grey">mdi-reload</v-icon></v-btn
+              
+              rounded
+              
+              
+              x-large
+              ><v-icon>mdi-reload</v-icon>reload</v-btn
             >
           </v-flex>
         </v-layout>
 
-        <v-card style="border-radius: 25px" class="pb-8">
+        <v-card style="border-radius: 25px" class="mt-4 pb-8">
           <v-card-title>
             <v-text-field
               v-model="search"
@@ -278,8 +277,8 @@
             >close</v-btn
           >
           <v-btn
-            @click="dialog ? setDateAndCloseCalender() : getValues()"
-            small
+            @click="setDateAndCloseCalender()"
+            
             rounded
             v-if="dates.length > 0 && calender"
             class="mx-auto"
@@ -325,6 +324,7 @@ export default {
       orderLoad: false,
       content: "",
       expanded: [],
+      loadingHist: false,
       dialog2: false,
       selected: [],
       minDate_: new Date(),
@@ -365,6 +365,9 @@ export default {
     loading() {
       return this.$store.getters.getVendorLoadStatus;
     },
+    user() {
+      return this.$store.getters.getUser;
+    },
     replys() {
       return this.$store.getters.getReplys;
     }
@@ -382,28 +385,36 @@ export default {
     }
   },
   methods: {
-    getDatedOrders(){
-   this.calender = false;
-      const when_date =
-        this.sorted_dates.length > 0
-          ? this.sorted_dates.length > 1
-            ? "?type=range&from=" +
-              this.sorted_dates[0] +
-              "&to=" +
-              this.sorted_dates[1]
-            : "?type=single&on=" + this.sorted_dates[0]
-          : "?type=single&on=" + this.minDate;
-             axios
-        .get("/vendor/values" + when_date)
-        .then((res) => {
-          
-                })
-        .catch(() => {
-          this.$store.dispatch("snack", {
-            color: "red",
-            text: "An error occured",
+        setDateAndCloseCalender() {
+      this.calender = false;
+      this.loadOrders();
+    },
+      loadOrders() {
+      const sn = this;
+      sn.loadingHist = true
+        const when_date =
+          this.sorted_dates.length > 1
+              ? "?type=range&from=" +
+                this.sorted_dates[0] +
+                "&to=" +
+                this.sorted_dates[1]
+              : "?type=single&on=" + this.sorted_dates[0]
+          var url = "/order/adminorderlist"+when_date
+    http({
+      url: url,
+        method: 'get'
+      })
+      .then( (response) =>{
+        sn.loadingHist = false
+        this.$store.dispatch("setAdminDatedOrderList", response.data.orders)
+      }).catch((err)=>{
+        sn.loadingHist = false
+        console.log(err)
+          sn.$store.dispatch("snack", {
+            color: "green",
+            text: "An error occured. Error : "+err
           });
-        });
+      })
     },
     setColor(x){
       return  x === 1
@@ -446,19 +457,6 @@ export default {
     },
      checktimer(x, y) {
       return !x && !y;
-    },
-    start() {
-      const sn = this;
-      sn.pageClose = true;
-      sn.$store
-        .dispatch("vendorOrderPage", {})
-        .then(() => {
-          sn.$store.dispatch("setVendorOrderList", null);
-        })
-        .then(() => {
-          sn.$store.dispatch("orderList");
-          sn.navb();
-        });
     },
     start() {
       const sn = this;

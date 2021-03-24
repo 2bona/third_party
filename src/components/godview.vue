@@ -23,11 +23,11 @@
           Admin vendor dashboard ({{users.length}})
         </h1>
         <v-btn absolute right @click="flushCache" color="red">flush cache</v-btn>
-        <v-fade-transition>
+        <v-keep-alive>
 
        
         <v-card
-        v-if="defer(2)"
+        v-if="defer(1)"
           min-height="80vh"
           style="    box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff !important;border-radius: 25px; top: 48px; z-index:2;    margin-bottom: 180px;"
           class="elevation-2 pt-1 pb-8"
@@ -41,6 +41,8 @@
         hide-details
       ></v-text-field>
         </div>
+                  <v-keep-alive>
+
           <v-data-table
             :mobile-breakpoint="30"
             :headers="headers"
@@ -62,7 +64,7 @@
               <v-btn  disabled color="red" @click="wallet(item.user.id)" icon>
               <v-icon>mdi-wallet</v-icon>
               </v-btn> -->
-              <v-btn  color="blue" @click="clearOrders(item.id)" icon>
+              <v-btn v-if="search == '.'"  color="blue" @click="clearOrders(item.id)" icon>
               <v-icon>mdi-cart-off</v-icon>
               </v-btn>
               <v-btn  color="blue" @click="getLastOrder(item.id)" icon>
@@ -94,6 +96,8 @@
               <td :colspan="headers.length">{{ item }}</td>
             </template>
           </v-data-table>
+            
+          </v-keep-alive>
           <div 
             v-if="loading"
           style="
@@ -111,7 +115,7 @@
             
           </div>
         </v-card>
-         </v-fade-transition>
+         </v-keep-alive>
       </v-flex>
     </v-row>
     <!-- <div style="position:fixed;width:100%; bottom:49px">

@@ -45,6 +45,13 @@ export const vendor = {
      }, data) {
            commit("setOrderDate", data)
      },
+     setAdminDatedOrderList({
+       commit,
+       state,
+       dispatch
+     }, data) {
+      commit("setAdminOrderList", data)
+    },
      setVendorList({
        commit,
        state,
@@ -109,7 +116,7 @@ export const vendor = {
       state,
       dispatch
     }, data) {
-    var url = "/order/adminorderlist"
+    var url = "/order/adminorderlist?type=single&on=" + new Date().toISOString()
     http({
         url: url,
         method: 'get'
@@ -389,7 +396,7 @@ loadOptions({
       state.end = data.end
     },
     setVendorList(state, data) {
-      state.vendorList = data
+      state.vendorList = data.map(Object.freeze)
     },
     setVendor(state, data) {
       state.vendor = data
@@ -437,7 +444,8 @@ loadOptions({
       state.items = items
     },
     setAdminOrderList(state, data) {
-      state.adminOrderList = data
+      state.adminOrderList =  data.map(Object.freeze)
+
     },
     setVendorOrderListLoading(state, status) {
       state.vendorLoadStatus = status
