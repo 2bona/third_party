@@ -695,10 +695,7 @@
               <v-btn
                 :loading="loading"
                 block
-                @click="
-                  order.payment_method === 4 || order.payment_method === 5
-                    ? serveBtn()
-                    : getLatestNearestAgentAndAssign()
+                @click=" serveBtn()
                 "
                 :class="order.status === 2 ? 'mt-2' : 'mt-2 elevation-10'"
                 rounded=""
@@ -1388,19 +1385,19 @@ export default {
         t.vendor_id = e.vendor.id
         this.$store.dispatch("setUser", t);
         this.$store.dispatch("setToken", res.data.success.token);
-        this.b(e)
+        this.loadOrder(e)
     }).catch((err)=>{
           sn.$store.dispatch("snack", {
             color: "green",
             text: "Error occured. err - "+err
           });
-        this.b(e)
+        this.loadOrder(e)
     })
               }else{
-        this.b(e)
+        this.loadOrder(e)
               }
     },
-        b(e){
+        loadOrder(e){
         this.$store.dispatch('getOrder', {
              id: e.id,
              action: 'clear' 
@@ -1456,7 +1453,7 @@ export default {
               color: "green",
               text: "Customer has been notified"
             });
-            sn.$router.push("/orders");
+            sn.$router.push("/godorders");
           });
     },
     setDeliveryAgent(x) {
