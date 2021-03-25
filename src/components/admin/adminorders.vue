@@ -16,9 +16,9 @@
             <v-icon color="grey darken-1">mdi-camera</v-icon>
           </v-btn>
 
-          <v-flex xs7 class="pl-3">
+          <v-flex xs6 class="pl-3">
             <h1 class="title text--darken-2  mb-3 grey--text">
-              Orders({{orders.length || 0}}) <br/>
+              Orders ({{orders.length || 0}}) <br/>
               <span
             v-if="dates.length"
             class="font-weight-bold body-1 text-capitalize"
@@ -32,20 +32,15 @@
           >
             </h1>
           </v-flex>
-          <v-flex xs5>
+          <v-flex >
              <v-btn 
-             class="mx-3"
-             rounded :loading="loadingHist" @click="showCalender()"  x-large  >
+             class="mr-3"
+              text :loading="loadingHist" @click="showCalender()"   >
           <v-icon>mdi-history</v-icon>history
         </v-btn>
             <v-btn
-              absolute
               @click="start()"
-              
-              rounded
-              
-              
-              x-large
+               text
               ><v-icon>mdi-reload</v-icon>reload</v-btn
             >
           </v-flex>
