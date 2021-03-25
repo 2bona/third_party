@@ -108,7 +108,9 @@
                   class="my-auto elevation-5 mx-2"
                   style="overflow:inherit;"
                 >
-                  <v-img contain :src="n.image"> </v-img>
+                  <v-img contain
+                  
+                          :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_80,w_80/'+n.image.substring(n.image.lastIndexOf('/') + 1,n.image.lastIndexOf('.'))"> </v-img>
                   <p
                     class="body-2 grey--text font-weight-bold"
                     style="position:absolute; top: -19px"
