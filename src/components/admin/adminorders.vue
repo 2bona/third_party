@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row class="pa-3 mb-12 px-6">
-      <v-flex xs12 class="mb-3 px-0">
+      <v-flex xs12 class="mb-3 pt-2 px-0">
         <v-layout row wrap>
           <v-btn
             class="mb-12"
@@ -338,10 +338,10 @@ export default {
         { text: "Vendor", value: "vendor.name" },
         { text: "", value: "preorder" },
         { text: "When  ", value: "created_at" },
-        { text: "Status", value: "status" },
-        { text: "Method", value: "payment_method" },
+        { text: "stats", value: "status" },
+        { text: "Methd", value: "payment_method" },
         { text: "Total", value: "grand_total" },
-        { text: "Mark Up", value: "mark_up" }
+        { text: "MKU-P", value: "mark_up" }
       ],
       dialog4: false,
       rules: {

@@ -1,29 +1,33 @@
 <template>
   <div>
-    <div class="container mt-0" style="margin-bottom: 100px;">
+    <div class="container mt-0" style="max-width: 565px;margin-bottom: 100px;">
+      <div class="d-flex " style="justify-content: flex-end"> 
+
      <a style="text-decoration:none" 
      :href="'tel:' + order.vendor.phone
      ">
       <v-btn
-        bottom
-        right
-        dark
-        class="mx-2"
-        color="orange darken-3"
+        
+        
+        text
+        class="mr-2"
         style="z-index:10;margin-bottom: 10px;">
-      <span class="font-weight-bold"> Call Vendor {{order.vendor.phone}}</span> 
+      <span class="font-weight-bold"> <v-icon>mdi-phone</v-icon>
+        Vendor {{order.vendor.phone}}</span> 
       </v-btn>
       </a>
 <a style="text-decoration:none" :href="'tel:' + order.user.phone">
         <v-btn
         right
-         dark
+         text class="pr-0"
         color="primary"
         style="z-index:10;margin-bottom: 10px;"
       >
-      <span class="font-weight-bold"> Call User {{order.user.phone}}</span> 
+      <span class="font-weight-bold">  <v-icon>mdi-phone</v-icon> 
+       User {{order.user.phone}}</span> 
       </v-btn>
                                  </a>
+      </div>
       <v-btn
         fixed
         @click="$router.go(-1)"
@@ -464,13 +468,8 @@
         <v-list-item-content>
           <v-list-item-title
             class="body-1 grey--text text--darken-1 text-wrap font-weight-bold"
-            v-if="!(order.payment_method === 4)"
-            >{{ order.address.area.name }}</v-list-item-title
-          >
-          <v-list-item-subtitle
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
-            class="body-2 grey--text text-wrap font-weight-medium"
-            >{{ order.address.name }}</v-list-item-subtitle
+            >{{ order.address.name }}</v-list-item-title
           >
           <v-list-item-subtitle
             class="body-2 grey--text font-weight-medium "
