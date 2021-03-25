@@ -360,6 +360,9 @@ export default {
     loading() {
       return this.$store.getters.getVendorLoadStatus;
     },
+    vendor() {
+      return this.$store.getters.getVendor;
+    },
     user() {
       return this.$store.getters.getUser;
     },
@@ -484,27 +487,38 @@ export default {
     OrderSound.stop()
         if (!this.orderLoad) {
             this.orderLoad = true; 
+            if (this.user.vendor_id !== e.vendor.id) {
+      
     axios.post('/auth_user2', {
         vendor_id: e.vendor.id
     })
     .then(res => {
         this.orderLoad = false; 
-        this.$store.dispatch("setUser", res.data.success.user);
+        var t = res.data.success.user
+        t.vendor_id = e.vendor.id
+        this.$store.dispatch("setUser", t);
         this.$store.dispatch("setToken", res.data.success.token);
-      if (!e.status) {
-          this.$store.dispatch("order", {
-              id: e.id,
-          action: "read"
-        });
-      } else {
+        this.b(e)
+        }).catch((err)=>{
+              this.$store.dispatch("snack", {
+            color: "green",
+            text: "An error occured. Error : "+err
+          });
+              this.b(e)
+        })
+            }else{
+              this.b(e)
+            }
+  
+    }
+    },
+    b(e){
           this.$store.dispatch("order", {
               id: e.id,
           action: null
         });
-      }
+      
     this.orderLoad = false;
-        })
-    }
     }
   }
 };

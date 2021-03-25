@@ -16,6 +16,7 @@ import {
 export const vendor = {
   state: {
     vendorList: [],
+    orderArray: [],
     vendors: [],
     tags: [],
     replys: [] || ["We don't have food anymore"],
@@ -223,12 +224,26 @@ export const vendor = {
       dispatch
     }, data) {
       // commit("setOrder", {})
+      const orderLoaded = state.orderArray.find((el)=>{
+        return  el.id == data.id
+      })
+      if (orderLoaded && data.action !== 'clear') {
+        commit("setOrder", orderLoaded)
+          if(data.action === null || data.action === 'read'){
+            router.push('/adminorder')
+            return
+          }
+      }else{
+        state.orderArray = state.orderArray.filter((el)=>{
+          return  el.id !== data.id
+        })
       let url = "/order/find?id=" + data.id
       axios.get(AXIOS_CONFIG.API_URL + url)
         .then(function (response) {
           var order = response.data.order;
            if (order) {
           commit("setOrder", order)
+          state.orderArray.push(order)
           if(data.action === null || data.action === 'read'){
             router.push('/adminorder')
           } else{
@@ -240,6 +255,7 @@ export const vendor = {
         }).catch(function (error) {
           console.log(error)
         })
+      }
     },
     order({
       commit,

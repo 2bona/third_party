@@ -19,14 +19,22 @@
 <a style="text-decoration:none" :href="'tel:' + order.user.phone">
         <v-btn
         right
-         text class="pr-0"
-        color="primary"
+        color="primary" text
         style="z-index:10;margin-bottom: 10px;"
       >
       <span class="font-weight-bold">  <v-icon>mdi-phone</v-icon> 
        User {{order.user.phone}}</span> 
       </v-btn>
-                                 </a>
+              </a>
+                                     <v-btn
+          class="pr-0"
+
+              @click="$store.dispatch('getOrder', {
+             id: order.id,
+             action: 'clear'  })"
+               text
+              ><v-icon>mdi-reload</v-icon>reload</v-btn
+            >
       </div>
       <v-btn
         fixed
@@ -361,11 +369,11 @@
       >
         <v-timeline align-top dense>
           <v-timeline-item color="blue" v-if="order.delivery != null" small>
-            <span class="overline grey--text  text--darken-1 font-weight-bold">
-              Delivery Agent
+            <span class="body-1 grey--text  text--darken-1 font-weight-bold">
+              Delivered by
             </span>
-            <v-list-item-content class="mt-0 mb-0 pb-0">
-              <p class="body-2 mb-0" v-text="order.delivery.name"></p>
+            <v-list-item-content class="mt-0 mb-0 py-0">
+              <p class="title mb-0" v-text="order.delivery.name"></p>
             </v-list-item-content>
             <v-list-item-content
               v-if="!(order.status === 4)"
@@ -420,7 +428,7 @@
             color="green"
             small
           >
-            <p class=" mb-0">Order has been delivered.</p>
+            <p class="body-2 grey--text mb-0">Order has been delivered.</p>
             <p
               v-if="order.delivered_time"
               class="caption grey--text text--lighten-1 mb-0"
@@ -440,7 +448,7 @@
             <v-list-item v-if="orderErrand" class="my-1" two-line>
         <v-list-item-content>
           <v-list-item-title
-            class="body-1 grey--text text--darken-1 text-wrap font-weight-bold"
+            class="headline grey--text text--darken-1 text-wrap font-weight-bold"
             v-if="orderErrand"
             >{{ order.errand.bike_carrier == 1 ? 'Bike': 'Keke'}}</v-list-item-title
           >
@@ -469,22 +477,22 @@
       <v-list-item v-if="order.address" class="my-1" two-line>
         <v-list-item-content>
           <v-list-item-title
-            class="body-1 grey--text text--darken-1 text-wrap font-weight-bold"
+            class="title  text-wrap"
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.name }}</v-list-item-title
           >
           <v-list-item-subtitle
-            class="body-2 grey--text font-weight-medium "
+            class="body-1 grey--text  "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.name_2 }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
-            class="body-2 grey--text text-wrap font-weight-medium "
+            class="body-1 grey--text text-wrap  "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.company }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
-            class="body-2 grey--text text-wrap font-weight-medium "
+            class="body-1 grey--text text-wrap font-weight-medium "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.instruction }}</v-list-item-subtitle
           >
@@ -519,15 +527,7 @@
       </span>
       <v-list-item class="my-1">
         <v-list-item-content>
-          <v-list-item-subtitle
-            class=" text-wrap body-1 grey--text  font-weight-medium"
-            >{{ paymentMethod }}
-            <span v-show="order.change_amount > 1">
-              <v-icon style="padding-bottom:2px" color="grey" size="12"
-                >mdi-currency-ngn</v-icon
-              >{{ order.change_amount | price }}</span
-            ></v-list-item-subtitle
-          >
+         
           <v-list-item-subtitle
             v-if="order.payment_method === 3 && !(order.status === 5) && order.grand_total > (order.pos_amt + order.transfer_amt)"
             class=" text-wrap title grey--text  font-weight-bold"
@@ -574,6 +574,15 @@
             v-if="order.paid && order.status === 5"
             class=" text-wrap title blue--text  font-weight-bold"
             >REFUNDED</v-list-item-subtitle
+          >
+           <v-list-item-subtitle
+            class=" text-wrap body-1 grey--text  font-weight-medium"
+            >{{ paymentMethod }}
+            <span v-show="order.change_amount > 1">
+              <v-icon style="padding-bottom:2px" color="grey" size="12"
+                >mdi-currency-ngn</v-icon
+              >{{ order.change_amount | price }}</span
+            ></v-list-item-subtitle
           >
         </v-list-item-content>
       </v-list-item>
@@ -703,7 +712,7 @@
       scrollable
       persistent
       v-model="dialogIn"
-      max-width="500px"
+      max-width="420px"
       transition="dialog-transition"
     >
       <v-card color="white" v-if="dialogItem">
@@ -798,7 +807,7 @@
     <v-dialog
       scrollable
       v-model="dialog"
-      max-width="500px"
+      max-width="420px"
       transition="dialog-transition"
     >
       <v-card color="white" v-if="dialogItem">
