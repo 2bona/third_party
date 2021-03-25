@@ -1,24 +1,30 @@
 <template>
   <div>
     <div class="container mt-0" style="max-width: 565px;margin-bottom: 100px;">
-      <div class="d-flex " style="justify-content: flex-end"> 
+      <div class="d-flex " style="justify-content: flex-start"> 
+<div></div>
+<v-layout style="
+    position: relative;
+" justify-space-between row wrap>
 
+
+      <v-flex>
      <a style="text-decoration:none" 
      :href="'tel:' + order.vendor.phone
      ">
       <v-btn
-        
-        
-        text
-        class="mr-2"
+        text color="primary"
+        class="pl-0 mr-2"
         style="z-index:10;margin-bottom: 10px;">
       <span class="font-weight-bold"> <v-icon>mdi-phone</v-icon>
-        Vendor {{order.vendor.phone}}</span> 
+        Vndr {{order.vendor.phone}}</span> 
       </v-btn>
       </a>
+<v-flex>
+
 <a style="text-decoration:none" :href="'tel:' + order.user.phone">
         <v-btn
-        right
+        right class="pa-0"
         color="primary" text
         style="z-index:10;margin-bottom: 10px;"
       >
@@ -26,15 +32,22 @@
        User {{order.user.phone}}</span> 
       </v-btn>
               </a>
-                                     <v-btn
-          class="pr-0"
+</v-flex>
+      </v-flex>
 
+<v-spacer></v-spacer>
+<v-flex>
+
+   <v-btn absolute right
+          class="pr-0"
               @click="$store.dispatch('getOrder', {
              id: order.id,
              action: 'clear'  })"
                text
               ><v-icon>mdi-reload</v-icon>reload</v-btn
             >
+</v-flex>
+              </v-layout>
       </div>
       <v-btn
         fixed
@@ -650,13 +663,14 @@
         </v-row>
         <v-divider></v-divider>
         <div style="position: fixed;
-    width: 100%;
+    width: 100%;background: rgb(245, 245, 245);
     left: 0;
     z-index: 99;
     bottom: 2px;">
           <v-layout
             v-if="order.status < 3"
-            style=" bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9"
+            style="     max-width: 600px;
+    margin: auto;bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9"
             
             wrap
             class=" pb-2 px-2"
