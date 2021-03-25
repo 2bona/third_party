@@ -16,8 +16,8 @@
             <v-icon color="grey darken-1">mdi-camera</v-icon>
           </v-btn>
 
-          <v-flex xs6 class="pl-3">
-            <h1 class="title text--darken-2  mb-3 grey--text">
+          <v-flex xs4 class="pl-3">
+            <h1 class="title text--darken-2 font-weight-bold  mb-3 grey--text">
               Orders ({{orders.length || 0}}) <br/>
               <span
             v-if="dates.length"
@@ -32,13 +32,14 @@
           >
             </h1>
           </v-flex>
-          <v-flex >
+          <v-flex xs8 style="display: flex;
+    justify-content: flex-end;">
              <v-btn 
-             class="mr-3"
               text :loading="loadingHist" @click="showCalender()"   >
           <v-icon>mdi-history</v-icon>history
         </v-btn>
             <v-btn
+            :loading="orderLoad"
               @click="start()"
                text
               ><v-icon>mdi-reload</v-icon>reload</v-btn
@@ -239,7 +240,6 @@
       max-width="450"
       style="background:white;"
       background-color="white"
-      persistent
       class="white pa-"
       v-model="calender"
     >
@@ -265,10 +265,10 @@
           <v-btn
             @click="calender = false"
             color="grey lighten-3"
-            small
+            
             rounded
             v-if="dates.length < 1 && calender"
-            class="mx-auto "
+            class="py-3 mx-auto "
             >close</v-btn
           >
           <v-btn
@@ -276,7 +276,7 @@
             
             rounded
             v-if="dates.length > 0 && calender"
-            class="mx-auto"
+            class="py-6 mx-auto"
             >Load record <br />
             {{
               sorted_dates.length > 1
@@ -386,6 +386,7 @@ export default {
     },
       loadOrders() {
       const sn = this;
+      sn.orderLoad = true
       sn.loadingHist = true
         const when_date =
           this.sorted_dates.length > 1
@@ -400,15 +401,30 @@ export default {
         method: 'get'
       })
       .then( (response) =>{
+        sn.orderLoad = false
         sn.loadingHist = false
         this.$store.dispatch("setAdminDatedOrderList", response.data.orders)
       }).catch((err)=>{
+        sn.orderLoad = false
         sn.loadingHist = false
         console.log(err)
           sn.$store.dispatch("snack", {
             color: "green",
             text: "An error occured. Error : "+err
           });
+      })
+    },
+    reload(){
+        this.dates = []
+      this.orderLoad = true
+          var url = "/order/adminorderlist?type=single&on=" + new Date().toISOString()
+    http({
+      url: url,
+        method: 'get'
+      })
+      .then( (response) => {
+      this.orderLoad = false
+        this.$store.dispatch("setAdminDatedOrderList", response.data.orders)
       })
     },
     setColor(x){
@@ -428,6 +444,7 @@ export default {
       this.dates = []
       this.calender = true;
     },
+
        paymentMethod(x) {
       let d = "";
       if (x === 1) {
@@ -455,17 +472,11 @@ export default {
     },
     start() {
       const sn = this;
-        this.orderLoad = true; 
-        this.$store.dispatch("setAdminOrderList").then(()=>{
-            this.orderLoad = false; 
-        })
+     sn.reload()
     },
     navb() {
-        this.orderLoad = true; 
         if(!this.orders.length){
-            this.$store.dispatch("setAdminOrderList").then(()=>{
-            this.orderLoad = false; 
-            });
+     sn.reload()
         }
     },
     clicker(e) {

@@ -20,7 +20,7 @@
                 src="https://res.cloudinary.com/dnqw7x4bp/image/upload/c_scale,w_80/v1582290476/e_dey_e_only_2.png"
               ></v-img>
             </v-avatar>
-          Admin vendor dashboard ({{users.length}})
+           vendors ({{users.length}})
         </h1>
         <v-btn absolute right @click="flushCache" color="red">flush cache</v-btn>
         <v-keep-alive>
@@ -29,8 +29,8 @@
         <v-card
         v-if="defer(1)"
           min-height="80vh"
-          style="    box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff !important;border-radius: 25px; top: 48px; z-index:2;    margin-bottom: 180px;"
-          class="elevation-2 pt-1 pb-8"
+          style="border-radius: 25px; top: 48px; z-index:2;    margin-bottom: 180px;"
+          class="elevation-6 pt-1 pb-8"
         ><div class="px-5 my-5">
 
               <v-text-field
