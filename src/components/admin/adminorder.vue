@@ -40,9 +40,7 @@
 
    <v-btn absolute right
           class="pr-0"
-              @click="$store.dispatch('getOrder', {
-             id: order.id,
-             action: 'clear'  })"
+              @click="reload(order)"
                text
               ><v-icon>mdi-reload</v-icon>reload</v-btn
             >
@@ -109,7 +107,6 @@
                   style="overflow:inherit;"
                 >
                   <v-img contain
-                  
                           :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_80,w_80/'+n.image.substring(n.image.lastIndexOf('/') + 1,n.image.lastIndexOf('.'))"> </v-img>
                   <p
                     class="body-2 grey--text font-weight-bold"
@@ -1166,6 +1163,9 @@ export default {
         return;
       }
     },
+    user() {
+      return this.$store.getters.getUser;
+    },
     vendor() {
       return this.$store.getters.getVendor;
     },
@@ -1232,7 +1232,7 @@ export default {
       sn.order.status === 1 &&
       !(sn.order.payment_method === 4 || sn.order.payment_method === 5)
     ) {
-      sn.getAgents();
+      // sn.getAgents();
     }
   },
   methods: {
@@ -1375,6 +1375,38 @@ export default {
       this.order.payment_method === 4 || this.order.payment_method === 5
         ? (this.dialogDelivery = true)
         : (this.dialogServe = true);
+    },
+    reload(e) {
+      const sn = this;
+  if (this.user.vendor_id !== e.vendor.id) {
+    axios.post('/auth_user2', {
+        vendor_id: e.vendor.id
+    })
+    .then(res => {
+        this.orderLoad = false; 
+        var t = res.data.success.user
+        t.vendor_id = e.vendor.id
+        this.$store.dispatch("setUser", t);
+        this.$store.dispatch("setToken", res.data.success.token);
+        this.b(e)
+    }).catch((err)=>{
+          sn.$store.dispatch("snack", {
+            color: "green",
+            text: "Error occured. err - "+err
+          });
+        this.b(e)
+    })
+              }else{
+        this.b(e)
+              }
+    },
+        b(e){
+        this.$store.dispatch('getOrder', {
+             id: e.id,
+             action: 'clear' 
+              })
+      
+    this.orderLoad = false;
     },
     dialogItemBtn(n) {
       const sn = this;
