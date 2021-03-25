@@ -147,6 +147,7 @@
                     style="
                         display: flex;
                         align-items: center;
+                            justify-content: flex-end;
                     "
                     class="pa-1"
                     cols="4"
@@ -193,7 +194,7 @@
                   <v-col
                   style="
                   display: flex;
-                  align-items: center;"
+                  align-items: center;    justify-content: flex-end;"
                   class="px-1"
                   cols="4"
                   >
@@ -237,6 +238,7 @@
                     style="
             display: flex;
             align-items: center;
+                justify-content: flex-end;
         "
                     class="px-1"
                     cols="4"
