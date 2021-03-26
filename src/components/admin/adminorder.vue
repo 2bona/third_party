@@ -48,39 +48,39 @@
         </v-flex>
       </v-layout>
       <v-layout v-if="!orderErrand" width="100%" class=" mx-0" style="overflow-x:hidden; ">
-        <v-container class=" px-0 pt-0">
+        <v-container class=" px-0 py-4">
           <v-card
-            class="py-6 mx-auto"
+            class=" mx-auto"
             style="position:relative;display:flex;justify-content: center;"
             flat
             tile
             color="transparent"
             max-width="600px"
-            min-height="196px"
+            min-height="126px"
           >
             <v-card
               width="100%"
-              height="110px"
+              height="150px"
               max-width="450px"
-              min-height="180px"
+              min-height="150px"
               tile
               color="transparent"
               flat
               style="position:absolute;padding-top: 19px !important; bottom: 0px; border-radius:0px; overflow-x:scroll;"
-              class=" mb-0 px-2  pt-7 pb-7 mx-auto"
+              class="d-flex mb-0 px-2  pt-7 pb-0 mx-auto"
             >
               <v-list-item class="pa-0">
                 <v-list-item-avatar
                   v-for="(n, i) in order.items"
                   :key="i"
                   size="80" :ripple="false"
-                  tile
+                  
                   @click="dialogItemBtn(n)"
-                  class="my-auto elevation-0 mx-2"
-                  style="border-radius:25px;overflow:inherit;"
+                  class="my-auto elevation-5 mx-2"
+                  style="border-radius:;overflow:inherit;"
                 >
                   <v-img contain
-                          :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_80,w_80/'+n.image.substring(n.image.lastIndexOf('/') + 1,n.image.lastIndexOf('.'))"> </v-img>
+                          :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_70,w_70/'+n.image.substring(n.image.lastIndexOf('/') + 1,n.image.lastIndexOf('.'))"> </v-img>
                   <p
                     class="body-2 grey--text font-weight-bold"
                     style="position:absolute; top: -19px"
@@ -289,8 +289,8 @@
         </div>
       <div
         v-if="order.reviews"
-        class="elevation-2 my-2"
-        style="max-height:70vh; border-radius:25px; overflow:auto"
+        class="elevation-2 mx-auto my-2"
+        style="max-width:400px;max-height:70vh; border-radius:25px; overflow:auto"
       >
         <v-list class="py-0 my-0" three-line>
           <v-list-item>
@@ -346,7 +346,7 @@
         v-if="(order.delivery != null || order.status === 5 ) && !orderErrand"
     md6 xs12>
       <span
-        class=" grey--text body-1 text--lighten-1  font-weight-bold"
+        class=" grey--text body-2 text--lighten-1  font-weight-bold"
       >
         DISPATCH TIMELINE
       </span>
@@ -431,7 +431,7 @@
       <v-flex v-if="orderErrand" md6 xs12>
       <span
         
-        class="body-1 font-weight-bold grey--text text--lighten-1"
+        class="body-2 font-weight-bold grey--text text--lighten-1"
       >
         VEHICLE TYPE
       </span>
@@ -446,14 +446,14 @@
       </v-flex>
       <v-flex md6 xs12>
       <span
-        class="body-1 font-weight-bold grey--text text--lighten-1"
+        class="body-2 font-weight-bold grey--text text--lighten-1"
       >
         VENDOR
       </span>
           <v-list-item v-if="order.vendor.name" class="my-1" two-line>
         <v-list-item-content>
           <v-list-item-title
-            class="body-1 grey--text text--darken-1 text-wrap font-weight-bold"
+            class="body-1 grey--text text--darken-1 text-wrap"
             >{{ order.vendor.name }}</v-list-item-title
           >
           <v-flex>
@@ -489,14 +489,14 @@
             <v-flex md6 xs12  v-if="order.address">  
       <span
        
-        class="obody-1 font-weight-bold grey--text text--lighten-1"
+        class="body-2 font-weight-bold grey--text text--lighten-1"
       >
         DELIVERY
       </span>
       <v-list-item v-if="order.address" class="my-1" two-line>
         <v-list-item-content>
           <v-list-item-title
-            class="title  text-wrap"
+            class="body-1 grey--trxt text--darken-1  text-wrap"
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.name }}</v-list-item-title
           >
@@ -544,7 +544,7 @@
       </div>
     </v-flex>
        <v-flex md6 xs12>
-      <span class="body-1 font-weight-bold grey--text text--lighten-1">
+      <span class="body-2 font-weight-bold grey--text text--lighten-1">
         PAYMENT
       </span>
       <v-list-item class="my-1">
@@ -609,7 +609,7 @@
         </v-list-item-content>
       </v-list-item></v-flex>  </v-layout>
       <v-card flat color="transparent" tile class="mb-12">
-        <span class="body-1 font-weight-bold grey--text text--lighten-1">
+        <span class="body-2 font-weight-bold grey--text text--lighten-1">
           SUMMARY
         </span>
         <v-row class="px-6 pt-3">
