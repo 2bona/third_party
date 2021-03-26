@@ -266,6 +266,7 @@
             @click="calender = false"
             color="grey lighten-3"
             
+            style="height:51px!important"
             rounded
             v-if="dates.length < 1 && calender"
             class="py-3 mx-auto "
@@ -273,10 +274,10 @@
           >
           <v-btn
             @click="setDateAndCloseCalender()"
-            
+            style="height:51px!important"
             rounded
             v-if="dates.length > 0 && calender"
-            class="py-6 mx-auto"
+            class="mx-auto"
             >Load record <br />
             {{
               sorted_dates.length > 1
