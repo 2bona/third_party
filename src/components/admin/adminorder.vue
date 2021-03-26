@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="container mt-0" style="max-width: 565px;margin-bottom: 100px;">
+  <div class="grey lighten-5" style="width:100%; height: 100%">
+    <div class="grey lighten-5 container mt-0" style="max-width: 565px;margin-bottom: 100px;">
       <div class="d-flex " style="justify-content: flex-start"> 
 <div></div>
 <v-layout style="

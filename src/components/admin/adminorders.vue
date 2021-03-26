@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="grey lighten-4" style="width:100%; height: 100%; min-height:100vh">
     <v-row class="pa-3 mb-12 px-6">
       <v-flex xs12 class="mb-3 pt-2 px-0">
         <v-layout row wrap>
@@ -47,7 +47,7 @@
           </v-flex>
         </v-layout>
 
-        <v-card style="border-radius: 25px" class="mt-4 pb-8">
+        <v-card style="border-radius: 25px" class="mt-4 grey lighten-4 pb-8">
           <v-card-title>
             <v-text-field
               v-model="search"
@@ -59,7 +59,7 @@
             ></v-text-field>
           </v-card-title>
           <v-data-table
-            
+            class="grey lighten-4"
             :mobile-breakpoint="30"
             :headers="headers"
             v-model="selected"
