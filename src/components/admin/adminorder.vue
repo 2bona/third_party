@@ -115,6 +115,15 @@
        <keep-alive>
             <v-timeline align-top dense>
               <v-timeline-item
+                small
+              >
+            <p
+            class="title mb-0 grey--text text--darken-1 text-wrap"
+            v-if="orderErrand"
+            >{{ order.errand.bike_carrier == 1 ? 'Bike': 'Keke'}}
+          </p>
+              </v-timeline-item>
+              <v-timeline-item
                 :color="order.errand.address[0].pivot.status ? 'green' : 'red'"
                 small
               >
@@ -611,22 +620,7 @@
         </div>
       </v-card>
   </v-flex>
-           <v-flex v-if="orderErrand" md6 xs12>
-      <span
-        
-        class="body-2 font-weight-bold grey--text text--lighten-1"
-      >
-        VEHICLE TYPE
-      </span>
-            <v-list-item v-if="orderErrand" class="my-1" two-line>
-        <v-list-item-content>
-          <v-list-item-title
-            class="title grey--text text--darken-1 text-wrap"
-            v-if="orderErrand"
-            >{{ order.errand.bike_carrier == 1 ? 'Bike': 'Keke'}}</v-list-item-title
-          >
-        </v-list-item-content></v-list-item>
-      </v-flex>
+
     <v-flex v-if="order.table_no" md6 xs12>
       <div >
         <span class="overline grey--text  text--darken-3 font-weight-bold">
