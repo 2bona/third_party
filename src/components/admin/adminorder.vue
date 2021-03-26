@@ -895,7 +895,7 @@
         </div>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialog2" width="500">
+    <v-dialog v-model="dialog2" width="400">
       <v-card>
         <v-card-title class="body-1 grey lighten-2" primary-title>
           Reason for cancellation
@@ -912,16 +912,17 @@
 
         <v-card-text>
           <v-form ref="form">
-            <v-text-field
+            <v-combobox
+            :items="replys"
               v-if="replys.length"
-              :value="replys[slide].content"
               v-model="reason"
               color="orange darken-4"
               :rules="[rules.required]"
+              validate-on-blur
             >
-            </v-text-field>
+            </v-combobox>
           </v-form>
-
+<!-- 
           <v-slider
             color="grey"
             v-if="replys.length"
@@ -931,7 +932,7 @@
             v-model="slide"
             thumb-label
             :max="slider"
-          ></v-slider>
+          ></v-slider> -->
         </v-card-text>
 
         <v-divider></v-divider>
@@ -1098,6 +1099,9 @@
   padding: 0px 0px !important;
   width: 90%;
 }
+.v-menu__content--fixed {
+    max-width: 328px;
+}
 </style>
 
 <script>
@@ -1140,15 +1144,17 @@ export default {
       }
     };
   },
-  watch:{
-    slide:{
-    handler: function (x, y) {this.reason = this.replys[x].content},
-    immediate: true
-    }
-  },
   computed: {
     replys() {
-      return this.$store.getters.getReplys;
+      var t = this.$store.getters.getReplys;
+      const b = []
+      t.forEach((el)=>{
+        b.push({
+          text: el.content,
+          value: el.content,
+        })
+      })
+      return b
     },
     disableDelivery() {
       const sn = this;
@@ -1242,7 +1248,9 @@ export default {
       sn.dialogIn = true;
       sn.setItem(n);
     }
-
+if (!this.replys.length) {
+  this.getReplys()
+}
     if (
       sn.order.status === 1 &&
       !(sn.order.payment_method === 4 || sn.order.payment_method === 5)
@@ -1559,7 +1567,23 @@ export default {
     },
     rejectBtn() {
       this.dialog2 = true;
-    }
+    },
+        getReplys() {
+      const sn = this;
+      let url = "/reply/all2";
+      http({
+        url: url,
+        method: "get"
+      })
+        .then(response => {
+          sn.$store.dispatch("setReplys", {
+            replys: response.data.replys
+          });
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
   }
 };
 </script>

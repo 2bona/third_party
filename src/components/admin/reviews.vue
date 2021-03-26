@@ -660,7 +660,7 @@ export default {
     navb() {
       const sn = this;
       sn.load = true;
-      let url = "/reply/all";
+      let url = "/reply/all2";
       http({
         url: url,
         method: "get"
