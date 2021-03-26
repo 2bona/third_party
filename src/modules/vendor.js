@@ -298,7 +298,7 @@ export const vendor = {
            console.log('....... response.......')
            dispatch("getOrder", {
              id: data.id,
-             action: data.action
+             action: 'clear'
            })
          }).catch((error)=>{
            console.log(error)
