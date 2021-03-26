@@ -77,8 +77,8 @@
                    style="display: inline-flex;"
                 color="grey lighten-2"
                 @change="setStatus(item.user.phone, item.id, item.status)"
-                :loading="statusLoad"
-                :disabled="statusLoad"
+                :loading="statusLoad && item.id == loadingVend"
+                :disabled="statusLoad && item.id == loadingVend"
                 v-model="item.status"
                 ></v-switch>
            </template>
@@ -210,6 +210,7 @@ export default {
       dialog: false,
       orderLoad: false,
       statusLoad: false,
+      loadingVend: null,
       content: "",
       expanded: [],
       loadingNow: false,
@@ -265,18 +266,21 @@ export default {
     scrollTop() {
       window.scrollTo(0, 0);
     },
-        setStatus2(x) {
+        setStatus2(x, y) {
       const sn = this;
+      sn.loadingVend = y
       sn.statusLoad = true;
-      const url = "/vendor/changeStatus";
+      const url = "/vendor/changeStatus2";
      axios.post(url, {
-          status: x? 1 : 0
+          status: x? 1 : 0,
+          vendor_id: y
         })
         .then(() => {
+          var t = x ? 'turned on': 'turned off'
           sn.statusLoad = false;
           sn.$store.dispatch("snack", {
             color: "green",
-            text: "Vendor Status has been Updated"
+            text: "Vendor has been "+ t
           });
         })
         .catch(err => {
@@ -317,30 +321,7 @@ export default {
     },
     setStatus(a, x, y){
       this.statusLoad = true
-      if (this.x === this.vendor.id) {
-        this.setStatus2(y)
-        return
-      }
-      // this.delDialog = true
-        axios.post('/auth_user', {
-          phone: a
-        })
-        .then(res => {
-            this.$store.dispatch("setUser", res.data.success.user);
-            this.$store.dispatch("setToken", res.data.success.token);
-           
-            this.$store.dispatch("snack", {
-                color: "green",
-              text: "logged in as vendor"
-            });
-            this.setStatus2(y)
-        })
-        .catch(()=>{
-        this.delDialog = false
-            this.loadingNow = false
-            this.delLoader = false
-            alert('couldnt login as vendor before setting their status')
-        })
+        this.setStatus2(y, x)
     },
     auth(x){
       this.loadingNow = true

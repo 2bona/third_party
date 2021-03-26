@@ -412,7 +412,7 @@ loadOptions({
       state.end = data.end
     },
     setVendorList(state, data) {
-      state.vendorList = data.map(Object.freeze)
+      state.vendorList = data
     },
     setVendor(state, data) {
       state.vendor = data
