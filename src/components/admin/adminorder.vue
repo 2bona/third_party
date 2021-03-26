@@ -340,110 +340,10 @@
           </v-list-item>
         </v-list>
       </div>
-        <v-layout wrap>
-   <v-flex
+      
+        <v-layout class="mb-12" wrap>
+
    
-        v-if="(order.delivery != null || order.status === 5 ) && !orderErrand"
-    md6 xs12>
-      <span
-        class=" grey--text body-2 text--lighten-1  font-weight-bold"
-      >
-        DISPATCH TIMELINE
-      </span>
-      <v-card-text
-        style="margin-left:-30px"
-        v-if="(order.delivery != null || order.status === 5)  && !orderErrand"
-        class="pa-0 my-3"
-      >
-        <v-timeline align-top dense>
-          <v-timeline-item color="blue" v-if="order.delivery != null" small>
-            <span class="caption grey--text  text--darken-1 font-weight-medium">
-              Delivered by
-            </span>
-            <v-list-item-content class="mt-0 mb-0 py-0">
-              <p class="body-1 mb-0" v-text="order.delivery.name"></p>
-            </v-list-item-content>
-            <v-list-item-content
-              v-if="!(order.status === 4)"
-              class="text-right"
-              style="display: inline;"
-            >
-              <a
-                style="text-decoration:none"
-                :href="'tel:' + order.delivery.phone"
-              >
-                <v-btn fab dark icon x-small color="primary"
-                  ><v-icon>mdi-phone</v-icon>
-                </v-btn></a
-              >
-              <a
-                style="text-decoration:none"
-                :href="
-                  'https://wa.me/+234' +
-                    order.delivery.phone.substring(1) +
-                    '?text=Hello,%20this%20is%20' +
-                    vendor.name +
-                    '%20,%20I%20just%20want%20to%20confirm%20your%20Request%20for%20a%20food%20delivery.'
-                "
-                target="_blank"
-              >
-                <v-btn fab dark icon x-small color="green">
-                  <v-icon>mdi-whatsapp</v-icon>
-                </v-btn>
-              </a>
-              <!-- <v-btn fab dark depressed color="white" x-small>
-                <v-icon color="primary">mdi-map-marker</v-icon>
-              </v-btn> -->
-            </v-list-item-content>
-            <p
-              v-if="order.transit_time"
-              class="caption grey--text text--lighten-1 mb-0"
-            >
-              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
-              {{ order.transit_time | trackDate }}
-            </p>
-          </v-timeline-item>
-          <v-timeline-item v-if="order.status === 5" color="red" small>
-            <p class=" mb-0 ">Order has been rejected.</p>
-            <p class="caption grey--text  mb-0">{{ order.reject_reason }}</p>
-            <p class="caption grey--text text--lighten-1 mb-0">
-              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
-              {{ order.rejected_time | trackDate }}
-            </p>
-          </v-timeline-item>
-          <v-timeline-item
-            v-if="order.delivery != null && order.status === 4"
-            color="green"
-            small
-          >
-            <p class="body-2 grey--text mb-0">Order has been delivered.</p>
-            <p
-              v-if="order.delivered_time"
-              class="caption grey--text text--lighten-1 mb-0"
-            >
-              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
-              {{ order.delivered_time | trackDate }}
-            </p>
-          </v-timeline-item>
-        </v-timeline>
-      </v-card-text>
-   </v-flex>
-      <v-flex v-if="orderErrand" md6 xs12>
-      <span
-        
-        class="body-2 font-weight-bold grey--text text--lighten-1"
-      >
-        VEHICLE TYPE
-      </span>
-            <v-list-item v-if="orderErrand" class="my-1" two-line>
-        <v-list-item-content>
-          <v-list-item-title
-            class="title grey--text text--darken-1 text-wrap"
-            v-if="orderErrand"
-            >{{ order.errand.bike_carrier == 1 ? 'Bike': 'Keke'}}</v-list-item-title
-          >
-        </v-list-item-content></v-list-item>
-      </v-flex>
       <v-flex md6 xs12>
       <span
         class="body-2 font-weight-bold grey--text text--lighten-1"
@@ -486,15 +386,14 @@
         </v-list-item-content>
           </v-list-item>
           </v-flex>  
-            <v-flex md6 xs12  v-if="order.address">  
+            <v-flex md6 xs12>  
       <span
-       
         class="body-2 font-weight-bold grey--text text--lighten-1"
       >
-        DELIVERY
+        DELIVERY & PAYMENT
       </span>
       <v-list-item v-if="order.address" class="my-1" two-line>
-        <v-list-item-content>
+        <v-list-item-content class="mt-0 py-0">
           <v-list-item-title
             class="body-1 grey--trxt text--darken-1  text-wrap"
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
@@ -521,34 +420,16 @@
             >ETA - {{ order.duration | duration }}</v-list-item-subtitle
           >
                <v-list-item-subtitle
-            v-show="order.discount"
+            v-if="order.discount"
             class="title orange--text text--darken-3 font-weight-bold"
             ><v-icon color="orange darken-4" style="padding-bottom:3px">mdi-sale</v-icon> Discount Rate</v-list-item-subtitle
           >
         </v-list-item-content>
-      </v-list-item>           </v-flex>
-    <v-flex v-if="order.table_no" md6 xs12>
-      <div >
-        <span class="overline grey--text  text--darken-3 font-weight-bold">
-          Table No
-        </span>
-        <v-list-item class="my-1" dense>
-          <v-list-item-content>
-            <p
-              class="text-wrap display-1 font-weight-bold font-weight-medium my-0 pt-0"
-            >
-              {{ order.table_no }}
-            </p>
-          </v-list-item-content>
-        </v-list-item>
-      </div>
-    </v-flex>
-       <v-flex md6 xs12>
-      <span class="body-2 font-weight-bold grey--text text--lighten-1">
-        PAYMENT
-      </span>
-      <v-list-item class="my-1">
-        <v-list-item-content>
+      </v-list-item>   
+      
+      
+       <v-list-item class="py-0">
+        <v-list-item-content class="mb-3 -0 py-0">
          
           <v-list-item-subtitle
             v-if="order.payment_method === 3 && !(order.status === 5) && order.grand_total > (order.pos_amt + order.transfer_amt)"
@@ -598,7 +479,7 @@
             >REFUNDED</v-list-item-subtitle
           >
            <v-list-item-subtitle
-            class=" text-wrap body-2 grey--text"
+            class=" text-wrap body-2 "
             >{{ paymentMethod }}
             <span v-show="order.change_amount > 1">
               <v-icon style="padding-bottom:2px" color="grey" size="12"
@@ -607,8 +488,10 @@
             ></v-list-item-subtitle
           >
         </v-list-item-content>
-      </v-list-item></v-flex>  </v-layout>
-      <v-card flat color="transparent" tile class="mb-12">
+      </v-list-item>
+              </v-flex>
+  <v-flex xs12>
+           <v-card flat color="transparent" class="mb-4" tile >
         <span class="body-2 font-weight-bold grey--text text--lighten-1">
           SUMMARY
         </span>
@@ -727,6 +610,128 @@
           </v-layout>
         </div>
       </v-card>
+  </v-flex>
+           <v-flex v-if="orderErrand" md6 xs12>
+      <span
+        
+        class="body-2 font-weight-bold grey--text text--lighten-1"
+      >
+        VEHICLE TYPE
+      </span>
+            <v-list-item v-if="orderErrand" class="my-1" two-line>
+        <v-list-item-content>
+          <v-list-item-title
+            class="title grey--text text--darken-1 text-wrap"
+            v-if="orderErrand"
+            >{{ order.errand.bike_carrier == 1 ? 'Bike': 'Keke'}}</v-list-item-title
+          >
+        </v-list-item-content></v-list-item>
+      </v-flex>
+    <v-flex v-if="order.table_no" md6 xs12>
+      <div >
+        <span class="overline grey--text  text--darken-3 font-weight-bold">
+          Table No
+        </span>
+        <v-list-item class="my-1" dense>
+          <v-list-item-content>
+            <p
+              class="text-wrap display-1 font-weight-bold font-weight-medium my-0 pt-0"
+            >
+              {{ order.table_no }}
+            </p>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
+    </v-flex>
+      
+         <v-flex
+   
+        v-if="(order.delivery != null || order.status === 5 ) && !orderErrand"
+    md6 xs12>
+      <span
+        class=" grey--text body-2 text--lighten-1  font-weight-bold"
+      >
+        DISPATCH TIMELINE
+      </span>
+      <v-card-text
+        style="margin-left:-30px"
+        v-if="(order.delivery != null || order.status === 5)  && !orderErrand"
+        class="pa-0 my-3"
+      >
+        <v-timeline align-top dense>
+          <v-timeline-item color="blue" v-if="order.delivery != null" small>
+            <span class="caption grey--text  text--darken-1 font-weight-medium">
+              Delivered by
+            </span>
+            <v-list-item-content class="mt-0 mb-0 py-0">
+              <p class="body-1 mb-0" v-text="order.delivery.name"></p>
+            </v-list-item-content>
+            <v-list-item-content
+              v-if="!(order.status === 4)"
+              class="text-right"
+              style="display: inline;"
+            >
+              <a
+                style="text-decoration:none"
+                :href="'tel:' + order.delivery.phone"
+              >
+                <v-btn fab dark icon x-small color="primary"
+                  ><v-icon>mdi-phone</v-icon>
+                </v-btn></a
+              >
+              <a
+                style="text-decoration:none"
+                :href="
+                  'https://wa.me/+234' +
+                    order.delivery.phone.substring(1) +
+                    '?text=Hello,%20this%20is%20' +
+                    vendor.name +
+                    '%20,%20I%20just%20want%20to%20confirm%20your%20Request%20for%20a%20food%20delivery.'
+                "
+                target="_blank"
+              >
+                <v-btn fab dark icon x-small color="green">
+                  <v-icon>mdi-whatsapp</v-icon>
+                </v-btn>
+              </a>
+              <!-- <v-btn fab dark depressed color="white" x-small>
+                <v-icon color="primary">mdi-map-marker</v-icon>
+              </v-btn> -->
+            </v-list-item-content>
+            <p
+              v-if="order.transit_time"
+              class="caption grey--text text--lighten-1 mb-0"
+            >
+              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
+              {{ order.transit_time | trackDate }}
+            </p>
+          </v-timeline-item>
+          <v-timeline-item v-if="order.status === 5" color="red" small>
+            <p class=" mb-0 ">Order has been rejected.</p>
+            <p class="caption grey--text  mb-0">{{ order.reject_reason }}</p>
+            <p class="caption grey--text text--lighten-1 mb-0">
+              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
+              {{ order.rejected_time | trackDate }}
+            </p>
+          </v-timeline-item>
+          <v-timeline-item
+            v-if="order.delivery != null && order.status === 4"
+            color="green"
+            small
+          >
+            <p class="body-2 grey--text mb-0">Order has been delivered.</p>
+            <p
+              v-if="order.delivered_time"
+              class="caption grey--text text--lighten-1 mb-0"
+            >
+              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
+              {{ order.delivered_time | trackDate }}
+            </p>
+          </v-timeline-item>
+        </v-timeline>
+      </v-card-text>
+   </v-flex> </v-layout>
+   
     </div>
     <v-dialog
       scrollable
