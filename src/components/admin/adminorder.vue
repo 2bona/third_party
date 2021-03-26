@@ -5,47 +5,20 @@
 <div></div>
 <v-layout style="
     position: relative;
-" justify-space-between row wrap>
+" justify-space-between  wrap>
 
 
-      <v-flex>
-     <a style="text-decoration:none" 
-     :href="'tel:' + order.vendor.phone
-     ">
-      <v-btn
-        text color="primary"
-        class="pl-0 mr-2"
-        style="z-index:10;margin-bottom: 10px;">
-      <span class="font-weight-bold"> <v-icon>mdi-phone</v-icon>
-        Vndr {{order.vendor.phone}}</span> 
-      </v-btn>
-      </a>
-<v-flex>
-
-<a style="text-decoration:none" :href="'tel:' + order.user.phone">
-        <v-btn
-        right class="pa-0"
-        color="primary" text
-        style="z-index:10;margin-bottom: 10px;"
-      >
-      <span class="font-weight-bold">  <v-icon>mdi-phone</v-icon> 
-       User {{order.user.phone}}</span> 
-      </v-btn>
-              </a>
-</v-flex>
-      </v-flex>
+      
 
 <v-spacer></v-spacer>
-<v-flex>
 
-   <v-btn absolute right
-          class="pr-0"
+   <v-btn fixed right color="grey darken-1"
+          class="elevation-24 pr-0 mb-2"
               @click="reload(order)"
-               text 
+               fab dark small
                :loading="orderLoad"
-              ><v-icon>mdi-reload</v-icon>reload</v-btn
+              ><v-icon>mdi-reload</v-icon></v-btn
             >
-</v-flex>
               </v-layout>
       </div>
       <v-btn
@@ -60,15 +33,15 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
-      <v-layout row wrap class="px-3">
+      <v-layout row wrap class="mt-12 px-3">
         <v-flex xs6>
-          <p class="overline mb-2  font-weight-bold grey--text text--darken-1">
+          <p class=" mb-2 body-1 font-weight-bold grey--text text--lighten-1">
           {{orderErrand ? 'ERRAND': 'ORDER'}} ID: {{ order.tracking_id }}
           </p>
         </v-flex>
         <v-flex xs6>
           <p
-            class="overline mb-2 text-right font-weight-bold grey--text text--darken-1"
+            class="body-1 mb-2 text-right font-weight-bold grey--text text--lighten-1"
           >
             {{ order.created_at | myDate }}
           </p>
@@ -100,12 +73,11 @@
                 <v-list-item-avatar
                   v-for="(n, i) in order.items"
                   :key="i"
-                  size="80"
-                  v-ripple
+                  size="80" :ripple="false"
                   tile
                   @click="dialogItemBtn(n)"
-                  class="my-auto elevation-5 mx-2"
-                  style="overflow:inherit;"
+                  class="my-auto elevation-0 mx-2"
+                  style="border-radius:25px;overflow:inherit;"
                 >
                   <v-img contain
                           :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_80,w_80/'+n.image.substring(n.image.lastIndexOf('/') + 1,n.image.lastIndexOf('.'))"> </v-img>
@@ -368,12 +340,15 @@
           </v-list-item>
         </v-list>
       </div>
-
-      <span
+        <v-layout wrap>
+   <v-flex
+   
         v-if="(order.delivery != null || order.status === 5 ) && !orderErrand"
-        class="overline grey--text  text--darken-1 font-weight-bold"
+    md6 xs12>
+      <span
+        class=" grey--text body-1 text--lighten-1  font-weight-bold"
       >
-        Dispatch Timeline
+        DISPATCH TIMELINE
       </span>
       <v-card-text
         style="margin-left:-30px"
@@ -452,11 +427,13 @@
           </v-timeline-item>
         </v-timeline>
       </v-card-text>
+   </v-flex>
+      <v-flex v-if="orderErrand" md6 xs12>
       <span
-        v-if="orderErrand"
-        class="overline grey--text  text--darken-1 font-weight-bold"
+        
+        class="body-1 font-weight-bold grey--text text--lighten-1"
       >
-        Vehicle Type
+        VEHICLE TYPE
       </span>
             <v-list-item v-if="orderErrand" class="my-1" two-line>
         <v-list-item-content>
@@ -466,11 +443,12 @@
             >{{ order.errand.bike_carrier == 1 ? 'Bike': 'Keke'}}</v-list-item-title
           >
         </v-list-item-content></v-list-item>
-      
+      </v-flex>
+      <v-flex md6 xs12>
       <span
-        class="overline grey--text  text--darken-1 font-weight-bold"
+        class="body-1 font-weight-bold grey--text text--lighten-1"
       >
-        Vendor
+        VENDOR
       </span>
           <v-list-item v-if="order.vendor.name" class="my-1" two-line>
         <v-list-item-content>
@@ -478,14 +456,42 @@
             class="body-1 grey--text text--darken-1 text-wrap font-weight-bold"
             >{{ order.vendor.name }}</v-list-item-title
           >
+          <v-flex>
+     <a style="text-decoration:none" 
+     :href="'tel:' + order.vendor.phone
+     ">
+      <v-btn small class="my-1"
+         color="primary"
+        depressed rounded     
+           style="z-index:10;">
+      <span class="font-weight-bold"> <v-icon>mdi-phone</v-icon>
+        Vndr {{order.vendor.phone}}</span> 
+      </v-btn>
+      </a>
+<v-flex>
+
+<a style="text-decoration:none" :href="'tel:' + order.user.phone">
+        <v-btn
+        small
+        right 
+  class="my-1"       color="primary" depressed rounded
+        style="z-index:10;"
+      >
+      <span class="font-weight-bold">  <v-icon>mdi-phone</v-icon> 
+       User {{order.user.phone}}</span> 
+      </v-btn>
+              </a>
+</v-flex>
+      </v-flex>
         </v-list-item-content>
           </v-list-item>
-        
+          </v-flex>  
+            <v-flex md6 xs12  v-if="order.address">  
       <span
-        v-if="order.address"
-        class="overline grey--text  text--darken-1 font-weight-bold"
+       
+        class="obody-1 font-weight-bold grey--text text--lighten-1"
       >
-        delivery
+        DELIVERY
       </span>
       <v-list-item v-if="order.address" class="my-1" two-line>
         <v-list-item-content>
@@ -511,7 +517,7 @@
           >
           <v-list-item-subtitle
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
-            class="title text--darken-2 grey--text  font-weight-bold"
+            class="title text--darken-2 red--text  font-weight-bold"
             >ETA - {{ order.duration | duration }}</v-list-item-subtitle
           >
                <v-list-item-subtitle
@@ -520,8 +526,9 @@
             ><v-icon color="orange darken-4" style="padding-bottom:3px">mdi-sale</v-icon> Discount Rate</v-list-item-subtitle
           >
         </v-list-item-content>
-      </v-list-item>
-      <div v-if="order.table_no">
+      </v-list-item>           </v-flex>
+    <v-flex v-if="order.table_no" md6 xs12>
+      <div >
         <span class="overline grey--text  text--darken-3 font-weight-bold">
           Table No
         </span>
@@ -535,8 +542,10 @@
           </v-list-item-content>
         </v-list-item>
       </div>
-      <span class="overline grey--text  text--darken-1 font-weight-bold">
-        payment
+    </v-flex>
+       <v-flex md6 xs12>
+      <span class="body-1 font-weight-bold grey--text text--lighten-1">
+        PAYMENT
       </span>
       <v-list-item class="my-1">
         <v-list-item-content>
@@ -598,10 +607,10 @@
             ></v-list-item-subtitle
           >
         </v-list-item-content>
-      </v-list-item>
+      </v-list-item></v-flex>  </v-layout>
       <v-card flat color="transparent" tile class="mb-12">
-        <span class="overline grey--text  text--darken-1 font-weight-bold">
-          Summary
+        <span class="body-1 font-weight-bold grey--text text--lighten-1">
+          SUMMARY
         </span>
         <v-row class="px-6 pt-3">
           <v-flex xs6>
