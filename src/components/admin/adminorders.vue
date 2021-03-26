@@ -289,7 +289,18 @@
     </v-dialog>
   </div>
 </template>
-<style></style>
+<style>
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
+    font-size: 16px!important;
+    text-transform: uppercase;
+}
+.v-data-table-header th.sortable:first-child{
+      padding: 0px 0px 0px 14px!important;
+}
+.v-data-table-header th.sortable{
+      padding: 0 5px!important;
+}
+</style>
 <script>
 import axios from "axios";
 import wrapper from "axios-cache-plugin";
