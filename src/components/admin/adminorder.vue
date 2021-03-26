@@ -463,7 +463,7 @@
       <v-btn small class="my-1"
          color="primary"
         depressed rounded outlined   
-           style="z-index:10;">
+           style="">
       <span class="font-weight-bold"> <v-icon>mdi-phone</v-icon>
         Vndr {{order.vendor.phone}}</span> 
       </v-btn>
@@ -475,7 +475,7 @@
         small
         right 
   class="my-1"       color="primary" outlined rounded
-        style="z-index:10;"
+        style=""
       >
       <span class="font-weight-bold">  <v-icon>mdi-phone</v-icon> 
        User {{order.user.phone}}</span> 
