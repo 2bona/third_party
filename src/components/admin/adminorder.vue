@@ -912,10 +912,11 @@
         <v-card-text>
           <v-form ref="form">
             <v-combobox
-            auto-select-first
+            :auto-select-first="true"
             :items="replys"
               v-if="replys.length"
-              v-model="reason" :item-value="value"
+              v-model="reason"
+              label="Write the Reason for rejection here"
               color="orange darken-4"
               :rules="[rules.required]"
               validate-on-blur
