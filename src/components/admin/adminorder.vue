@@ -912,26 +912,16 @@
         <v-card-text>
           <v-form ref="form">
             <v-combobox
+            auto-select-first
             :items="replys"
               v-if="replys.length"
-              v-model="reason"
+              v-model="reason" :item-value="value"
               color="orange darken-4"
               :rules="[rules.required]"
               validate-on-blur
             >
             </v-combobox>
           </v-form>
-<!-- 
-          <v-slider
-            color="grey"
-            v-if="replys.length"
-            :loading="load"
-            track-color="grey lighten-2"
-            thumb-color="orange darken-4"
-            v-model="slide"
-            thumb-label
-            :max="slider"
-          ></v-slider> -->
         </v-card-text>
 
         <v-divider></v-divider>
@@ -1148,10 +1138,7 @@ export default {
       var t = this.$store.getters.getReplys;
       const b = []
       t.forEach((el)=>{
-        b.push({
-          text: el.content,
-          value: el.content,
-        })
+        b.push(el.content)
       })
       return b
     },
