@@ -510,28 +510,26 @@ export default {
         t.vendor_id = e.vendor.id
         this.$store.dispatch("setUser", t);
         this.$store.dispatch("setToken", res.data.success.token);
-        this.b(e)
+        this.b(e.id)
         }).catch((err)=>{
               this.$store.dispatch("snack", {
             color: "green",
             text: "An error occured. Error : "+err
           });
-              this.b(e)
+              this.b(e.id)
         })
             }else{
-              this.b(e)
+              this.b(e.id)
             }
   
     }
     },
     b(e){
           this.$store.dispatch("order", {
-              id: e.id,
+              id: e,
           action: null
         });
-      
-    this.orderLoad = false;
-    }
+          }
   }
 };
 </script>
