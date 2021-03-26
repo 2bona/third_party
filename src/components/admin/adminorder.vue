@@ -1228,11 +1228,11 @@ export default {
           d = "Cash Payment";
         }
       } else if (this.order.payment_method === 3) {
-        var t = this.order.offline ? "" : "on delivery";
+        var t = this.order.offline !== '0' ? "" : "on delivery";
         if (this.order.change_amount > 1) {
-          d = this.order.offline ? "" : "Paying Cash " + t + ", expecting change of ";
+          d = this.order.offline !== '0' ? "" : "Paying Cash " + t + ", expecting change of ";
         } else {
-          d = this.order.offline ? "" : "Paying Cash " + t;
+          d = this.order.offline !== '0' ? "" : "Paying Cash " + t;
         }
       }
       return d;
