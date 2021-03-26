@@ -198,6 +198,18 @@ export const vendor = {
           state.adminOrderList.unshift(order);
         });
     },
+    setOrderObj({
+      commit,
+      state,
+      dispatch
+    }, data) {
+      data.loaded = false
+      commit("setOrder", data) 
+      state.orderArray = state.orderArray.filter((el)=>{
+        return  el.id !== data.id
+      })
+      state.orderArray.push(data)  
+      },
     vendorOrderPage({
       commit,
       state,
@@ -228,6 +240,7 @@ export const vendor = {
         return  el.id == data.id
       })
       if (orderLoaded && data.action !== 'clear') {
+        orderLoaded.loaded = true
         commit("setOrder", orderLoaded)
           if(data.action === null || data.action === 'read'){
             router.push('/adminorder')
@@ -241,6 +254,7 @@ export const vendor = {
       axios.get(AXIOS_CONFIG.API_URL + url)
         .then(function (response) {
           var order = response.data.order;
+          order.loaded = false
            if (order) {
           commit("setOrder", order)
           state.orderArray.push(order)
@@ -282,33 +296,6 @@ export const vendor = {
       axios.get(AXIOS_CONFIG.API_URL + url )
          .then(res => {
            console.log('....... response.......')
-           console.log(res)
-          //  const agentsToken = res.data.agentsToken;
-          //  if (res.data.token && res.data.message) {
-          //     axios.post(AXIOS_CONFIG.API_URL + "/notify", {
-          //      receiver_user : res.data.token,
-          //      title: 'Order Update',
-          //      message: res.data.message,
-          //      push_type: 'individual',
-          //      payload: JSON.stringify({url: '/cart', id: data.id, status: data.status})
-          //     }).then((res)=>{
-          //       if (data.action === "served") {
-          //         axios.post(AXIOS_CONFIG.API_URL + "/notify", {
-          //           receiver_user : agentsToken,
-          //           title: 'New Order',
-          //           message: "New Order from " + state.vendor.name+"!!!",
-          //           push_type: 'individual',
-          //           payload: JSON.stringify({url: '/delivery', id: data.id, status: data.status})
-          //          }).then((res) =>{
-          //            console.log(res)
-          //          })
-          //       }
-          //       console.log(res)
-          //    }).catch((err)=>{
-          //     console.log(err)
-          //    })
-             
-          //  }
            dispatch("getOrder", {
              id: data.id,
              action: data.action

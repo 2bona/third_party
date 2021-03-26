@@ -41,7 +41,8 @@
    <v-btn absolute right
           class="pr-0"
               @click="reload(order)"
-               text
+               text 
+               :loading="orderLoad"
               ><v-icon>mdi-reload</v-icon>reload</v-btn
             >
 </v-flex>
@@ -1112,6 +1113,7 @@ export default {
       dialog: false,
       dialogIn: false,
       dialog2: false,
+      orderLoad: false,
       dialogServe: false,
       dialogDelivery: false,
       dialog3: false,
@@ -1218,19 +1220,25 @@ export default {
   },
   mounted() {
     const sn = this;
-    if (this.order.items.length) {
+    if (sn.order.items.length) {
       sn.dialogItem = null;
       sn.max_no = sn.order.items.length - 1;
       var n = sn.order.items[sn.item_no];
       sn.dialogIn = true;
       sn.setItem(n);
     }
+
     if (
       sn.order.status === 1 &&
       !(sn.order.payment_method === 4 || sn.order.payment_method === 5)
     ) {
       // sn.getAgents();
     }
+    sn.$nextTick(()=>{
+      if (sn.order.loaded) {
+        sn.reload(sn.order)
+      }
+    })
   },
   methods: {
     markTask(x, y){
@@ -1375,29 +1383,30 @@ export default {
     },
     reload(e) {
       const sn = this;
-  if (this.user.vendor_id !== e.vendor.id) {
+      sn.orderLoad = true;
+  if (sn.user.vendor_id !== e.vendor.id) {
     axios.post('/auth_user2', {
         vendor_id: e.vendor.id
     })
     .then(res => {
-        this.orderLoad = false; 
         var t = res.data.success.user
         t.vendor_id = e.vendor.id
-        this.$store.dispatch("setUser", t);
-        this.$store.dispatch("setToken", res.data.success.token);
-        this.loadOrder(e)
+        sn.$store.dispatch("setUser", t);
+        sn.$store.dispatch("setToken", res.data.success.token);
+        sn.loadOrder2(e)
     }).catch((err)=>{
-          sn.$store.dispatch("snack", {
+      sn.orderLoad = false; 
+      sn.$store.dispatch("snack", {
             color: "green",
-            text: "Error occured. err - "+err
+            text: "Error occured. err - " + err
           });
-        this.loadOrder(e)
+        sn.loadOrder2(e)
     })
-              }else{
-        this.loadOrder(e)
-              }
+    }else{
+        this.loadOrder2(e)
+    }
     },
-        loadOrder(e){
+    loadOrder(e){
         this.$store.dispatch('getOrder', {
              id: e.id,
              action: 'clear' 
@@ -1437,6 +1446,27 @@ export default {
             sn.$router.push("/orders");
           });
       }
+    },
+    loadOrder2(x){
+      const sn = this
+      sn.orderLoad = true;
+      let url = "/order/find?id=" + x.id
+      axios.get(url)
+        .then(function (response) {
+          var order = response.data.order;
+           if (order) {
+          sn.$store.dispatch("setOrderObj", order)
+          }
+              sn.orderLoad = false;
+
+          }).catch((err)=>{
+            sn.orderLoad = false;
+            sn.$store.dispatch("snack", {
+              color: "green",
+              text: "Err - "+err
+            });
+          })
+
     },
     serve() {
       const sn = this;
