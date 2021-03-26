@@ -501,7 +501,7 @@
             >{{ order.address.name }}</v-list-item-title
           >
           <v-list-item-subtitle
-            class="body-2 grey--text  "
+            class="body-2 grey--text text-wrap "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.name_2 }}</v-list-item-subtitle
           >
