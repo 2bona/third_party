@@ -357,11 +357,11 @@
       >
         <v-timeline align-top dense>
           <v-timeline-item color="blue" v-if="order.delivery != null" small>
-            <span class="body-1 grey--text  text--darken-1 font-weight-bold">
+            <span class="caption grey--text  text--darken-1 font-weight-medium">
               Delivered by
             </span>
             <v-list-item-content class="mt-0 mb-0 py-0">
-              <p class="title mb-0" v-text="order.delivery.name"></p>
+              <p class="body-1 mb-0" v-text="order.delivery.name"></p>
             </v-list-item-content>
             <v-list-item-content
               v-if="!(order.status === 4)"
@@ -438,7 +438,7 @@
             <v-list-item v-if="orderErrand" class="my-1" two-line>
         <v-list-item-content>
           <v-list-item-title
-            class="headline grey--text text--darken-1 text-wrap font-weight-bold"
+            class="title grey--text text--darken-1 text-wrap"
             v-if="orderErrand"
             >{{ order.errand.bike_carrier == 1 ? 'Bike': 'Keke'}}</v-list-item-title
           >
@@ -462,7 +462,7 @@
      ">
       <v-btn small class="my-1"
          color="primary"
-        depressed rounded     
+        depressed rounded outlined   
            style="z-index:10;">
       <span class="font-weight-bold"> <v-icon>mdi-phone</v-icon>
         Vndr {{order.vendor.phone}}</span> 
@@ -474,7 +474,7 @@
         <v-btn
         small
         right 
-  class="my-1"       color="primary" depressed rounded
+  class="my-1"       color="primary" outlined rounded
         style="z-index:10;"
       >
       <span class="font-weight-bold">  <v-icon>mdi-phone</v-icon> 
@@ -501,23 +501,23 @@
             >{{ order.address.name }}</v-list-item-title
           >
           <v-list-item-subtitle
-            class="body-1 grey--text  "
+            class="body-2 grey--text  "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.name_2 }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
-            class="body-1 grey--text text-wrap  "
+            class="body-2 grey--text text-wrap  "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.company }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
-            class="body-1 grey--text text-wrap font-weight-medium "
+            class="body-2 grey--text text-wrap"
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.instruction }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
-            class="title text--darken-2 red--text  font-weight-bold"
+            class="body-1 text--darken-2 red--text  font-weight-bold"
             >ETA - {{ order.duration | duration }}</v-list-item-subtitle
           >
                <v-list-item-subtitle
@@ -552,7 +552,7 @@
          
           <v-list-item-subtitle
             v-if="order.payment_method === 3 && !(order.status === 5) && order.grand_total > (order.pos_amt + order.transfer_amt)"
-            class=" text-wrap title grey--text  font-weight-bold"
+            class=" text-wrap body-1 font-weight-bold grey--text "
             >Cash  <span v-show="order.grand_total - order.pos_amt - order.transfer_amt > 1">
                - <v-icon style="padding-bottom:2px" color="grey" size="17"
                 >mdi-currency-ngn</v-icon
@@ -561,7 +561,7 @@
           >
           <v-list-item-subtitle
             v-if="order.pos && !(order.status === 5)"
-            class=" text-wrap title grey--text  font-weight-bold"
+            class=" text-wrap body-1 font-weight-bold grey--text "
             >POS  <span v-show="order.pos_amt > 1">
                - <v-icon style="padding-bottom:2px" color="grey" size="17"
                 >mdi-currency-ngn</v-icon
@@ -570,7 +570,7 @@
           >
           <v-list-item-subtitle
             v-if="order.transfer && !(order.status === 5)"
-            class=" text-wrap title grey--text  font-weight-bold"
+            class=" text-wrap body-1 font-weight-bold grey--text "
             >Transfer <span v-show="order.transfer_amt > 1">
                - <v-icon style="padding-bottom:2px" color="grey" size="17"
                 >mdi-currency-ngn</v-icon
@@ -579,26 +579,26 @@
           >
           <v-list-item-subtitle
             v-if="order.creditor"
-            class=" text-wrap title grey--text  font-weight-bold"
+            class=" text-wrap body-1 font-weight-bold grey--text "
             >CREDIT - {{order.creditor}}</v-list-item-subtitle
           >
           <v-list-item-subtitle
             v-if="order.paid && !(order.status === 5)"
-            class=" text-wrap title green--text  font-weight-bold"
+            class=" text-wrap body-1 font-weight-bold green--text"
             >PAID</v-list-item-subtitle
           >
           <v-list-item-subtitle
             v-if="!order.paid"
-            class=" text-wrap title red--text  font-weight-bold"
+            class=" text-wrap body-1 font-weight-bold red--text"
             >UNPAID</v-list-item-subtitle
           >
           <v-list-item-subtitle
             v-if="order.paid && order.status === 5"
-            class=" text-wrap title blue--text  font-weight-bold"
+            class=" text-wrap body-1 font-weight-bold blue--text"
             >REFUNDED</v-list-item-subtitle
           >
            <v-list-item-subtitle
-            class=" text-wrap body-1 grey--text  font-weight-medium"
+            class=" text-wrap body-2 grey--text"
             >{{ paymentMethod }}
             <span v-show="order.change_amount > 1">
               <v-icon style="padding-bottom:2px" color="grey" size="12"
@@ -914,8 +914,8 @@
           <v-form ref="form">
             <v-text-field
               v-if="replys.length"
-              v-model="replys[slide].content"
-              readonly
+              :value="replys[slide].content"
+              v-model="reason"
               color="orange darken-4"
               :rules="[rules.required]"
             >
@@ -1139,6 +1139,12 @@ export default {
         required: value => !!value || "Required."
       }
     };
+  },
+  watch:{
+    slide:{
+    handler: function (x, y) {this.reason = this.replys[x].content},
+    immediate: true
+    }
   },
   computed: {
     replys() {
@@ -1538,7 +1544,7 @@ export default {
             status: sn.order.status,
             action: "rejected",
             delivery: n,
-            reason: sn.replys[sn.slide].content
+            reason: sn.reason
           });
           sn.dialog2 = false;
           sn.loading2 = false;
