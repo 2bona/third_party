@@ -6,8 +6,8 @@
         :value="snackbar.status"
         :timeout="5000"
         :color="snackbar.color"
-        top
-        left
+        top class="font-weight-bold"
+        left x-small
         multi-line
         style="z-index:99999"
       >

@@ -1466,6 +1466,10 @@ if (!this.replys.length) {
            if (order) {
           sn.$store.dispatch("setOrderObj", order)
           }
+                   sn.$store.dispatch("snack", {
+            color: "green",
+            text: "Order Refreshed"
+          });
               sn.orderLoad = false;
 
           }).catch((err)=>{

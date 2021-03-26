@@ -440,7 +440,17 @@ export default {
       .then( (response) => {
       this.orderLoad = false
         this.$store.dispatch("setAdminDatedOrderList", response.data.orders)
-      })
+          this.$store.dispatch("snack", {
+            color: "green",
+            text: "Orders Reloaded"
+          });
+      }).catch((err)=>{
+              this.$store.dispatch("snack", {
+            color: "green",
+            text: "An error occured. Error : "+err
+          });
+              this.b(e.id)
+        })
     },
     setColor(x){
       return  x === 1
