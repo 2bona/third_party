@@ -24,6 +24,7 @@
             >
               </v-layout>
       </div>
+ 
       <v-btn
         fixed
         @click="$router.go(-1)"
@@ -364,8 +365,17 @@
           <v-list-item v-if="order.vendor.name" class="" two-line>
         <v-list-item-content class="py-1">
           <v-list-item-title
-            class="body-1 grey--text text--darken-3 text-wrap"
-            >{{ order.vendor.name }}</v-list-item-title
+            class="body-1 pb-0  grey--text text--darken-3 text-wrap"
+            >{{ order.vendor.name }}
+                 <v-btn
+ @click.stop="auth(order.vendor.id)"        bottom
+        fab x-small
+        color="grey lighten-4" depressed
+        style="z-index:10;margin-bottom0px;"
+      >
+        <v-icon size="16" class="" color="blue darken-2">mdi-login</v-icon> 
+      </v-btn>
+            </v-list-item-title
           >
           <v-flex>
      <a style="text-decoration:none" 
@@ -373,13 +383,17 @@
      ">
       <v-btn small
          class="my-1 elevation-0 pl-0 pr-6 text-left blue--text text--darkeen-4"    
-     color="white"  rounded
+        color="grey lighten-4"  rounded
         style="height:45px"
          >
         <span  class="ml-3 mr-2 font-weight-bold">  <v-icon>mdi-phone</v-icon> </span>
       <span>
          <span class="blue--text text--lighten-3">
-       VNDR </span><br> {{order.vendor.phone}}</span> 
+       VENDOR
+        </span><br> <span class="body-1 font-weight-black">
+         {{order.vendor.phone}}
+         </span>
+         </span> 
       </v-btn>
       </a>
 <v-flex>
@@ -389,13 +403,17 @@
         small
         right 
   class="my-1 elevation-0 pl-0 pr-6 text-left blue--text text--darkeen-4"    
-     color="white"  rounded
+        color="grey lighten-4" rounded
         style="height:45px"
       >
       <span  class="font-weight-bold ml-3 mr-2" >  <v-icon>mdi-phone</v-icon> </span>
       <span>
       <span class="blue--text text--lighten-3">
-       User </span><br> {{order.user.phone}}</span> 
+       User </span><br> 
+       <span class="body-1 font-weight-black">
+        {{order.user.phone}}
+         </span>
+       </span> 
       </v-btn>
               </a>
 </v-flex>
@@ -763,7 +781,7 @@
           ><v-icon>mdi-close-circle</v-icon></v-btn
         >
         <div v-show="dialogItem">
-          <v-card-title class="pb-1 text-capitalize elevation-10" primary-title>
+          <v-card-title style="padding-right: 52px;" class="pb-1 text-capitalize elevation-10" primary-title>
             <span
               class="pr-1 grey--text text--darken-3 font-weight-black"
               v-show="dialogItem.pivot.qty > 1"
@@ -1426,6 +1444,31 @@ if (!this.replys.length) {
       sn.item_no = y
       sn.setItem(n);
       sn.dialog = true;
+    },
+      auth(x){
+      this.orderLoad = true
+      // this.delDialog = true
+        axios.post('/auth_user2', {
+          vendor_id: x,
+        })
+        .then(res => {
+      this.orderLoad = false
+            this.$store.dispatch("setUser", res.data.success.user);
+            this.$store.dispatch("setToken", res.data.success.token);
+            this.$store.dispatch("snack", {
+                color: "red",
+              text: "Now Logged in as "+ res.data.success.user.first_name
+            });
+this.$store.dispatch("loadVendor")
+this.$store.dispatch("loadTags");
+        })
+        .catch((err)=>{
+            this.orderLoad = false
+            this.$store.dispatch("snack", {
+              color: "green",
+              text: "Err - "+err
+            });
+        })
     },
     deliver() {
       const sn = this;
