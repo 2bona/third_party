@@ -1,7 +1,7 @@
 <template>
     
 
-<v-app-bar bottom dense color="white" fixed short >
+<v-app-bar dark bottom dense  fixed short >
       <!-- <div class="flex-grow-1">2</div> -->
 
       <v-btn to="/" icon class="mx-auto">

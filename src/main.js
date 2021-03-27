@@ -315,12 +315,11 @@ window.Channel2 = pusher.subscribe('private-orders2');
 if (!OrderSoundPlaying) {
   OrderSound.play();
 }
-  
-  if (data.status === 0 && data.status == 2) {
     store.dispatch('addItem', data.order)
-  } else{
-    store.dispatch('removeItem', data.order)
-  }
+    store.dispatch('getOrder', {
+      id: data.order,
+      action: 'clear' 
+  })
 });
 new Vue({
   vuetify,

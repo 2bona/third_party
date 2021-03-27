@@ -214,9 +214,9 @@
         </v-card>
       </v-flex>
     </v-row>
-    <div style="position:fixed;width:100%; bottom:49px">
+    <div style="position:fixed;width:100%; top:0px">
       <v-progress-linear
-        color="grey"
+        color="blue lighten-2" :height="'8px'"
         v-show="orderLoad"
         :indeterminate="orderLoad"
       ></v-progress-linear>
@@ -441,7 +441,7 @@ export default {
       this.orderLoad = false
         this.$store.dispatch("setAdminDatedOrderList", response.data.orders)
           this.$store.dispatch("snack", {
-            color: "green",
+            color: "blue",
             text: "Orders Reloaded"
           });
       }).catch((err)=>{
@@ -505,33 +505,10 @@ export default {
         }
     },
     clicker(e) {
-    console.log(e)
     OrderSound.stop()
-        if (!this.orderLoad) {
-            this.orderLoad = true; 
-            if (this.user.vendor_id !== e.vendor.id) {
-      
-    axios.post('/auth_user2', {
-        vendor_id: e.vendor.id
-    })
-    .then(res => {
-        this.orderLoad = false; 
-        var t = res.data.success.user
-        t.vendor_id = e.vendor.id
-        this.$store.dispatch("setUser", t);
-        this.$store.dispatch("setToken", res.data.success.token);
-        this.b(e.id)
-        }).catch((err)=>{
-              this.$store.dispatch("snack", {
-            color: "green",
-            text: "An error occured. Error : "+err
-          });
-              this.b(e.id)
-        })
-            }else{
-              this.b(e.id)
-            }
-  
+    if ( !this.orderLoad ) {
+      this.orderLoad = true; 
+      this.b(e.id)
     }
     },
     b(e){

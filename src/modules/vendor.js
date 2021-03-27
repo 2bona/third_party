@@ -250,7 +250,7 @@ export const vendor = {
         state.orderArray = state.orderArray.filter((el)=>{
           return  el.id !== data.id
         })
-      let url = "/order/find?id=" + data.id
+      let url = "/order/find2?id=" + data.id
       axios.get(AXIOS_CONFIG.API_URL + url)
         .then(function (response) {
           var order = response.data.order;

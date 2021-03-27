@@ -1,5 +1,8 @@
 <template>
   <div class="grey lighten-5" style="width:100%; height: 100%">
+    <keep-alive>
+
+   
     <div class="grey lighten-5 container mt-0" style="max-width: 565px;margin-bottom: 100px;">
       <div class="d-flex " style="justify-content: flex-start"> 
 <div></div>
@@ -74,7 +77,7 @@
                   :key="i"
                   size="80" :ripple="false"
                   
-                  @click="dialogItemBtn(n)"
+                  @click="dialogItemBtn(n, i)"
                   class="my-auto elevation-5 mx-2"
                   style="border-radius:;overflow:inherit;"
                 >
@@ -452,33 +455,33 @@
             v-if="order.payment_method === 3 && !(order.status === 5) && order.grand_total > (order.pos_amt + order.transfer_amt)"
             class=" text-wrap body-1 font-weight-bold grey--text "
             >Cash  <span v-show="order.grand_total - order.pos_amt - order.transfer_amt > 1">
-               - <v-icon style="padding-bottom:2px" color="grey" size="17"
+               - <v-icon style="padding-bottom:2px" color="grey" size="14"
                 >mdi-currency-ngn</v-icon
-              > {{ order.grand_total - order.pos_amt - order.transfer_amt | price }}</span
+              >{{ order.grand_total - order.pos_amt - order.transfer_amt | price }}</span
             ></v-list-item-subtitle
           >
           <v-list-item-subtitle
             v-if="order.pos && !(order.status === 5)"
             class=" text-wrap body-1 font-weight-bold grey--text "
             >POS  <span v-show="order.pos_amt > 1">
-               - <v-icon style="padding-bottom:2px" color="grey" size="17"
+               - <v-icon style="padding-bottom:2px" color="grey" size="14"
                 >mdi-currency-ngn</v-icon
-              >  {{ order.pos_amt | price }}</span
+              > {{ order.pos_amt | price }}</span
             ></v-list-item-subtitle
           >
           <v-list-item-subtitle
             v-if="order.transfer && !(order.status === 5)"
             class=" text-wrap body-1 font-weight-bold grey--text "
             >Transfer <span v-show="order.transfer_amt > 1">
-               - <v-icon style="padding-bottom:2px" color="grey" size="17"
+               - <v-icon style="padding-bottom:2px" color="grey" size="14"
                 >mdi-currency-ngn</v-icon
-              > {{ order.transfer_amt | price }}</span
+              >{{ order.transfer_amt | price }}</span
             ></v-list-item-subtitle
           >
           <v-list-item-subtitle
             v-if="order.creditor"
             class=" text-wrap body-1 font-weight-bold grey--text "
-            >CREDIT - {{order.creditor}}</v-list-item-subtitle
+            >CREDIT -{{order.creditor}}</v-list-item-subtitle
           >
           <v-list-item-subtitle
             v-if="order.paid && !(order.status === 5)"
@@ -612,7 +615,7 @@
                 dark large class=" font-weight-black'"
                 color="primary"
               >
-                {{
+              {{
                   order.payment_method === 4 || order.payment_method === 5
                     ? "deliver"
                     : "available"
@@ -733,18 +736,24 @@
         </v-timeline>
       </v-card-text>
    </v-flex> </v-layout>
-   
+    </div>
+     </keep-alive>
+      <div style="position:fixed;width:100%;left:0; top:0px">
+      <v-progress-linear
+        color="blue lighten-2" :height="'8px'"
+        v-show="orderLoad"
+        :indeterminate="orderLoad"
+      ></v-progress-linear>
     </div>
     <v-dialog
       scrollable
-      persistent
-      v-model="dialogIn"
+      v-model="dialog"
       max-width="420px"
       transition="dialog-transition"
     >
       <v-card color="white" v-if="dialogItem">
         <v-btn
-          @click="dialogIn = false"
+          @click="dialog = false"
           absolute
           fab
           right
@@ -761,8 +770,8 @@
               >{{ dialogItem.pivot.qty + "x" }}
             </span>
             {{ dialogItem.name + " " }}
-            <span class="pl-1 pb-2 caption grey--text">
-              <v-icon size="11" color="grey" style="padding-bottom:3px"
+            <span class="pl-1 pb-2 body-2 text--darken-2 grey--text">
+              <v-icon size="13" color="grey" style="padding-bottom:1px"
                 >mdi-currency-ngn</v-icon
               >{{ (dialogItem.pivot.qty * dialogItem.price) | price }}</span
             >
@@ -833,7 +842,7 @@
     </v-dialog>
     <v-dialog
       scrollable
-      v-model="dialog"
+      v-model="dialog3"
       max-width="420px"
       transition="dialog-transition"
     >
@@ -1240,8 +1249,8 @@ export default {
       sn.dialogItem = null;
       sn.max_no = sn.order.items.length - 1;
       var n = sn.order.items[sn.item_no];
-      sn.dialogIn = true;
       sn.setItem(n);
+      sn.dialog = true;
     }
 if (!this.replys.length) {
   this.getReplys()
@@ -1402,41 +1411,21 @@ if (!this.replys.length) {
     reload(e) {
       const sn = this;
       sn.orderLoad = true;
-  if (sn.user.vendor_id !== e.vendor.id) {
-    axios.post('/auth_user2', {
-        vendor_id: e.vendor.id
-    })
-    .then(res => {
-        var t = res.data.success.user
-        t.vendor_id = e.vendor.id
-        sn.$store.dispatch("setUser", t);
-        sn.$store.dispatch("setToken", res.data.success.token);
-        sn.loadOrder2(e)
-    }).catch((err)=>{
-      sn.orderLoad = false; 
-      sn.$store.dispatch("snack", {
-            color: "green",
-            text: "Error occured. err - " + err
-          });
-        sn.loadOrder2(e)
-    })
-    }else{
-        this.loadOrder2(e)
-    }
+      sn.loadOrder2(e)
     },
     loadOrder(e){
         this.$store.dispatch('getOrder', {
              id: e.id,
              action: 'clear' 
               })
-      
     this.orderLoad = false;
     },
-    dialogItemBtn(n) {
+    dialogItemBtn(n, y) {
       const sn = this;
       sn.dialogItem = null;
-      sn.dialog = true;
+      sn.item_no = y
       sn.setItem(n);
+      sn.dialog = true;
     },
     deliver() {
       const sn = this;
@@ -1468,7 +1457,7 @@ if (!this.replys.length) {
     loadOrder2(x){
       const sn = this
       sn.orderLoad = true;
-      let url = "/order/find?id=" + x.id
+      let url = "/order/find2?id=" + x.id
       axios.get(url)
         .then(function (response) {
           var order = response.data.order;
@@ -1476,7 +1465,7 @@ if (!this.replys.length) {
           sn.$store.dispatch("setOrderObj", order)
           }
                    sn.$store.dispatch("snack", {
-            color: "green",
+            color: "blue",
             text: "Order Refreshed"
           });
               sn.orderLoad = false;
