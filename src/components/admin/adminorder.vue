@@ -61,7 +61,6 @@
             <v-card
               width="100%"
               height="150px"
-              max-width="450px"
               min-height="150px"
               tile
               color="transparent"
@@ -353,28 +352,31 @@
         <v-layout class="mb-12" wrap>
 
    
-      <v-flex md6 xs12>
+      <v-flex md6 sm6 xs12>
       <span
         class="body-2 font-weight-bold grey--text text--lighten-1"
       >
         VENDOR
       </span>
-          <v-list-item v-if="order.vendor.name" class="my-1" two-line>
-        <v-list-item-content>
+          <v-list-item v-if="order.vendor.name" class="" two-line>
+        <v-list-item-content class="py-1">
           <v-list-item-title
-            class="body-1 grey--text text--darken-1 text-wrap"
+            class="body-1 grey--text text--darken-3 text-wrap"
             >{{ order.vendor.name }}</v-list-item-title
           >
           <v-flex>
      <a style="text-decoration:none" 
      :href="'tel:' + order.vendor.phone
      ">
-      <v-btn small class="my-1"
-         color="primary"
-        depressed rounded outlined   
-           style="">
-      <span class="font-weight-bold"> <v-icon>mdi-phone</v-icon>
-        Vndr {{order.vendor.phone}}</span> 
+      <v-btn small
+         class="my-1 elevation-0 pl-0 pr-6 text-left blue--text text--darkeen-4"    
+     color="white"  rounded
+        style="height:45px"
+         >
+        <span  class="ml-3 mr-2 font-weight-bold">  <v-icon>mdi-phone</v-icon> </span>
+      <span>
+         <span class="blue--text text--lighten-3">
+       VNDR </span><br> {{order.vendor.phone}}</span> 
       </v-btn>
       </a>
 <v-flex>
@@ -383,11 +385,14 @@
         <v-btn
         small
         right 
-  class="my-1"       color="primary" outlined rounded
-        style=""
+  class="my-1 elevation-0 pl-0 pr-6 text-left blue--text text--darkeen-4"    
+     color="white"  rounded
+        style="height:45px"
       >
-      <span class="font-weight-bold">  <v-icon>mdi-phone</v-icon> 
-       User {{order.user.phone}}</span> 
+      <span  class="font-weight-bold ml-3 mr-2" >  <v-icon>mdi-phone</v-icon> </span>
+      <span>
+      <span class="blue--text text--lighten-3">
+       User </span><br> {{order.user.phone}}</span> 
       </v-btn>
               </a>
 </v-flex>
@@ -395,7 +400,7 @@
         </v-list-item-content>
           </v-list-item>
           </v-flex>  
-            <v-flex md6 xs12>  
+            <v-flex md6 sm6 xs12>  
       <span
         class="body-2 font-weight-bold grey--text text--lighten-1"
       >
@@ -425,8 +430,11 @@
           >
           <v-list-item-subtitle
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
-            class="body-1 text--darken-2 red--text  font-weight-bold"
-            >ETA - {{ order.duration | duration }}</v-list-item-subtitle
+            style="font-family: monospace;" class="body-2 text--lighten-1 grey--text  font-weight-bold"
+            >ETA - <span class="grey--text text--darken-2" >
+              {{ order.duration | duration }}
+              </span>
+              </v-list-item-subtitle
           >
                <v-list-item-subtitle
             v-if="order.discount"
@@ -621,7 +629,7 @@
       </v-card>
   </v-flex>
 
-    <v-flex v-if="order.table_no" md6 xs12>
+    <v-flex v-if="order.table_no" md6 sm6 xs12>
       <div >
         <span class="overline grey--text  text--darken-3 font-weight-bold">
           Table No
@@ -641,7 +649,7 @@
          <v-flex
    
         v-if="(order.delivery != null || order.status === 5 ) && !orderErrand"
-    md6 xs12>
+    md6 sm6 xs12>
       <span
         class=" grey--text body-2 text--lighten-1  font-weight-bold"
       >
@@ -746,7 +754,7 @@
           ><v-icon>mdi-close-circle</v-icon></v-btn
         >
         <div v-show="dialogItem">
-          <v-card-title class="pb-1 elevation-10" primary-title>
+          <v-card-title class="pb-1 text-capitalize elevation-10" primary-title>
             <span
               class="pr-1 grey--text text--darken-3 font-weight-black"
               v-show="dialogItem.pivot.qty > 1"
@@ -831,7 +839,7 @@
     >
       <v-card color="white" v-if="dialogItem">
         <div v-show="dialogItem">
-          <v-card-title class="pb-1 elevation-10" primary-title>
+          <v-card-title class="pb-1 text-capitalize elevation-10" primary-title>
             <span
               class="pr-1 grey--text text--darken-3 font-weight-black"
               v-show="dialogItem.pivot.qty > 1"
