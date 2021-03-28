@@ -28,9 +28,9 @@
       <v-btn
         fixed
         @click="$router.go(-1)"
-        bottom
-        right
-        fab
+        top
+        left
+        fab x-small
         color="white"
         style="z-index:10;margin-bottom: 60px;"
       >
