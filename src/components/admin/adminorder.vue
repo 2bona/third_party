@@ -37,15 +37,21 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
-      <v-layout row wrap class="mt-12 px-3">
-        <v-flex xs6>
-          <p class=" mb-2 body-1 font-weight-bold grey--text text--lighten-1">
-          {{orderErrand ? 'ERRAND': 'ORDER'}} ID: {{ order.tracking_id }}
+      <v-layout row wrap class="mt-12 px-2">
+        <v-flex style="justify-content: center;
+    display: flex;" xs6>
+          <p 
+          
+           style="font-family: monospace!important;"
+          class="pr-1-2  mb-0 body-1 font-weight-bold grey--text text--lighten-1">
+          {{orderErrand ? 'ERRND': 'ORDR'}} ID: {{ order.tracking_id }}
           </p>
         </v-flex>
-        <v-flex xs6>
+        <v-flex style="justify-content: center;
+    display: flex;" xs6>
           <p
-            class="body-1 mb-2 text-right font-weight-bold grey--text text--lighten-1"
+           style="font-family: monospace!important; padding-top:1px"
+            class="body-2 pl-2 mb-0 text-truncate text-uppercase text-right font-weight-bold grey--text text--lighten-1"
           >
             {{ order.created_at | myDate }}
           </p>
@@ -60,7 +66,7 @@
             tile
             color="transparent"
             max-width="600px"
-            min-height="126px"
+            min-height="118px"
           >
             <v-card
               width="100%"
@@ -427,7 +433,7 @@
       >
         DELIVERY & PAYMENT
       </span>
-      <v-list-item v-if="order.address" class="my-1" two-line>
+      <v-list-item v-if="order.address" class="mt-1 mb-0" two-line>
         <v-list-item-content class="mt-0 py-0">
           <v-list-item-title
             class="body-1 grey--trxt text--darken-1  text-wrap"
@@ -471,9 +477,9 @@
          
           <v-list-item-subtitle
             v-if="order.payment_method === 3 && !(order.status === 5) && order.grand_total > (order.pos_amt + order.transfer_amt)"
-            class=" text-wrap body-1 font-weight-bold grey--text "
-            >Cash  <span v-show="order.grand_total - order.pos_amt - order.transfer_amt > 1">
-               - <v-icon style="padding-bottom:2px" color="grey" size="14"
+            class="mt-0 pt-0 text-wrap body-2 font-weight-bold grey--text "
+            >CASH  <span v-show="order.grand_total - order.pos_amt - order.transfer_amt > 1">
+               - <v-icon style="padding-bottom:1px" color="grey" size="13"
                 >mdi-currency-ngn</v-icon
               >{{ order.grand_total - order.pos_amt - order.transfer_amt | price }}</span
             ></v-list-item-subtitle
