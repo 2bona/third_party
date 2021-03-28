@@ -98,12 +98,14 @@
                   </p>
                   <p
                     class="body-2 grey--text font-weight-bold"
-                    style="position:absolute; bottom:-36px"
+                    style="justify-content:center;display:flex;width:60px;position:absolute; bottom:-36px"
                   >
-                    <v-icon color="grey" style="padding-bottom:1px" size="14">
+                  <span>
+
+                    <v-icon color="grey" style="padding-bottom:1px" size="12">
                       mdi-currency-ngn
-                    </v-icon>
-                    {{ n.pivot.total | price }}
+                    </v-icon>{{ n.pivot.total | price }}
+                  </span>
                   </p>
                 </v-list-item-avatar>
               </v-list-item>
@@ -371,7 +373,7 @@
           <v-list-item v-if="order.vendor.name" class="" two-line>
         <v-list-item-content class="py-1">
           <v-list-item-title
-            class="body-1 pb-0  grey--text text--darken-3 text-wrap"
+            class="body-1 pb-0 font-weight-medium  grey--text text--darken-3 text-wrap"
             >{{ order.vendor.name }}
                  <v-btn
  @click.stop="auth(order.vendor.id)"        bottom
@@ -436,22 +438,22 @@
       <v-list-item v-if="order.address" class="mt-1 mb-0" two-line>
         <v-list-item-content class="mt-0 py-0">
           <v-list-item-title
-            class="body-1 grey--trxt text--darken-1  text-wrap"
+            class="body-1 grey--trxt text--darken-1 font-weight-medium text-wrap"
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.name }}</v-list-item-title
           >
           <v-list-item-subtitle
-            class="body-2 grey--text text-wrap "
+            class="body-2 font-weight-medium text--darken-1 grey--text text-wrap "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.name_2 }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
-            class="body-2 grey--text text-wrap  "
+            class="body-2 font-weight-medium text--darken-1 grey--text text-wrap  "
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.company }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
-            class="body-2 grey--text text-wrap"
+            class="body-2 font-weight-medium text--darken-1 grey--text text-wrap"
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             >{{ order.address.instruction }}</v-list-item-subtitle
           >
