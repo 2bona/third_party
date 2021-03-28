@@ -38,7 +38,7 @@
       </v-btn>
 
       <v-layout row wrap class="mt-12 px-2">
-        <v-flex style="justify-content: center;
+        <v-flex style="justify-content: left;
     display: flex;" xs6>
           <p 
           
@@ -47,7 +47,7 @@
           {{orderErrand ? 'ERRND': 'ORDR'}} ID: {{ order.tracking_id }}
           </p>
         </v-flex>
-        <v-flex style="justify-content: center;
+        <v-flex style="justify-content: flex-end;
     display: flex;" xs6>
           <p
            style="font-family: monospace!important; padding-top:1px"
@@ -58,7 +58,7 @@
         </v-flex>
       </v-layout>
       <v-layout v-if="!orderErrand" width="100%" class=" mx-0" style="overflow-x:hidden; ">
-        <v-container class=" px-0 py-4">
+        <v-container class=" px-0 pt-2 pb-0">
           <v-card
             class=" mx-auto"
             style="position:relative;display:flex;justify-content: center;"
@@ -66,12 +66,12 @@
             tile
             color="transparent"
             max-width="600px"
-            min-height="118px"
+            min-height="100px"
           >
             <v-card
               width="100%"
-              height="150px"
-              min-height="150px"
+              height="90px"
+              min-height="130px"
               tile
               color="transparent"
               flat
@@ -82,7 +82,7 @@
                 <v-list-item-avatar
                   v-for="(n, i) in order.items"
                   :key="i"
-                  size="80" :ripple="false"
+                  size="50" :ripple="false"
                   
                   @click="dialogItemBtn(n, i)"
                   class="my-auto elevation-5 mx-2"
