@@ -1288,7 +1288,7 @@ if (!this.replys.length) {
       // sn.getAgents();
     }
     sn.$nextTick(()=>{
-      if (sn.order.loaded) {
+      if (sn.order.loaded && sn.order.status !== 4 && sn.order.status !== 5) {
         sn.reload(sn.order)
       }
     })
