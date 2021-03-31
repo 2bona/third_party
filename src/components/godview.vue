@@ -122,33 +122,6 @@
      <v-progress-linear color="grey" v-show="orderLoad" :indeterminate="orderLoad"></v-progress-linear>
 
 </div> -->
-     
-         <div
-          
-          style="     position: fixed;
-    margin: auto;
-    bottom: 45px;
-    width: 100%;
-    z-index: 10;
-    max-width: 1090px;">
-
-    <v-scale-transition origin="center center">
-      <v-btn
-        absolute
-        to="/"
-        bottom
-       v-if="defer(3)"
-        right
-        fab
-        color="white"
-        class="elevation-24"
-        style="background: linear-gradient(315deg, #ffffff, #e6e6e6);z-index:10;margin-bottom: 60px;"
-      >
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-    </v-scale-transition>
-             </div>
-
     <v-dialog v-model="delDialog" max-width="290">
       <v-card :loading="delLoader">
         <v-card-title class="title red--text">Delete user from System</v-card-title>

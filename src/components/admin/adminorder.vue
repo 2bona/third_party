@@ -32,7 +32,7 @@
         left
         fab x-small
         color="white"
-        style="z-index:10;margin-bottom: 60px;"
+        style="margin-bottom: 60px;"
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
@@ -118,7 +118,7 @@
           <v-card
             width="100%"
             max-width="490px"
-            class="py-3 mx-auto px-2 mb-10 mt-2"
+            class="py-3 mx-auto px-2 mb-4 mt-2"
             flat
             tile
             color="transparent"
@@ -677,7 +677,7 @@
       
          <v-flex
    
-        v-if="(order.delivery != null || order.status === 5 ) && !orderErrand"
+        v-if="(order.delivery != null || order.status === 5 )"
     md6 sm6 xs12>
       <span
         class=" grey--text body-2 text--lighten-1  font-weight-bold"
@@ -686,7 +686,7 @@
       </span>
       <v-card-text
         style="margin-left:-30px"
-        v-if="(order.delivery != null || order.status === 5)  && !orderErrand"
+        v-if="(order.delivery != null || order.status === 5)"
         class="pa-0 my-3"
       >
         <v-timeline align-top dense>
