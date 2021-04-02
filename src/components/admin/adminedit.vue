@@ -131,7 +131,18 @@
                 :rules="[rules.required, rules.min, rules.required2]"
                 color="grey"
                 :loading="loading"
+                readonly
                 :disabled="loading"
+                required
+              ></v-text-field>
+              <v-text-field
+                validate-on-blur
+                label="Agent ID"
+                
+                :loading="loading"
+                v-model="vendor.agent_id"
+                placeholder="Agent ID"
+                color="grey"
                 required
               ></v-text-field>
               <v-text-field
@@ -1088,6 +1099,7 @@ export default {
               params: {
                 name: sn.vendor.name,
                 bio: sn.vendor.bio,
+                agent_id: sn.vendor.agent_id,
                 phone: sn.vendor.phone,
                 tags: sn.vendorTags,
                 areas: sn.area,
