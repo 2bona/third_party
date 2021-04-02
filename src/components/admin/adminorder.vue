@@ -467,6 +467,16 @@
             >{{ order.address.instruction }}</v-list-item-subtitle
           >
           <v-list-item-subtitle
+            style="font-family: monospace;"
+            
+             class="body-1 text--lighten-1 grey--text  font-weight-bold"
+            
+            >  <span  :class="order.approved ? 'text--darken-2 grey--text': 'text--darken-2 red--text'" >
+              {{ order.approved ? 'APPROVED' : 'UNAPPROVED' }}
+              </span>
+              </v-list-item-subtitle
+          >
+          <v-list-item-subtitle
             v-if="!(order.payment_method === 4 || order.payment_method === 5)"
             style="font-family: monospace;" class="body-2 text--lighten-1 grey--text  font-weight-bold"
             >ETA - <span class="grey--text text--darken-2" >

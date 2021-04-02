@@ -18,7 +18,7 @@
 
           <v-flex xs6 class="pl-3">
             <h1 class="title text--darken-2  mb-3 grey--text">
-              Orders
+             Vendor Orders
             </h1>
           </v-flex>
           <v-flex xs6>
@@ -62,20 +62,8 @@
           >
             <template v-slot:item.status="{ item }">
               <span
-                class="overline"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+                class="title text-capitalize"
+                :class="setColor(item.status)"
                 v-text="
                   item.status === 1
                     ? 'read'
@@ -93,39 +81,15 @@
             </template>
             <template v-slot:item.created_at="{ item }">
               <span
-                class="overline"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+                class="title text-capitalize"
+                :class="setColor(item.status)"
                 >{{ item.created_at | nowDate }}</span
               >
             </template>
             <template v-slot:item.id="{ item }">
               <span
-                class="overline d-flex"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+                class="title text-capitalize d-flex"
+                :class="setColor(item.status)"
                 ><v-icon
                   v-if="item.status === 3 || item.status === 1"
                   size="8"
@@ -147,130 +111,21 @@
         @checktimer="checktimer"
         />    
     <h2 v-else  class="title text-capitalize"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text text--lighten-1'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "> Instant </h2>    
+                :class="setColor(item.status)"> Instant </h2>    
      </template>
             <template v-slot:item.tracking_id="{ item }">
               <span
-                class=" overline"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
+                class=" title text-capitalize"
+                :class="setColor(item.status)"
                 >{{ item.tracking_id }}</span
               >
             </template>
-            <template v-slot:item.payment_method="{ item }">
-              <v-icon
-                size="16"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
-                v-if="item.payment_method === 6"
-                >mdi-wallet-outline
-              </v-icon>
-              <v-icon
-                size="16"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
-                v-if="item.payment_method === 1"
-                >mdi-credit-card-outline
-              </v-icon>
-              <v-icon
-                size="16"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
-                v-if="item.payment_method === 2"
-                >mdi-cellphone-wireless
-              </v-icon>
-              <v-icon
-                size="16"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
-                v-if="item.payment_method === 3"
-                >{{ item.offline ? "mdi-cash" : "mdi-cash-marker" }}
-              </v-icon>
-              <v-icon
-                size="16"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "
-                v-if="item.payment_method === 4 || item.payment_method === 5"
-                >mdi-table-chair
-              </v-icon>
+         <template v-slot:item.payment_method="{ item }">
+              <h2
+                class=" title text-capitalize"
+               :class="setColor(item.status)"
+                >{{ paymentMethod(item.payment_method) }}</h2
+              >
             </template>
             <template v-slot:expanded-item="{ headers, item }">
               <td :colspan="headers.length">{{ item }}</td>
@@ -415,6 +270,34 @@ export default {
     },
      checktimer(x, y) {
       return !x && !y;
+    },
+         paymentMethod(x) {
+      let d = "";
+      if (x === 1) {
+        d = "App Paid";
+      } else if (x === 2) {
+        d = "Transfer";
+      } else if (x === 4) {
+        d = "Over the counter or use P.O.S";
+      } else if (x === 6) {
+        d = "App Paid";
+      } else if (x === 3) {
+          d = "Cash";
+        }
+      return d;
+    },
+        setColor(x){
+      return  x === 1
+                    ? 'blue--text'
+                    : x === 2
+                    ? 'green--text'
+                    : x === 3
+                    ? 'orange--text'
+                    : x === 4
+                    ? 'grey--text'
+                    : x === 5
+                    ? 'red--text'
+                    : ''
     },
     start() {
       const sn = this;
