@@ -784,16 +784,15 @@
       <v-card class="px-2 pb-2">
         <v-card-title
           class="body-1 text-center  pl-3  my-2 pb-0 "
-          >Send Notification To <span class="text-capitalize"> {{ notifyType}}
-            </span>
+          >Send notification to  {{ ' ' + notifyType}}
             </v-card-title
         >
-        <v-form ref="formNotify">
+        <v-form  @submit.prevent="sendNotify()" ref="formNotify">
           <v-text-field
             :rules="[rules.required]"
             validate-on-blur
             autofocus
-            @submit.prevent="sendNotify()"
+           
             rounded label="Message"
             hint="Write your notification message here"
             solo

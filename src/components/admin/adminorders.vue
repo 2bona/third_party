@@ -35,15 +35,15 @@
           <v-flex xs7 style="display: flex;
     justify-content: flex-end;">
              <v-btn 
-              text :loading="loadingHist" @click="showCalender()"   >
+               depressed color="grey lighten-2" rounded :loading="loadingHist" @click="showCalender()"   >
           <v-icon>mdi-history</v-icon><span v-if=" $vuetify.breakpoint.smAndUp">
             history
             </span> 
         </v-btn>
             <v-btn
             :loading="orderLoad"
-              @click="start()"
-               text
+              @click="start()" class="mx-3"
+                depressed color="grey lighten-2" rounded
               ><v-icon>mdi-reload</v-icon>
               <span v-if=" $vuetify.breakpoint.smAndUp">
               reload
