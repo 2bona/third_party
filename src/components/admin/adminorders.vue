@@ -16,7 +16,7 @@
             <v-icon color="grey darken-1">mdi-camera</v-icon>
           </v-btn>
 
-          <v-flex xs4 class="pl-3">
+          <v-flex xs5 class="pl-3">
             <h1 class="title text--darken-2 font-weight-bold  mb-3 grey--text">
               Orders ({{orders.length || 0}}) <br/>
               <span
@@ -32,26 +32,34 @@
           >
             </h1>
           </v-flex>
-          <v-flex xs8 style="display: flex;
+          <v-flex xs7 style="display: flex;
     justify-content: flex-end;">
              <v-btn 
               text :loading="loadingHist" @click="showCalender()"   >
-          <v-icon>mdi-history</v-icon>history
+          <v-icon>mdi-history</v-icon><span v-if=" $vuetify.breakpoint.smAndUp">
+            history
+            </span> 
         </v-btn>
             <v-btn
             :loading="orderLoad"
               @click="start()"
                text
-              ><v-icon>mdi-reload</v-icon>reload</v-btn
+              ><v-icon>mdi-reload</v-icon>
+              <span v-if=" $vuetify.breakpoint.smAndUp">
+              reload
+              </span>
+              </v-btn
             >
           </v-flex>
         </v-layout>
 
-        <v-card style="border-radius: 25px" class="mt-4 grey lighten-4 pb-8">
-          <v-card-title>
+        <v-card style="overflow-x: scroll;border-radius: 25px" class="mt-4 grey lighten-4 pb-8">
+          <v-card-title style="    position: sticky;
+    left: 0;"> 
             <v-text-field
               v-model="search"
-              dense
+              dense style="position: sticky;
+    left: 0px;"
               append-icon="mdi-magnify"
               label="Search by order id"
               single-line
@@ -64,6 +72,7 @@
             :headers="headers"
             v-model="selected"
             :items="orders"
+            style="min-width: 1150px;"
             @click:row="clicker($event)"
             :expanded.sync="expanded"
             :search="search"

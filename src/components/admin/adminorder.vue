@@ -386,44 +386,53 @@
             </v-list-item-title
           >
           <v-flex>
-     <a style="text-decoration:none" 
-     :href="'tel:' + order.vendor.phone
-     ">
-      <v-btn small
-         class="my-1 elevation-0 pl-0 pr-6 text-left blue--text text--darkeen-4"    
-        color="grey lighten-4"  rounded
-        style="height:45px"
-         >
-        <span  class="ml-3 mr-2 font-weight-bold">  <v-icon>mdi-phone</v-icon> </span>
-      <span>
-         <span class="blue--text text--lighten-3">
-       VENDOR
-        </span><br> <span class="body-1 font-weight-black">
-         {{order.vendor.phone}}
-         </span>
-         </span> 
-      </v-btn>
-      </a>
-<v-flex>
-
-<a style="text-decoration:none" :href="'tel:' + order.user.phone">
+    
         <v-btn
         small
         right 
-  class="my-1 elevation-0 pl-0 pr-6 text-left blue--text text--darkeen-4"    
+  class="my-1 elevation-0 px-3 text-left blue--text text--darkeen-4"    
         color="grey lighten-4" rounded
-        style="height:45px"
+        style="height:45px;width:233px;max-width:233px;    display: ;
+    justify-content: end;"
       >
-      <span  class="font-weight-bold ml-3 mr-2" >  <v-icon>mdi-phone</v-icon> </span>
+      <span  class="font-weight-bold ml-0 mr-2" >  <v-icon>mdi-phone</v-icon> </span>
+      <a style="text-decoration:none" :href="'tel:' + order.vendor.phone">
       <span>
       <span class="blue--text text--lighten-3">
-       User </span><br> 
+       vendor </span>
+       <br> 
+       <span class="body-1 font-weight-black">
+        {{order.vendor.phone}}
+         </span>
+       </span> 
+              </a>
+                 <v-btn absolute style="right:-4px" @click.stop="sendNotifyBtn('vendor')" fab x-small class="ml-2 mr-0 font-weight-bold">  <v-icon>mdi-message-outline</v-icon> </v-btn>
+      </v-btn>
+
+<v-flex>
+
+
+        <v-btn
+        small
+        right 
+  class="my-1 elevation-0 px-3 text-left blue--text text--darkeen-4"    
+        color="grey lighten-4" rounded
+        style="height:45px;width:233px;max-width:233px;    display: ;
+    justify-content: end;"
+      >
+      <span  class="font-weight-bold ml-0 mr-2" >  <v-icon>mdi-phone</v-icon> </span>
+      <a style="text-decoration:none" :href="'tel:' + order.user.phone">
+      <span>
+      <span class="blue--text text--lighten-3">
+       User </span>
+       <br> 
        <span class="body-1 font-weight-black">
         {{order.user.phone}}
          </span>
        </span> 
+      </a>
+    <v-btn absolute style="right:-4px" @click.stop="sendNotifyBtn('user')" fab x-small class="ml-2 mr-0 font-weight-bold">  <v-icon>mdi-message-outline</v-icon> </v-btn>
       </v-btn>
-              </a>
 </v-flex>
       </v-flex>
         </v-list-item-content>
@@ -771,6 +780,48 @@
         :indeterminate="orderLoad"
       ></v-progress-linear>
     </div>
+       <v-dialog v-model="dialogNotify" max-width="290">
+      <v-card class="px-2 pb-2">
+        <v-card-title
+          class="body-1 text-center  pl-3  my-2 pb-0 "
+          >Send Notification To <span class="text-capitalize"> {{ notifyType}}
+            </span>
+            </v-card-title
+        >
+        <v-form ref="formNotify">
+          <v-text-field
+            :rules="[rules.required]"
+            validate-on-blur
+            autofocus
+            @submit.prevent="sendNotify()"
+            rounded label="Message"
+            hint="Write your notification message here"
+            solo
+            v-model="message"
+          ></v-text-field>
+        </v-form>
+
+        <v-card-actions class="pr-1">
+          <v-spacer></v-spacer>
+
+          <v-btn rounded 
+             style="background: linear-gradient(145deg, #ffffff, #e6e6e6);
+box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
+          class="font-weight-black orange--text text--darken-4 whiteBtnShadow" color=""  small @click="dialogNotify = false">
+            cancel
+          </v-btn>
+
+          <v-btn
+          rounded
+             style="background: linear-gradient(145deg, #ffffff, #e6e6e6);
+box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
+       class="font-weight-black"
+           color="blue darken-1" text small @click="sendNotify()">
+            send
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog
       scrollable
       v-model="dialog"
@@ -1158,11 +1209,14 @@ export default {
       payBtn: false,
       dialog: false,
       dialogIn: false,
+      dialogNotify: false,
       dialog2: false,
       orderLoad: false,
       dialogServe: false,
       dialogDelivery: false,
       dialog3: false,
+      message: "",
+      notifyType: '',
       dialogItem: "",
       dialogComp: [],
       dialogOpt: [],
@@ -1294,6 +1348,38 @@ if (!this.replys.length) {
     })
   },
   methods: {
+    sendNotifyBtn(x){
+      
+      this.notifyType = x
+      this.dialogNotify = true
+    },
+    sendNotify(x){
+      if (this.$refs.formNotify.validate()) {
+        this.dialogNotify = false
+        this.orderLoad = true
+        axios.post('/notify_', {
+          message: this.message,
+          type: this.notifyType,
+          order_id: this.order.id
+        })
+        .then(res => {
+          this.orderLoad = false
+            this.$store.dispatch("snack", {
+                color: "blue",
+                text: "Notification sent"
+              });
+          console.log(res)
+        }).catch((err)=>{
+          this.orderLoad = false
+          this.$store.dispatch("snack", {
+              color: "green",
+              text: "Err - "+err
+            });
+          console.log(err)
+
+        })
+              }
+    },
     markTask(x, y){
       this.taskLoading = true
          const sn = this;
