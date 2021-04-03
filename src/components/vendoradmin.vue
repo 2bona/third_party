@@ -16,7 +16,7 @@ export default {
     return {};
   },
   mounted(){
-        this.$store.dispatch("loadVendor")
+        this.$store.dispatch("loadDeliveryAgent")
   }
 };
 </script>

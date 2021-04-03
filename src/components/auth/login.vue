@@ -52,16 +52,6 @@
         >
           login
         </v-btn>
-        <v-btn
-          @click="finished()"
-          :loading="loading"
-          dark
-          rounded
-          color="white"
-          class="mt-4 ml-1 mb-3 caption font-weight-black text--darken-4 orange--text"
-        >
-          finish registeration
-        </v-btn>
     
       </v-form>
       <v-btn
@@ -72,15 +62,6 @@
         text
         color=""
         >forgot password</v-btn
-      >
-      <v-btn
-        to="/auth/register"
-        rounded
-        class="mt-4 caption font-weight-black grey--text"
-        small
-        text
-        color=""
-        >create account</v-btn
       >
     </v-card-text>
   </div>
@@ -146,7 +127,7 @@ export default {
         method: "post",
         params: {
           token: token,
-          type: "vendor"
+          type: "delivery"
         }
       }).then(() => {
         sn.go();
@@ -156,8 +137,6 @@ export default {
       if (this.$route.query.nextUrl) {
         this.$router.push(this.$route.query.nextUrl);
       } else {
-        this.finish ? 
-        this.$router.push("/Regvendor"):
         this.$router.push("/");
       }
     },
@@ -182,26 +161,18 @@ export default {
           .then(response => {
             sn.loading = false;
             var d = response.data.success.user;
-            if (d.role !== "vendor" && !sn.finish) {
+            if (d.role !== "delivery_agent" && !sn.finish) {
               sn.$store.dispatch("snack", {
                 color: "red",
-                text: "Sorry, you are not a Vendor"
+                text: "Sorry, you are not a Logistic Agent"
               });
               return;
-            } else if (d.role === "vendor" && sn.finish) {
-                sn.$store.dispatch("snack", {
-                  color: "red",
-                text: "You are already a Vendor, login to conitinue"
-              });
-            sn.loading = false;
-              sn.finish = false
-              return;
-               } else {
+            }else {
               sn.$store.dispatch("setUser", d);
               sn.$store
                 .dispatch("setToken", response.data.success.token)
                 .then(() => {
-                  sn.$store.dispatch("loadVendor");
+                  sn.$store.dispatch("loadDeliveryAgent");
                   if (sn.ios || sn.android) {
                     sn.setFcm();
                   } else {

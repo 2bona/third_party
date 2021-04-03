@@ -1,37 +1,17 @@
-/* eslint-disable no-unused-vars */
 <template>
-  <v-card color="" style="overflow-x: hidden;" flat tile class="pb-9 px-3">
-    <div>
-      <v-flex>
-        <v-spacer></v-spacer>
-
-        <v-switch
-          style="position: absolute;
-    right: 0;"
-          @change="changeVendorStatus"
-          class=""
-          :loading="statusLoad"
-          v-model="vendor.status"
-          color="success"
-          hide-details
-        >
-          <template v-slot:prepend>
-            <span class="pt-1 red--text font-weight-bold" v-if="!vendor.status"
-              >Closed</span
-            >
-            <span
-              class="pt-1 success--text font-weight-bold"
-              v-if="vendor.status"
-              >Open</span
-            >
-          </template></v-switch
-        >
-      </v-flex>
-    </div>
-    <v-row justify="space-around">
-      <v-avatar size="100" color="transparent" class="mt-6 mb-3 elevation-15">
+  <v-card
+    min-height="95vh"
+    color="grey lighten-3"
+    style="overflow-x: hidden;"
+    flat
+    tile
+    class="pb-9 px-3"
+  >
+    <v-row style="    max-width: 567px;
+    margin: auto;" justify="space-around">
+      <v-avatar size="80" color="transparent" class="mt-6 mb-3 elevation-15">
         <v-img
-          :src="vendor.image || ''"
+          :src="deliveryAgent.image"
           @click="openImageInput"
           alt="profile"
         ></v-img>
@@ -58,11 +38,11 @@
           <v-icon color="orange lighten-4" dark>mdi-cloud-upload</v-icon></v-btn
         >
       </v-avatar>
-      <v-flex xs12 class="mb-4">
+      <v-flex xs12 class=" px-6 mb-3">
         <h3
-          class="text-center mb-0 text-capitalize grey--text text--darken-1 font-weight-bold"
+          class="text-center text-truncate headline mb-0 text-capitalize grey--text text--darken-1 font-weight-bold"
         >
-          <span>{{ vendor.name }}</span>
+          <span>{{ deliveryAgent.name }}</span>
         </h3>
       </v-flex>
       <input
@@ -72,51 +52,41 @@
         @change="fieldChange"
         class="v-input"
       />
-      <v-row class=" px-6">
-        <v-flex xs4>
-          <h4
-            class="grey--text text--darken-1 font-weight-medium  text-center mb-0"
+      <v-row class="">
+        <v-flex xs6>
+          <h3
+            class="grey--text text--darken-1 font-weight-regular  text-center mb-0"
           >
-            {{ vendor.orders_count | price }}
-          </h4>
+            {{ deliveryAgent.orders_count | price }}
+          </h3>
           <p
-            class=" mt-0 grey--text text-capitalize body-2 font-weight-regular  text-center"
+            class=" mt-0 grey--text text-capitalize body-2 font-weight-regular text--lighten-1  text-center"
           >
             Orders
           </p>
         </v-flex>
-        <v-flex xs4>
-          <h4 class="green--text font-weight-medium  text-center mb-0">
-            <v-icon size="14px" style="padding-bottom:1px" color="green"
-              >mdi-currency-ngn</v-icon
-            >{{ vendor.wallet | price }}
-          </h4>
-          <p
-            class=" mt-0 grey--text text-capitalize body-2 font-weight-regular  text-center"
+        <v-flex xs6>
+          <h3
+            class="grey--text text--darken-1 font-weight-regular  text-center mb-0"
           >
-            Wallet
-          </p>
-        </v-flex>
-        <v-flex xs4>
-          <h4 class="green--text font-weight-medium  text-center mb-0">
-            <v-icon size="14px" style="padding-bottom:1px" color="green"
-              >mdi-currency-ngn</v-icon
-            >20,000,000
-          </h4>
+            <v-icon class="pb-1" size="19">mdi-currency-ngn</v-icon
+            >{{ deliveryAgent.funds_collected | price }}
+          </h3>
           <p
-            class=" mt-0 grey--text text-capitalize body-2 font-weight-regular  text-center"
+            class=" mt-0 grey--text text-capitalize body-2 font-weight-regular text--lighten-1  text-center"
           >
-            Paid
+            Funds Collected
           </p>
         </v-flex>
       </v-row>
     </v-row>
-    <v-expansion-panels style="border-radius:25px 25px 0 0" accordion>
+    <v-expansion-panels style="    max-width: 567px;
+    margin: auto;border-radius: 25px 25px 0 0 ;" accordion>
       <v-expansion-panel>
         <v-expansion-panel-header class="px-3"
-          ><p class="font-weight-regular mb-0 body-1">
-            <v-icon class="mr-2" color="grey lighten-3">mdi-account</v-icon
-            >Business Information
+          ><p class="grey--text   text--darken-1 mb-0 title">
+            <v-icon class="mr-2" color="grey lighten-3">mdi-account</v-icon>
+            Account Information
           </p>
         </v-expansion-panel-header>
         <v-expansion-panel-content style="position: relative" class="px-4 py-2">
@@ -125,33 +95,47 @@
               <v-text-field
                 validate-on-blur
                 @keyup.enter.native="edit"
-                label="Business name"
-                v-model="vendor.name"
-                placeholder="Your first name"
-                :rules="[rules.required, rules.min, rules.required2]"
-                color="grey"
-                :loading="loading"
+                label="Token"
+                v-model="deliveryAgent.token"
                 readonly
-                :disabled="loading"
-                required
+                color="grey"
+                disabled
+                :hint="fcm"
+                persistent-hint
               ></v-text-field>
               <v-text-field
                 validate-on-blur
-                label="Agent ID"
-                
-                :loading="loading"
-                v-model="vendor.agent_id"
-                placeholder="Agent ID"
+                @keyup.enter.native="edit"
+                label="Full name"
+                v-model="deliveryAgent.name"
+                placeholder="Your first name"
+                :rules="[rules.required, rules.min]"
                 color="grey"
+                :loading="loading"
+                :disabled="loading"
                 required
               ></v-text-field>
+              <v-select
+                :items="vendors"
+                attach
+                :rules="[rules.minVendor]"
+                chips
+                :loading="loading"
+                :disabled="loading"
+                v-model="vendor"
+                placeholder
+                cache-items
+                label="Vendors you deliver for"
+                color="grey"
+                multiple
+              ></v-select>
               <v-text-field
                 validate-on-blur
                 label="Address"
                 disabled
                 :loading="loading"
                 :rules="[rules.required]"
-                v-model="vendor.address"
+                v-model="deliveryAgent.address"
                 placeholder="Address"
                 color="grey"
                 required
@@ -161,7 +145,7 @@
                 validate-on-blur
                 :loading="loading"
                 :disabled="loading"
-                v-model="vendor.phone"
+                v-model="deliveryAgent.phone"
                 :rules="numberRules"
                 placeholder="Your phone number"
                 color="grey"
@@ -170,8 +154,9 @@
               <v-select
                 :items="areas"
                 attach
-                chips
                 :rules="[rules.minArea]"
+                chips
+                cache-items
                 :loading="loading"
                 :disabled="loading"
                 v-model="area"
@@ -179,24 +164,11 @@
                 color="grey"
                 multiple
               ></v-select>
-              <v-select
-                :items="tags"
-                attach
-                :rules="vendor.type !== 'Errands'? [rules.minTag]: ''"
-                chips
-                :loading="loading"
-                :disabled="loading"
-                v-model="vendorTags"
-                placeholder="Select your cuisines"
-                label="Tags"
-                color="grey"
-                multiple
-              ></v-select>
               <v-textarea
                 name="bio"
                 :loading="loading"
                 :disabled="loading"
-                v-model="vendor.bio"
+                v-model="deliveryAgent.bio"
                 label="Bio"
                 color="grey"
                 placeholder="A little info about your business."
@@ -208,12 +180,14 @@
             </v-row>
             <v-row class="my-5 px-3" justify="space-around">
               <v-btn
-                outlined
+                depressed
                 :disabled="editBtn"
                 @click.prevent="edit"
                 :loading="loading"
                 class="px-6"
-                color="orange"
+                small
+                outlined
+                color="primary"
                 dark
                 rounded
                 >Edit</v-btn
@@ -223,10 +197,10 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel>
-        <v-expansion-panel-header @click="overlay = true" class="px-3"
-          ><p class="  font-weight-regular mb-0 body-1">
-            <v-icon class="mr-2" color="grey lighten-3">mdi-map-marker</v-icon
-            >Delivery
+        <v-expansion-panel-header class="px-3"
+          ><p class="grey--text   text--darken-1 mb-0 title">
+            <v-icon class="mr-2" color="grey lighten-3">mdi-map-marker</v-icon>
+            Areas
           </p>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -234,15 +208,15 @@
             <p
               class="px-2 mb-0 py-0 mt-0 caption grey--text text--lighten-1 text-center"
             >
-              SET DELIVERY FEE FOR THE AREAS YOU COVER
+              AREAS YOU COVER
             </p>
             <v-divider class="mt-2 mb-9 grey lighten-3"></v-divider>
-            <div v-for="(item, i) in vendor.area" :key="item.lat">
+            <div v-for="(item, i) in deliveryAgent.areas" :key="item.lat">
               <v-list-item class="my-2 mt-2" style="max-height: 38px!important">
                 <v-list-item-content v-show="!show[i]">
                   <v-list-item-title
                     class="body-2 grey--text font-weight-medium text--darken-1 pb-0"
-                    >{{ item.name | name }}</v-list-item-title
+                    >{{ item.name }}</v-list-item-title
                   >
                   <v-list-item-title
                     class="overline text-lowercase grey--text mb-7"
@@ -251,46 +225,16 @@
                     }}</v-list-item-title
                   >
                 </v-list-item-content>
-                <v-list-item-content class="pr-1 pl-5">
-                  <v-text-field
-                    :rules="minRule"
-                    :loading="loadingFee"
-                    :disabled="loadingFee"
-                    solo
-                    rounded
-                    @keyup.enter.native="setFee"
-                    prepend-inner-icon="mdi-currency-ngn"
-                    ref="fee"
-                    dense
-                    color="grey lighten-2"
-                    placeholder="Fee"
-                    :value="item.pivot.fee"
-                  >
-                  </v-text-field>
-                </v-list-item-content>
               </v-list-item>
             </div>
           </v-list>
-          <v-row class="mb-8 mt-0 px-3" justify="space-around">
-            <v-btn
-              outlined
-              @click.prevent="setFee"
-              :loading="loadingFee"
-              class="px-6"
-              small
-              color="primary"
-              dark
-              rounded
-              >set</v-btn
-            >
-          </v-row>
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel>
-        <v-expansion-panel-header @click="overlay = true" class="px-3"
-          ><p class="  font-weight-regular mb-0 body-1">
-            <v-icon class="mr-2" color="grey lighten-3">mdi-credit-card</v-icon
-            >Payment
+        <v-expansion-panel-header class="px-3"
+          ><p class="grey--text   text--darken-1 mb-0 title">
+            <v-icon class="mr-2" color="grey lighten-3">mdi-credit-card</v-icon>
+            Payment
           </p>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -298,102 +242,9 @@
             <p
               class="px-2 mb-0 py-0 mt-0 caption grey--text text--lighten-1 text-center"
             >
-              SET PAYMENT OPTIONS FOR CUSTOMERS
+              SET ACCOUNT DETAILS FOR SALARY AND TIPS
             </p>
-            <v-divider class="mt-2 mb-4 grey lighten-3"></v-divider>
-            <v-list-item class="mt-2 mb-0" style="max-height: 38px!important">
-              <v-list-item-icon class=" mt-3 mr-2">
-                <v-icon color="grey lighten-2">mdi-cash-marker</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title class="body-2 grey--text text--darken-1 pb-0"
-                  >Cash on delivery</v-list-item-title
-                >
-              </v-list-item-content>
-              <v-switch
-                color="grey lighten-2"
-                @change="paySet"
-                :disabled="payLoad || isNaN(vendor.minimum_order)"
-                :loading="payLoad"
-                v-model="vendor.cash_on_delivery"
-                class="pt-3"
-              ></v-switch>
-            </v-list-item>
-            <v-list-item class="mb-2" style="max-height: 38px!important">
-              <v-list-item-icon class=" mt-3 mr-2">
-                <v-icon color="grey lighten-2">mdi-cellphone-wireless</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title class="body-2 grey--text text--darken-1 pb-0"
-                  >Transfer on delivery
-                  <span
-                    class="overline font-weight-bold text--lighten-2 grey--text"
-                  ></span
-                ></v-list-item-title>
-              </v-list-item-content>
-              <v-switch
-                color="grey lighten-2"
-                @change="paySet"
-                :disabled="payLoad || isNaN(vendor.minimum_order)"
-                :loading="payLoad"
-                v-model="vendor.card_on_delivery"
-                class="pt-3"
-              ></v-switch>
-            </v-list-item>
-            <v-list-item class="mt-3 mb-1" style="max-height: 38px!important">
-              <v-list-item-icon class=" mt-0 mr-2">
-                <v-icon color="grey lighten-2">mdi-cash</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title class="body-2 grey--text text--darken-1 pb-6"
-                  >Minimum order</v-list-item-title
-                >
-              </v-list-item-content>
-              <v-list-item-content class="pl-4 pr-1">
-                <v-text-field
-                  :rules="minRule"
-                  :disabled="payLoad"
-                  :loading="payLoad"
-                  solo
-                  rounded
-                  prepend-inner-icon="mdi-currency-ngn"
-                  dense
-                  color="grey"
-                  placeholder="Fee"
-                  v-model="vendor.minimum_order"
-                >
-                </v-text-field>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item class="mt-3 mb-1" style="max-height: 38px!important">
-              <v-list-item-icon class=" mt-0 mr-2">
-                <v-icon color="grey lighten-2">mdi-cash</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title class="body-2 grey--text text--darken-1 pb-6"
-                  >P.O.S charge</v-list-item-title
-                >
-              </v-list-item-content>
-              <v-list-item-content class="pl-4 pr-1">
-                <v-text-field
-                  :disabled="payLoad"
-                  :loading="payLoad"
-                  solo
-                  rounded
-                  prepend-inner-icon="mdi-currency-ngn"
-                  dense
-                  color="grey"
-                  placeholder="Fee"
-                  v-model="vendor.pos_charge"
-                >
-                </v-text-field>
-              </v-list-item-content>
-            </v-list-item>
-            <p
-              class="px-2 mb-0 py-0 mt-0 caption grey--text text--lighten-1 text-center"
-            >
-              SET YOUR ACCOUNT DETAILS
-            </p>
+
             <v-divider class="mt-2 mb-9 grey lighten-3"></v-divider>
             <v-list-item class="mt-3 mb-1" style="max-height: 38px!important">
               <v-list-item-icon class=" mt-0 mr-2">
@@ -411,10 +262,9 @@
                   solo
                   rounded
                   dense
-                  class="caption"
                   color="grey"
                   placeholder="Bank Name"
-                  v-model="vendor.bank_name"
+                  v-model="deliveryAgent.bank_name"
                 >
                 </v-text-field>
               </v-list-item-content>
@@ -435,10 +285,9 @@
                   solo
                   rounded
                   dense
-                  class="caption"
                   color="grey"
                   placeholder="Account name"
-                  v-model="vendor.account_name"
+                  v-model="deliveryAgent.account_name"
                 >
                 </v-text-field>
               </v-list-item-content>
@@ -458,12 +307,11 @@
                   :disabled="payLoad"
                   :loading="payLoad"
                   solo
-                  rounded
+                  rounded=""
                   dense
-                  class="caption"
                   color="grey"
                   placeholder="Account number"
-                  v-model="vendor.account_number"
+                  v-model="deliveryAgent.account_number"
                 >
                 </v-text-field>
               </v-list-item-content>
@@ -471,12 +319,12 @@
           </v-list>
           <v-row class="mb-7 mt-0 px-3" justify="space-around">
             <v-btn
-              outlined
-              :disabled="isNaN(vendor.minimum_order)"
+              depressed
               @click.prevent="paySet"
               :loading="payLoad"
               class="px-6"
               small
+              outlined
               color="primary"
               dark
               rounded
@@ -486,147 +334,47 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-card flat style="border-radius: 0 0 25px 25px" tile class="mb-7">
+    <v-card style="    max-width: 567px;
+    margin: auto;border-radius: 0 0 25px 25px;" flat tile class="mb-7">
       <v-list>
-        <v-list-item class="pl-2 pr-0">
-          <v-list-item-title class="body-1 px-1   font-weight-regular">
-            <v-icon size="21" class="mr-2" color="grey lighten-3"
+        <v-list-item class="px-3">
+          <v-list-item-title class="title px-1 grey--text   text--darken-1">
+            <v-icon size="19" class="mr-2" color="grey lighten-3"
               >mdi-information</v-icon
             >
             Support
-            <span class="caption"></span>
           </v-list-item-title>
-          <v-list-item-action class=" pr-5  ml-0">
-            <v-btn
-              outlined
-              small
-              color="grey darken-1"
-              :href="
-                'https://wa.me/+234' +
-                  8033685498 +
-                  '?text=Hello,%20this%20is%20' +
-                  vendor.name
-              "
-              target="_blank"
-              rounded
-              class="px-3 font-weight-bold"
-            >
-              <v-icon size="18" color="grey lighten-1" class="px-2 mt-0"
-                >mdi-information-outline</v-icon
-              >
-            </v-btn>
-          </v-list-item-action>
+          <v-btn
+            outlined
+            rounded
+            small
+            color="grey darken-1"
+            :href="
+              'https://wa.me/+234' +
+                8033685498 +
+                '?text=Hello,%20this%20is%20' +
+                deliveryAgent.name
+            "
+            class="px-3 font-weight-bold"
+            target="_blank"
+            ><v-icon size="18" class="px-2 mt-0"
+              >mdi-information-outline</v-icon
+            ></v-btn
+          >
         </v-list-item>
-        <v-list-item class="pl-2 pr-0">
-          <v-list-item-title class="body-1 px-1   font-weight-regular">
-            <v-icon size="21" class="mr-2" color="grey lighten-3"
-              >mdi-refresh-circle</v-icon
-            >
-            Refresh offline data
-            <span class="caption"></span>
-          </v-list-item-title>
-          <v-list-item-action class=" pr-5  ml-0">
-            <v-btn
-              @click="refreshOffline()"
-              outlined
-              small
-              color="grey darken-1"
-              rounded
-              class="px-3 font-weight-bold"
-            >
-              <v-icon size="18" color="grey lighten-1" class="px-2 mt-0"
-                >mdi-refresh-circle</v-icon
-              >
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-        <v-list-item class="pl-2 pr-0">
-          <v-list-item-title class="body-1 px-1   font-weight-regular">
-            <v-icon size="21" class="mr-2" color="grey lighten-3"
-              >mdi-upload</v-icon
-            >
-            Upload Offline Orders
-            <span class="caption"></span>
-          </v-list-item-title>
-          <v-list-item-action class=" pr-5  ml-0">
-            <v-btn
-              outlined
-              small
-              @click="uploadOfflineOrders()"
-              color="grey darken-1"
-              rounded
-              class="px-3 font-weight-bold"
-            >
-              <v-icon size="18" color="grey lighten-1" class="px-2 mt-0"
-                >mdi-cloud-upload</v-icon
-              >
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-        <v-list-item class="pl-2 pr-0">
-          <v-list-item-title class="body-1 px-1   font-weight-regular">
-            <v-icon size="21" class="mr-2" color="grey lighten-3"
-              >mdi-network-strength-off-outline</v-icon
-            >
-            Offline Companion <v-icon>mdi-trademark</v-icon>
-            <span class="caption"></span>
-          </v-list-item-title>
-          <v-list-item-action class=" pr-5  ml-0">
-            <v-btn
-              to="/offlinepage"
-              outlined
-              small
-              color="grey darken-1"
-              rounded
-              class="px-3 font-weight-bold"
-            >
-              <v-icon size="18" color="grey lighten-1" class="px-2 mt-0"
-                >mdi-network-strength-off-outline</v-icon
-              >
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-        <v-list-item class="pl-2 pr-0">
-          <v-list-item-title class="body-1 px-1   font-weight-regular">
-            <v-icon size="21" class="mr-2" color="grey lighten-3"
-              >mdi-cart-outline</v-icon
-            >
-            Offline orders
-            <span class="caption"></span>
-          </v-list-item-title>
-          <v-list-item-action class=" pr-5  ml-0">
-            <v-btn
-              to="/offlineorders"
-              outlined
-              small
-              color="grey darken-1"
-              rounded
-              class="px-3 font-weight-bold"
-            >
-              <v-icon size="18" color="grey lighten-1" class="px-2 mt-0"
-                >mdi-cart-outline</v-icon
-              >
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-        <v-list-item class="pl-2 pr-0">
-          <v-spacer></v-spacer>
-          <v-btn to="/adminuser" outlined rounded>admin</v-btn>
-          <v-btn @click="logout" outlined rounded>Logout</v-btn>
+        <v-list-item class="px-3">
+          <v-btn
+            dark
+            @click="logout"
+            depressed
+            class="mx-auto caption font-weight-bold px-8 red--text text--lighten-1"
+            rounded
+            color="red lighten-5"
+            >Logout</v-btn
+          >
         </v-list-item>
       </v-list>
     </v-card>
-    <v-dialog v-model="dialog" persistent max-width="290">
-      <v-card flat color="grey">
-        <v-progress-linear
-          color="grey darken-4"
-          :indeterminate="true"
-        ></v-progress-linear>
-        <p class="text-center mt-3 font-weight-bold grey--text text--darken-3">
-          please wait...
-        </p>
-      </v-card>
-    </v-dialog>
   </v-card>
 </template>
 <style>
@@ -640,14 +388,11 @@
 <script>
 import axios from "axios";
 import wrapper from "axios-cache-plugin";
-import { loadedGoogleMapsAPI } from "@/main";
-import localforage from "localforage";
-import LZString from "lz-string";
 
 let http = wrapper(axios, {
   maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
   ttl: 60000, // time to live. if you set this option the cached item will be auto deleted after ttl(ms).
-  excludeHeaders: true // should headers be ignored in cache key, helpful for ignoring tracking headers
+  excludeHeaders: true, // should headers be ignored in cache key, helpful for ignoring tracking headers
 });
 
 export default {
@@ -655,344 +400,164 @@ export default {
     loading: false,
     loadingFee: false,
     loading2: false,
+    fundLoad: false,
     payLoad: false,
-    vendorStatus: false,
-    statusLoad: false,
     load: true,
     attachments: [],
-    vendorTags: [],
+    deliveryAgentTags: [],
     areas: [],
     results: [],
     distance: [],
+    vendors: [],
+    vendor: [],
     duration: [],
     area: [],
-    vendorItems: "",
     show: [],
+    show1: true,
+    fundDialog: false,
     overlay: true,
-    dialog: false,
+    fundAmnt: "",
+    RiderPassword: "",
+    fundPhone: "",
     editBtn: true,
-    rem: [],
-    notReady: [],
-    ready: [],
-    ordersList: [],
-    anyrem: true,
     visible: true,
     rules: {
-      required: value => !!value || "Required.",
-      required2: value =>
-        !/[^a-zA-Z0-9&'()\s]/.test(value) ||
-        "Only letters, numbers, & and bracket are allowed.",
-      min: value => value.length >= 3 || "Min 3 characters",
-      minArea: value => value.length > 0 || "Min 1 area",
-      minTag: value => value.length > 0 || "Min 1 tag",
-      // eslint-disable-next-line no-unused-vars
-      c_password: value =>
+      required: (value) => !!value || "Required.",
+      min: (value) => value.length >= 3 || "Min 3 characters",
+      minVendor: (value) => value.length > 0 || "Minimum of 1 vendor",
+      minArea: (value) => value.length > 0 || "Minimum of 1 area",
+      c_password: (value) =>
         this.password === this.c_password || "does not match passoword",
-      email: value => {
+      email: (value) => {
         const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return pattern.test(value) || "Invalid e-mail.";
-      }
+      },
     },
-    numberRules: [
-      v => (v != null && v.length >= 11) || "Min 11 characters",
-      v => !!v || "Phone number is required",
-      v => v[0] === "0" || 'Phone number must start with "0"',
-      v => /^[0-9]*$/.test(v) || "Number must be valid"
+    fundRules: [
+      (v) => /^[0-9]*$/.test(v) || "Only numbers are allowed",
+      (v) => v >= 50 || "Min 50",
     ],
-    minRule: [v => /^[0-9]*$/.test(v) || "Number must be valid"]
+    numberRules: [
+      (v) => (v != null && v.length >= 11) || "Min 11 characters",
+      (v) => !!v || "Phone number is required",
+      (v) => v[0] === "0" || 'Phone number must start with "0"',
+      (v) => /^[0-9]*$/.test(v) || "Number must be valid",
+    ],
+    minRule: [
+      (v) => !!v || "Phone number is required",
+      (v) => /^[0-9]*$/.test(v) || "Number must be valid",
+    ],
   }),
   computed: {
+    fcm() {
+      return localStorage.getItem("fcm");
+    },
     user() {
       return this.$store.getters.getUser;
     },
-    vendor() {
-      return this.$store.getters.getVendor;
+    deliveryAgent() {
+      return this.$store.getters.getDeliveryAgent;
     },
-    tagsList() {
-      return this.$store.getters.getTags;
-    },
-    tags() {
-      const sn = this;
-      var tags = sn.tagsList.filter(item => {
-        return item.type.toLowerCase() === sn.vendor.type.toLowerCase();
-      });
-      return tags;
-    }
   },
   created() {
     var sn = this;
-    sn.$store.dispatch("loadVendor").then(() => {
+    sn.loading = true;
+    sn.$store.dispatch("loadDeliveryAgent").then(() => {
+      var l = [];
+      var n = sn.deliveryAgent.vendors;
+      sn.vendor = n;
       axios
-        .get("/city/vendorarea?city=" + sn.vendor.city)
+        .get("/city/delivery?city=" + sn.deliveryAgent.city)
         .then(function(response) {
           sn.areas = response.data.areas;
           sn.results = response.data.result;
           sn.load = false;
+          axios
+            .get("/delivery/allvendors?id=" + sn.deliveryAgent.city)
+            .then(function(response) {
+              var d = response.data.vendors;
+              sn.loading = false;
+              sn.vendors = d;
+            });
         });
-      this.$store.dispatch("loadTags");
-      var d = sn.$store.getters.getVendor.tags;
-      sn.vendorTags = d.map(item => {
-        return item.id;
-      });
-      loadedGoogleMapsAPI.then(() => {
-        sn.editBtn = false;
-      });
-      const e = sn.$store.getters.getVendor.area;
-      sn.area = e.map(item => {
+      sn.editBtn = false;
+      const e = sn.$store.getters.getDeliveryAgent.areas;
+      sn.area = e.map((item) => {
         return item.id;
       });
     });
   },
   methods: {
-    uploadOfflineOrders() {
-      const sn = this;
-      sn.dialog = true;
-      localforage.ready().then(function() {
-        localforage
-          .getItem("orders")
-          .then(val => {
-            var o = LZString.decompress(val);
-            var p = JSON.parse(o);
-            sn.ordersList = p;
-            var t = p.filter(el => {
-              return el.p === true && el.s === true;
-            });
-            var y = p.filter(el => {
-              return el.p === false || el.s === false;
-            });
-            sn.notReady = y;
-            sn.ready = t;
-            console.log(t);
-            if (t.length && !sn.rem.length) {
-              let orders = t.filter((el, i) => {
-                return i < 4;
+    fundAccnt() {
+      if (this.$refs.form2.validate()) {
+        this.fundLoad = true;
+        axios
+          .post("/delivery/fund2", {
+            user_phone: this.fundPhone,
+            rider_password: this.RiderPassword,
+            amount: this.fundAmnt,
+          })
+          .then((res) => {
+            if (res.data.blocked) {
+              this.$store.dispatch("snack", {
+                color: "red",
+                text:
+                  "Wrong password!!!, ACCOUNT BLOCKED CALL THE OFFICE TO UNBOLOCK IT NOW!!",
               });
-              let ogt4 = t.filter((el, i) => {
-                return i > 4;
-              });
-              //ogt4 orders greater than index of 4 from 0
-              sn.rem = ogt4;
-              sn.uploader(orders);
+              this.$store.dispatch("logout");
             } else {
-              sn.dialog = false;
-              sn.$store.dispatch("snack", {
+              this.fundDialog = false;
+              this.fundLoad = false;
+              this.$store.dispatch("snack", {
                 color: "green",
-                text: "No completed orders to upload."
+                text: "User Account has been funded successfully",
               });
             }
           })
-          .catch(() => {
-            sn.rem = [];
-            sn.dialog = false;
-            sn.message2 = "You have not accepted any offline order. ";
-          });
-      });
-    },
-    setOrders() {
-      var c = LZString.compress(JSON.stringify(this.ordersList));
-      localforage.removeItem("orders");
-      localforage.setItem("orders", c);
-    },
-    upl() {
-      const sn = this;
-      var t = sn.rem;
-      if (t.length > 0) {
-        let orders = t.filter((el, i) => {
-          return i < 4;
-        });
-        let ogt4 = t.filter((el, i) => {
-          return i > 4;
-        });
-        //ogt4 orders greater than index of 4 from 0
-        sn.rem = ogt4;
-        sn.uploader(orders);
-      } else {
-        sn.dialog = false;
-        sn.rem = [];
-
-        sn.$store
-          .dispatch("snack", {
-            color: "green",
-            text: "Your offline orders has been uploaded successfully."
-          })
-          .then(() => {
-            sn.setOrders();
+          .catch((error) => {
+            console.log(error);
+            this.$store.dispatch("snack", {
+              color: "red",
+              text: "An error occured",
+            });
+            this.fundLoad = false;
+            this.fundDialog = false;
           });
       }
     },
-    checker(x, y) {
-      return x.some(el => {
-        return el === y;
-      });
-    },
-    uploader(x) {
-      var url = "/order/saveOffline";
-      const sn = this;
-      http({
-        url: url,
-        method: "post",
-        params: {
-          orders: JSON.stringify(x)
-        }
-      })
-        .then(res => {
-          console.log(sn.ordersList);
-          var newList = sn.ordersList.filter(el => {
-            return !sn.checker(res.data.list, el.o);
-          });
-          sn.ordersList = newList;
-          setTimeout(() => {
-            sn.upl();
-          }, 2000);
-        })
-        .catch(() => {
-          sn.dialog = false;
-          sn.rem = [];
-          sn.setOrders();
-          sn.$store.dispatch("snack", {
-            color: "green",
-            text: "An error occured."
-          });
-        });
-    },
-    refreshOffline() {
-      const sn = this;
-      sn.dialog = true;
-      const url = "/vendor/get_offline_data";
-      http({
-        url: url,
-        method: "get"
-      })
-        .then(response => {
-          sn.vendorItems = response.data.items;
-
-          localforage
-            .ready()
-            .then(function() {
-              localforage.removeItem("vendorItems");
-              localforage
-                .setItem("vendorItems", sn.vendorItems)
-                .then(val => {
-                  sn.vendorItems = val;
-                  sn.dialog = false;
-                  sn.$store.dispatch("snack", {
-                    color: "green",
-                    text:
-                      "Your offline data has been refreshed successfully and your users has been notified, to refresh their data."
-                  });
-                })
-                .catch(() => {
-                  sn.dialog = false;
-                  sn.$store.dispatch("snack", {
-                    color: "green",
-                    text: "An error occured."
-                  });
-                });
-            })
-            .catch(() => {
-              sn.dialog = false;
-              sn.$store.dispatch("snack", {
-                color: "green",
-                text: "An error occured."
-              });
-            });
-        })
-        .catch(() => {
-          sn.dialog = false;
-          sn.$store.dispatch("snack", {
-            color: "green",
-            text: "An error occured."
-          });
-        });
-      console.log(sn.vendorItems);
-      setTimeout(() => {
-        sn.btn = true;
-      }, 50);
-    },
-    changeVendorStatus() {
-      const sn = this;
-      sn.statusLoad = true;
-      const url = "/vendor/changeStatus";
-      http({
-        url: url,
-        method: "post",
-        params: {
-          status: sn.vendor.status ? 1 : 0
-        }
-      })
-        .then(() => {
-          sn.statusLoad = false;
-          sn.$store.dispatch("loadVendor");
-          sn.$store.dispatch("snack", {
-            color: "green",
-            text: "Your Status has been Updated"
-          });
-        })
-        .catch(err => {
-          sn.statusLoad = false;
-          sn.$store.dispatch("snack", {
-            color: "red",
-            text: err
-          });
-        });
+    fund() {
+      this.fundDialog = true;
+      this.fundAmnt = "";
+      this.RiderPassword = "";
+      this.fundPhone = "";
     },
     paySet() {
       const sn = this;
       sn.payLoad = true;
-      const url = "/vendor/payset";
+      const url = "/delivery/payset";
       http({
         url: url,
         method: "post",
         params: {
-          card: sn.vendor.card_on_delivery ? 1 : 0,
-          cash: sn.vendor.cash_on_delivery ? 1 : 0,
-          minimum: sn.vendor.minimum_order,
-          pos_charge: sn.vendor.pos_charge,
-          bank_name: sn.vendor.bank_name,
-          account_name: sn.vendor.account_name,
-          account_number: sn.vendor.account_number
-        }
+          bank_name: sn.deliveryAgent.bank_name,
+          account_name: sn.deliveryAgent.account_name,
+          account_number: sn.deliveryAgent.account_number,
+        },
       })
-        .then(() => {
+        .then((response) => {
           sn.payLoad = false;
-          sn.$store.dispatch("loadVendor");
+          sn.$store.dispatch("loadDeliveryAgent");
           sn.$store.dispatch("snack", {
             color: "green",
-            text: "Your payment options has been set successfully"
+            text: "Your account details has been set successfully",
           });
         })
         .catch(function(error) {
           sn.payLoad = false;
           sn.$store.dispatch("snack", {
             color: "red",
-            text: error
+            text: error,
           });
-        });
-    },
-    setFee() {
-      const sn = this;
-      sn.loadingFee = true;
-      var fd = new FormData();
-      this.$refs.fee.forEach((fee, i) => {
-        fd.append("fee[" + i + "]", fee.$refs.input.value);
-      });
-      const config = { headers: { "Content-Type": "multipart/form-data" } };
-      axios
-        .post("/vendor/setfee", fd, config)
-        .then(() => {
-          sn.$store.dispatch("loadVendor");
-          sn.loadingFee = false;
-          sn.$store.dispatch("snack", {
-            color: "green",
-            text: "Delivery fee edited successfully"
-          });
-        })
-        .catch(err => {
-          sn.$store.dispatch("snack", {
-            color: "red",
-            text: err
-          });
-          sn.loadingFee = false;
         });
     },
     logout() {
@@ -1025,22 +590,22 @@ export default {
       }
       const config = { headers: { "Content-Type": "multipart/form-data" } };
       axios
-        .post("/vendor/upload", fd, config)
-        .then(res => {
+        .post("/delivery/upload", fd, config)
+        .then((res) => {
           var d = res.data.success;
-          sn.$store.dispatch("loadVendor");
+          sn.$store.dispatch("loadDeliveryAgent");
           sn.loading2 = false;
           sn.$store.dispatch("snack", {
             color: "green",
-            text: d.message
+            text: d.message,
           });
           sn.attachments = [];
         })
-        .catch(err => {
+        .catch((err) => {
           sn.attachments = [];
           sn.$store.dispatch("snack", {
             color: "red",
-            text: err
+            text: err,
           });
           sn.loading2 = false;
         });
@@ -1049,35 +614,37 @@ export default {
       const sn = this;
       if (this.$refs.form.validate()) {
         this.loading = true;
-        const url = "/vendor/update";
+        const url = "/delivery/update";
         var d = sn.results;
         var e = [];
-        sn.area.forEach(element => {
+        sn.area.forEach((element) => {
           e.push(
-            d.find(item => {
+            d.find((item) => {
               return item.id === element;
             })
           );
         });
         const origin = [];
         var set = [];
-        e.forEach(item => {
-          // eslint-disable-next-line no-undef
+        e.forEach((item) => {
           set = new google.maps.LatLng(item.lat, item.lng);
           origin.push(set);
         });
-        // eslint-disable-next-line no-undef
+
         var service = new google.maps.DistanceMatrixService();
         service.getDistanceMatrix(
           {
-            // eslint-disable-next-line no-undef
-            origins: [new google.maps.LatLng(sn.vendor.lat, sn.vendor.lng)],
+            origins: [
+              new google.maps.LatLng(
+                sn.deliveryAgent.lat,
+                sn.deliveryAgent.lng
+              ),
+            ],
             destinations: origin,
             travelMode: "DRIVING",
-            // eslint-disable-next-line no-undef
             unitSystem: google.maps.UnitSystem.METRIC,
             avoidHighways: false,
-            avoidTolls: false
+            avoidTolls: false,
           },
           function(response, status) {
             const duration = [];
@@ -1086,40 +653,42 @@ export default {
               alert("Error was: " + status);
             } else {
               var answer = response.rows[0].elements;
-              answer.forEach(element => {
+              answer.forEach((element) => {
                 distance.push(element.distance.value);
                 duration.push(element.duration.value);
               });
             }
-            console.log(duration);
 
             http({
               url: url,
               method: "post",
               params: {
-                name: sn.vendor.name,
-                bio: sn.vendor.bio,
-                agent_id: sn.vendor.agent_id,
-                phone: sn.vendor.phone,
-                tags: sn.vendorTags,
+                name: sn.deliveryAgent.name,
+                bio: sn.deliveryAgent.bio,
+                phone: sn.deliveryAgent.phone,
                 areas: sn.area,
+                vendors: sn.vendor[0].value
+                  ? sn.vendor.map((n) => {
+                      return n.value;
+                    })
+                  : sn.vendor,
                 duration: duration,
                 distance: distance,
-                token: localStorage.getItem("fcm") || ""
-              }
+                token: sn.fcm || "",
+              },
             })
               .then(() => {
                 sn.loading = false;
-                sn.$store.dispatch("loadVendor");
+                sn.$store.dispatch("loadDeliveryAgent");
                 sn.$store.dispatch("snack", {
                   color: "green",
-                  text: "Your profile has been successfully edited"
+                  text: "Your profile has been successfully updated",
                 });
               })
               .catch(function(error) {
                 sn.$store.dispatch("snack", {
                   color: "red",
-                  text: error
+                  text: error,
                 });
                 sn.loading = false;
               });
@@ -1128,7 +697,7 @@ export default {
       } else {
         sn.loading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -53,33 +53,6 @@
                   >
                     {{ items.name }}
                   </h3>
-
-                  <v-row justify="space-around" class="mt-3">
-                    <v-btn
-                      :disabled="$route.params.id != items.id"
-                      @click="editCat(items.name, items.id)"
-                      text
-                      x-small
-                      color="grey"
-                      ><v-icon>mdi-pencil-outline</v-icon> edit</v-btn
-                    >
-                    <v-btn
-                      :disabled="$route.params.id != items.id"
-                      @click="addCat(items.name, items.id)"
-                      text
-                      x-small
-                      color="grey"
-                      ><v-icon>mdi-plus</v-icon>add item</v-btn
-                    >
-                    <v-btn
-                      :disabled="$route.params.id != items.id"
-                      @click="deleteCat(items.name, items.id)"
-                      text
-                      x-small
-                      color="grey"
-                      ><v-icon>mdi-trash-can</v-icon>delete</v-btn
-                    >
-                  </v-row>
                 </div>
 
                 <v-divider class="my-4"></v-divider>
@@ -125,8 +98,8 @@
                       >
                         <v-img
                         contain
+                        :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_40,w_40/'+n.image.substring(n.image.lastIndexOf('/') + 1,n.image.lastIndexOf('.'))"
                           @click="openItemImageInput(n.id)"
-                          :src="n.image"
                         ></v-img>
                         <v-overlay
                           absolute
@@ -170,62 +143,99 @@
                                 >mdi-circle</v-icon
                               >{{ n.name }}
                             </h2>
-                          </v-flex>
+                            <vue-countdown-timer
+                            v-if="n.preorder"
+                            @end_callback="''"
+                            :start-time="minDate2"
+                            :end-time="getEndTime(n.preorder_value)"
+                            :interval="1000"
+                            :start-label="'Until start'"
+                            label-position="begin"
+                            :end-text="'Preorder ended for the day!'"
+                            :day-txt="'days'"
+                            :hour-txt="'hours'"
+                            :minutes-txt="'minutes'"
+                            :seconds-txt="'seconds'"
+                          >
+                            <template slot="countdown" slot-scope="scope">
+                              <v-chip
+                                class="mt-1 font-weight-bold body-1"
+                                :color="
+                                  scope.props.minutes <= 1
+                                    ? 'red lighten-4'
+                                    : scope.props.minutes <= 2
+                                    ? 'yellow lighten-4'
+                                    : 'grey lighten-2'
+                                "
+                                :class="
+                                  scope.props.minutes <= 1
+                                    ? 'red--text text--darken-2'
+                                    : scope.props.minutes <= 2
+                                    ? 'yellow--text text--darken-4'
+                                    : 'grey--text text--darken-2'
+                                "
+                              >
+                                <span>{{ scope.props.days }}: </span>
+                                <span>{{ scope.props.hours }}: </span>
+                                <span>{{ scope.props.minutes }}: </span>
+                                <span>{{ scope.props.seconds }}</span>
+                              </v-chip>
+                            </template>
+                          </vue-countdown-timer>
+                                                   </v-flex>
                           <v-slide-x-reverse-transition>
                             <v-flex
                               v-show="!n.status"
                               xs5
                               style="
-            position: absolute; right: -2px; z-index:99; top: -3px;"
+                                position: absolute; right:0px; z-index:99;"
                             >
                               <v-btn
-                                @click="
+                                @click.stop="
                                   editCatItem(
                                     items.id,
                                     n.id,
                                     n.name,
                                     n.cost_price,
-                                    n.description,
-                                    n.main_option,
-                                    n.mark_up_price,
-                                    n.tel,
-                                    n.address,
-                                    n.ig
+                                    n.description
                                   )
                                 "
                                 icon
-                                text
-                                color="grey lighten-2"
-                                small
-                                class="mt-1 mr-1"
+                                color="grey darken-2"
+                                class=" mr-3"
                               >
                                 <v-icon>mdi-pencil-outline</v-icon>
-                              </v-btn>
-                              <v-btn
-                                icon
-                                text
-                                @click="deleteCatItem(items.id, n.id, n.name)"
-                                color="grey lighten-2"
-                                small
-                                class="mt-1 mr-1"
-                              >
-                                <v-icon>mdi-trash-can</v-icon>
                               </v-btn>
                             </v-flex>
                           </v-slide-x-reverse-transition>
                           <v-slide-x-transition>
                             <v-switch
-                              v-show="!n.status"
+                            :disabled="!n.available"
+                              @click.prevent="
+                                preorderBtn(n.preorder, n.name, n.id, items.id)
+                              "
+                              :style="
+                                n.status
+                                  ? 'position: absolute;transform: rotate(270deg);top: -13px;left: -39px;'
+                                  : 'position: absolute;transform: rotate(270deg);left: -39px; top: -13px;'
+                              "
+                              v-model="n.preorder"
+                              :color="n.preorder ? 'orange' : 'grey'"
+                              class="mt-2 mb-0 pb-0"
+                            ></v-switch>
+                          </v-slide-x-transition>
+                          <v-slide-x-transition>
+                            <v-switch
                               @click.prevent="
                                 offFood(n.available, n.name, n.id, items.id)
                               "
                               :style="
                                 n.status
-                                  ? 'position: absolute;transform: rotate(270deg);top: 15px;right: -25px;'
-                                  : 'position: absolute;transform: rotate(270deg);right: -25px; top: 15px;'
+                                  ? 'position: absolute;transform: rotate(270deg);top: -13px;right: -49px;'
+                                  : 'position: absolute;transform: rotate(270deg);right: -49px; top: -13px;'
                               "
                               v-model="n.available"
-                              color="grey lighten-4"
+                              :color="n.available ? 'green' : 'red'"
                               class="mt-2 mb-0 pb-0"
                             ></v-switch>
                           </v-slide-x-transition>
@@ -239,110 +249,11 @@
                             size="11.5px"
                             style="width: 4.8px; padding-bottom:1.8px; margin-right:3px"
                             >mdi-currency-ngn</v-icon
-                          >{{ n.price | price }}
+                          >{{ n.cost_price | price }}
                         </p>
                         <p class="mb-0 ">
                           <span class="d-flex justify mb-0 mt-0"> </span>
                         </p>
-                        <v-flex xs12>
-                          <v-expand-transition>
-                            <v-layout
-                              v-show="!n.status"
-                              style="width:100%;padding-left: 13px !important;"
-                              row
-                              wrap
-                              class="py-1"
-                            >
-                              <v-flex
-                                v-show="!type"
-                                v-if="n.main_option.length"
-                                xs12
-                              >
-                                <p
-                                  class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
-                                >
-                                  Cumpolsory
-                                </p>
-                                <v-divider
-                                  class=" grey lighten-4 mb-1"
-                                ></v-divider>
-                                <v-layout row wrap class="pl-3">
-                                  <div
-                                    style="max-width:150px;display: inline-grid;"
-                                    v-show="img.pivot.type === 'compulsory'"
-                                    v-for="img in n.main_option"
-                                    :key="img.id + img.pivot.type"
-                                  >
-                                    <v-chip class="ma-1" x-small>
-                                      {{ img.name }}
-                                    </v-chip>
-                                  </div>
-                                </v-layout>
-                              </v-flex>
-                              <v-flex
-                                v-show="!type"
-                                xs12
-                                v-if="n.main_option.length"
-                              >
-                                <p
-                                  class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
-                                >
-                                  Optional
-                                </p>
-                                <v-divider
-                                  class="grey lighten-4 mb-1"
-                                ></v-divider>
-                                <v-layout row wrap class="pl-3">
-                                  <div
-                                    style="max-width:150px;display: inline-grid;"
-                                    v-show="img.pivot.type === 'optional'"
-                                    v-for="img in n.main_option"
-                                    :key="img.id + img.pivot.type"
-                                  >
-                                    <v-chip
-                                      class="ma-1 text-center text-truncate"
-                                      x-small
-                                    >
-                                      {{ img.name }}
-                                    </v-chip>
-                                  </div>
-                                </v-layout>
-                              </v-flex>
-                              <v-flex v-if="serve" xs12>
-                                <p
-                                  class="overline my-0 py-0 grey--text font-weight-bold text-capitalize"
-                                >
-                                  Sold
-                                </p>
-                                <v-progress-linear
-                                  color="grey lighten-1"
-                                  v-show="isLoading && countId === n.id"
-                                  :indeterminate="isLoading"
-                                ></v-progress-linear>
-                                <v-divider
-                                  class="grey lighten-4 mb-1"
-                                ></v-divider>
-                                <div
-                                  style="width:40px;display: inline-grid;"
-                                  class="mb-0 mr-2"
-                                >
-                                  <v-avatar
-                                    size="25px"
-                                    class=" mx-auto elevation-2"
-                                    color="green"
-                                  >
-                                    <v-icon small dark>mdi-cart-outline</v-icon>
-                                  </v-avatar>
-                                  <p
-                                    class="caption mb-0 text-capitalize text-center grey--text"
-                                  >
-                                    {{ counterValue(n.id) }}
-                                  </p>
-                                </div>
-                              </v-flex>
-                            </v-layout>
-                          </v-expand-transition>
-                        </v-flex>
                       </v-list-item-title>
                     </v-list-item>
                   </v-card>
@@ -405,31 +316,33 @@
                       ></v-text-field>
                     </v-card-text>
                     <v-flex>
-            <div style="width:100%; " class="py-2 text-center">
-              <span>Tag this category</span>
-              <v-layout
-                style="padding: 0 0px;overflow: visible;width:100%;height:;position: relative;"
-              >
-                <div
-                  style="top: 0;bottom: 0;
+                      <div style="width:100%; " class="py-2 text-center">
+                        <span>Tag this category</span>
+                        <v-layout
+                          style="padding: 0 0px;overflow: visible;width:100%;height:;position: relative;"
+                        >
+                          <div
+                            style="top: 0;bottom: 0;
                 left: 10px; display: flex;overflow-y: hidden; height:100%;
                   flex-wrap: wrap;box-sizing:content;overflow-x: scroll !important;width:100%; padding: 0 19px 12px 19px !important;"
-                  xs12
-                >
-                
-                  <v-chip
-                  v-for="n in tags" :key="n.id"
-                    style="flex: 0 0 auto;"
-                    class=" px-5 text-capitalize mx-2 my-2  text--lighten-0
+                            xs12
+                          >
+                            <v-chip
+                              v-for="n in tags"
+                              :key="n.id"
+                              style="flex: 0 0 auto;"
+                              class=" px-5 text-capitalize mx-2 my-2  text--lighten-0
                      font-weight-bold body-1"
-                     :color="taggedText == n.text ? 'lighten-2 orange': ''"
-                     @click="tagged(n.text)"
-                    >{{n.text}}</v-chip
-                  >
-                </div></v-layout
-              >
-            </div>
-          </v-flex>
+                              :color="
+                                taggedText == n.text ? 'lighten-2 orange' : ''
+                              "
+                              @click="tagged(n.text)"
+                              >{{ n.text }}</v-chip
+                            >
+                          </div></v-layout
+                        >
+                      </div>
+                    </v-flex>
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-btn
@@ -448,53 +361,89 @@
                   </v-form>
                 </v-card>
               </v-dialog>
-              <v-dialog v-model="dialog2" width="500">
+              <v-dialog v-model="dialog4" fullscreen>
                 <v-card>
-                  <v-card-title class="body-1 grey lighten-2" primary-title>
-                    Delete category and its Items?
+                  <v-card-title class=" grey lighten-2" primary-title>
+                     Pre Order settings
                     <v-spacer></v-spacer>
-                    <v-btn icon @click="dialog2 = false"
+                    <v-btn icon @click="dialog4 = false"
                       ><v-icon>mdi-close</v-icon></v-btn
                     >
                   </v-card-title>
                   <v-divider></v-divider>
-
-                  <v-card-actions>
-                    <v-btn
-                      color="blue"
-                      class="px-3 mx-auto"
-                      rounded
-                      dark
-                      depressed
-                      :loading="loading2"
-                      @click="deleteCategory(deleteId)"
-                    >
-                      sure
-                    </v-btn>
-                    <v-btn
-                      color="grey"
-                      class="px-3 mx-auto"
-                      rounded
-                      dark
-                      depressed
-                      @click="dialog2 = false"
-                    >
-                      cancel
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-              <v-dialog v-model="dialog3" width="500">
-                <v-card>
-                  <v-card-title class="body-1 grey lighten-2" primary-title>
-                    Turn {{ offName }}?
-                    <v-spacer></v-spacer>
-                    <v-btn icon @click="dialog3 = false"
-                      ><v-icon>mdi-close</v-icon></v-btn
-                    >
-                  </v-card-title>
-                  <v-divider></v-divider>
-                  <v-card-actions>
+                  <v-row flat class="px-8" v-if="preOrd" justify="center">
+                    <div style="width: 100%;" class="my-6" v-if="preorderAns === null">
+                    <h3 class="my-2 grey--text text-center">Will it be available today?</h3>
+                    <v-card-actions style="justify-content: center;">
+                      <v-btn
+                        class="px-3 mx-1"
+                        rounded
+                        dark
+                        depressed
+                        color="grey"
+                        :loading="loading3"
+                        @click="preorderAns = false"
+                      >
+                        no
+                      </v-btn>
+                      <v-btn
+                        color="blue"
+                        class="px-3 mx-1"
+                        rounded
+                        dark
+                        depressed
+                        
+                        @click="preorderAns = true"
+                      >
+                        yes
+                      </v-btn>
+                    </v-card-actions>
+                    </div>
+                    
+                    <div class="mx-auto text-center"> 
+                      <h2 v-if="preorderAns === true" class="my-4 grey--text">What time will it be available? </h2>
+                      <h2 v-if="preorderAns === false" class="my-4 grey--text">Which day will it be available? </h2>
+                      <v-time-picker
+                        v-show="preorderAns === true"
+                        width="230"
+                        format="ampm"
+                        v-model="timepicker"
+                      ></v-time-picker>
+                      <v-date-picker
+                        :min="minDate"
+                        :max="maxDate"
+                        v-show="preorderAns === false"
+                        width="100%"
+                        v-model="picker"
+                      ></v-date-picker>
+                      <v-card-actions style="justify-content: center;" v-show="preorderAns !== null"> 
+                        <v-btn
+                          class="px-3 mx-1"
+                          rounded
+                          dark
+                          depressed
+                          
+                          color="grey"
+                          :loading="loading3"
+                          @click="preorderAns = null"
+                        >
+                          back
+                        </v-btn>
+                        <v-btn
+                          color="blue"
+                          class="px-3 white--text mx-1"
+                          rounded
+                          depressed
+                          :disabled="!disabBtn"
+                          :loading="loading3"
+                          @click=" preorder()"
+                        >
+                          Set
+                        </v-btn>
+                      </v-card-actions>
+                    </div>
+                  </v-row>
+                  <v-card-actions v-if="!preOrd">
                     <v-btn
                       color="blue"
                       class="px-3 mx-auto"
@@ -502,7 +451,7 @@
                       dark
                       depressed
                       :loading="loading3"
-                      @click="offItem()"
+                      @click="preOrd ? preorder() : offItem()"
                     >
                       sure
                     </v-btn>
@@ -519,19 +468,18 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <v-dialog v-model="dialog4" width="500">
+              <v-dialog v-model="dialog3" width="500">
                 <v-card>
-                  <v-card-title
-                    class="body-1 item-truncate grey lighten-2"
-                    primary-title
-                  >
-                    Delete item?
+                  <v-card-title class=" grey lighten-2" primary-title>
+                    Turn {{ setDialogName }}
                     <v-spacer></v-spacer>
-                    <v-btn icon @click="dialog4 = false"
+
+                    <v-btn icon @click="dialog3 = false"
                       ><v-icon>mdi-close</v-icon></v-btn
                     >
                   </v-card-title>
                   <v-divider></v-divider>
+            
                   <v-card-actions>
                     <v-btn
                       color="blue"
@@ -539,8 +487,8 @@
                       rounded
                       dark
                       depressed
-                      :loading="loading4"
-                      @click="deleteItem(deleteCatId, deleteCatItemId)"
+                      :loading="loading3"
+                      @click="preOrd ? preorder() : offItem()"
                     >
                       sure
                     </v-btn>
@@ -550,175 +498,11 @@
                       rounded
                       dark
                       depressed
-                      @click="dialog4 = false"
+                      @click="dialog3 = false"
                     >
                       cancel
                     </v-btn>
                   </v-card-actions>
-                </v-card>
-              </v-dialog>
-              <v-dialog v-model="dialog5" width="500">
-                <v-card flat tile class=" pb-9">
-                  <v-form onSubmit="return false;" ref="form4">
-                    <v-card-title
-                      primary-title
-                      class=" grey lighten-2 body-1 mb-3"
-                    >
-                      Add new item
-                      <v-spacer></v-spacer>
-                      <v-btn icon @click="dialog5 = false"
-                        ><v-icon>mdi-close</v-icon></v-btn
-                      >
-                    </v-card-title>
-                    <div class="px-5 pb-9">
-                      <v-flex xs12>
-                        <v-text-field
-                          class="font-weight-regular grey--text text--darken-4"
-                          label="Name"
-                          :placeholder="
-                            serve && !type
-                              ? 'eg. Jollof Rice'
-                              : !serve
-                              ? 'Name of business'
-                              : 'eg. Shirt'
-                          "
-                          color="orange"
-                          v-model="name"
-                          required
-                          :rules="[rules.required, rules.required2]"
-                        ></v-text-field>
-                        <v-text-field
-                          v-if="!serve"
-                          class="font-weight-regular grey--text text--darken-4"
-                          label="Phone number"
-                          v-model="tel"
-                          placeholder="08033685498"
-                          hint="put only valid number eg '08033685498' not '+234803323455'"
-                          color="orange"
-                          required
-                          :rules="[rules.required]"
-                        ></v-text-field>
-                        <v-text-field
-                          v-if="!serve"
-                          class="font-weight-regular grey--text text--darken-4"
-                          label="Instagram handle"
-                          v-model="ig"
-                          placeholder="app_money_1"
-                          hint="put only valid instagram handle without '@'"
-                          color="orange"
-                        ></v-text-field>
-                        <v-text-field
-                          v-if="!serve"
-                          class="font-weight-regular grey--text text--darken-4"
-                          label="Address"
-                          v-model="address"
-                          placeholder="No 5 ben oranusim Ifite Awka."
-                          hint="Enter Service persons' address"
-                          color="orange"
-                          required
-                        ></v-text-field>
-                        <v-text-field
-                          v-if="serve"
-                          class="font-weight-regular grey--text text--darken-4"
-                          label="Cost price"
-                          v-model="cost_price"
-                          placeholder="0"
-                          hint="put only number eg '1000' not '1,000'"
-                          color="orange"
-                          prepend-inner-icon="mdi-currency-ngn"
-                          required
-                          :rules="[rules.required]"
-                        ></v-text-field>
-                        <!-- <v-text-field
-                          v-if="serve"
-                          class="font-weight-regular grey--text text--darken-4"
-                          label="Pack price"
-                          v-model="mark_up_price"
-                          placeholder="0"
-                          hint="put only number eg '1000' not '1,000'"
-                          color="orange"
-                          prepend-inner-icon="mdi-currency-ngn"
-                          :rules="markRules"
-                        ></v-text-field> -->
-                        <v-text-field
-                          v-if="serve"
-                          class="font-weight-regular grey--text text--darken-4"
-                          label="Mark up"
-                          v-model="mark_up_price"
-                          placeholder="0"
-                          hint="put only number eg '1000' not '1,000'"
-                          color="orange"
-                          prepend-inner-icon="mdi-currency-ngn"
-                          :rules="markRules"
-                        ></v-text-field>
-                      </v-flex>
-                      <v-row class="px-3" justify="space-between">
-                        <v-flex xs12>
-                          <v-file-input
-                            ref="file2"
-                            @change="fieldChanges"
-                            class="font-weight-regular grey--text text--darken-4"
-                            prepend-icon="mdi-camera"
-                            placeholder="Picture"
-                            label="Image"
-                          ></v-file-input>
-                        </v-flex>
-                        <v-flex xs12>
-                          <v-textarea
-                            name="description"
-                            label="Description (optional)"
-                            color="orange"
-                            v-model="description"
-                            class="font-weight-regular grey--text text--darken-4"
-                            :placeholder="
-                              serve
-                                ? 'eg. Egusi soup garnished with kpomo and okporoko, to satisfy your hunger and keep you wanting more.'
-                                : 'A little info about the service person'
-                            "
-                          ></v-textarea>
-                        </v-flex>
-                        <v-flex xs12 v-if="!type">
-                          <v-select
-                            class="font-weight-regular grey--text text--darken-4"
-                            :items="mainOptionsList"
-                            attach
-                            v-model="compulsory"
-                            chips
-                            placeholder="eg. meat, fish, garri, fufu"
-                            label="Compulsory extras (optional)"
-                            color="orange"
-                            multiple
-                          ></v-select>
-                        </v-flex>
-                        <v-flex xs12 v-if="!type">
-                          <v-select
-                            class="font-weight-regular grey--text text--darken-4"
-                            :items="mainOptionsList"
-                            attach
-                            v-model="optional"
-                            chips
-                            placeholder="eg. plantain, eggs, coleslaw, moi-moi"
-                            label="Optional extras (optional)"
-                            color="orange"
-                            multiple
-                          ></v-select>
-                        </v-flex>
-                      </v-row>
-
-                      <v-row class="my-5 px-3" justify="space-around">
-                        <v-btn
-                          :loading="loading5"
-                          @click="addCategoryItem(addId)"
-                          class="px-6"
-                          color="orange"
-                          dark
-                          depressed=""
-                          rounded
-                          >add</v-btn
-                        >
-                      </v-row>
-                    </div>
-                  </v-form>
                 </v-card>
               </v-dialog>
               <v-dialog v-model="dialog6" width="500">
@@ -748,7 +532,7 @@
                           "
                           color="orange"
                           v-model="editCatItemName"
-                          required
+                          disabled
                           :rules="[rules.required, rules.required2]"
                         ></v-text-field>
                         <v-text-field
@@ -793,17 +577,6 @@
                           required
                           :rules="numberRules"
                         ></v-text-field>
-                        <v-text-field
-                          v-if="serve"
-                          class="font-weight-regular grey--text text--darken-4"
-                          label="Mark up"
-                          v-model="editCatItemMarkUp"
-                          placeholder="0"
-                          hint="put only number eg '1000' not '1,000'"
-                          color="orange"
-                          prepend-inner-icon="mdi-currency-ngn"
-                          :rules="markRules"
-                        ></v-text-field>
                       </v-flex>
                       <v-row class="px-3" justify="space-between">
                         <v-flex xs12>
@@ -821,32 +594,6 @@
                                 : 'A little info on the laundry process'
                             "
                           ></v-textarea>
-                        </v-flex>
-                        <v-flex v-if="!type" xs12>
-                          <v-select
-                            class="font-weight-regular grey--text text--darken-4"
-                            :items="mainOptionsList"
-                            attach
-                            v-model="compValue"
-                            chips
-                            placeholder="eg. meat, fish, garri, fufu"
-                            label="Compulsory extras (optional)"
-                            color="orange"
-                            multiple
-                          ></v-select>
-                        </v-flex>
-                        <v-flex v-if="!type" xs12>
-                          <v-select
-                            class="font-weight-regular grey--text text--darken-4"
-                            :items="mainOptionsList"
-                            attach
-                            v-model="optValue"
-                            chips
-                            placeholder="eg. plantain, eggs, coleslaw, moi-moi"
-                            label="Optional extras (optional)"
-                            color="orange"
-                            multiple
-                          ></v-select>
                         </v-flex>
                       </v-row>
 
@@ -886,7 +633,15 @@ export default {
       generic: "",
       address: "",
       tel: "",
+      preorderAns: null,
       ig: "",
+      timepicker: null,
+      minDate2: new Date(),
+      minDate: new Date().toISOString(),
+      picker: null,
+      maxDate: new Date(
+        new Date().getTime() + 3 * 24 * 60 * 60 * 1000
+      ).toISOString(),
       cost_price: "",
       mark_up_price: "",
       taggedText: "",
@@ -909,10 +664,10 @@ export default {
       deleteCatId: "",
       deleteCatItemId: "",
       deleteName: "",
-      offName: "",
-      offId: "",
-      offCat: "",
-      offAvailable: "",
+      setDialogName: "",
+      selectedId: "",
+      selectedCat: "",
+      selectedAvailable: "",
       deleteCatItemName: "",
       attachments: [],
       attach: "",
@@ -936,7 +691,8 @@ export default {
       isLoading: false,
       loading1: false,
       loading2: false,
-      loading3: false,
+      loading2: false,
+      preOrd: false,
       loading4: false,
       loading5: false,
       loading6: false,
@@ -945,29 +701,39 @@ export default {
       counter: [],
       valid: true,
       rules: {
-        required: value => !!value || "Required.",
-        required2: value =>
+        required: (value) => !!value || "Required.",
+        required2: (value) =>
           !/[^a-zA-Z0-9&()\s]/.test(value) ||
-          "Only letters, numbers, & and bracket are allowed."
+          "Only letters, numbers, & and bracket are allowed.",
       },
-      markRules: [v => /^[0-9]*$/.test(v) || "Price must be only numbers"],
+      markRules: [(v) => /^[0-9]*$/.test(v) || "Price must be only numbers"],
       numberRules: [
-        value => !!value || "Required.",
-        v => /^[0-9]*$/.test(v) || "Price must be only numbers"
+        (value) => !!value || "Required.",
+        (v) => /^[0-9]*$/.test(v) || "Price must be only numbers",
       ],
-      radios: "Thank you soo much, we will keep improving"
+      radios: "Thank you soo much, we will keep improving",
     };
   },
   computed: {
     vendor() {
       return this.$store.getters.getVendor;
     },
+    preorder_time(){
+      return this.minDate.substr(0, 10)+' '+this.timepicker
+    },
+    disabBtn() {
+    if (this.preorderAns !== null) {
+      return this.preorderAns? this.timepicker != null: this.picker != null
+    }else{
+      return false
+    }
+    },
     tagsList() {
       return this.$store.getters.getTags;
     },
     tags() {
       const sn = this;
-      var tags = sn.tagsList.filter(item => {
+      var tags = sn.tagsList.filter((item) => {
         return item.type.toLowerCase() === sn.vendor.type.toLowerCase();
       });
       return tags;
@@ -975,7 +741,7 @@ export default {
     type() {
       return !(this.vendor.type.toLowerCase() === "food");
     },
-  
+
     serve() {
       return !(this.vendor.type.toLowerCase() === "services");
     },
@@ -998,27 +764,30 @@ export default {
     },
     items() {
       return this.$store.getters.getItems;
-    }
+    },
   },
   mounted() {
     this.$store.dispatch("loadOptions");
   },
   beforeRouteEnter(to, from, next) {
-    next(vm => {
+    next((vm) => {
       let n = to;
       // access to component instance via `vm`
       vm.$store.dispatch("loadItems", {
-        id: n.params.id
+        id: n.params.id,
       });
     });
   },
   methods: {
-    tagged(x){
-      this.taggedText = x
+            getEndTime(x){
+     return this.minDate.substr(0, 10)+' '+ x
+    },
+    tagged(x) {
+      this.taggedText = x;
     },
     counterValue(x) {
       const sn = this;
-      var item = sn.counter.find(element => {
+      var item = sn.counter.find((element) => {
         return element.id === x;
       });
       if (item) {
@@ -1042,26 +811,26 @@ export default {
         //   }, 1000);
         // });
       } else {
-        var isCounted = sn.counter.find(element => {
+        var isCounted = sn.counter.find((element) => {
           return element.id === x;
         });
-          if (isCounted && !sn.isLoading) {
-            return;
-          } else {
-            sn.isLoading = false;
-            var d = {};
-            // axios
-            //   .get("/item/count_orders?id=" + x + "&cat_id=" + y)
-            //   .then(res => {
-            //     d.id = x;
-            //     d.count = res.data.count;
-            //     sn.counter.push(d);
-            //     setTimeout(() => {
-            //       sn.isLoading = false;
-            //     }, 1000);
-            //   });
-            return;
-          }
+        if (isCounted && !sn.isLoading) {
+          return;
+        } else {
+          sn.isLoading = false;
+          var d = {};
+          // axios
+          //   .get("/item/count_orders?id=" + x + "&cat_id=" + y)
+          //   .then(res => {
+          //     d.id = x;
+          //     d.count = res.data.count;
+          //     sn.counter.push(d);
+          //     setTimeout(() => {
+          //       sn.isLoading = false;
+          //     }, 1000);
+          //   });
+          return;
+        }
       }
     },
     addCategory() {
@@ -1072,18 +841,18 @@ export default {
           .post("/category/save", {
             content: sn.content,
             vendor_id: sn.vendor.id,
-            vendor_name: sn.vendor.name
+            vendor_name: sn.vendor.name,
           })
           .then(function(response) {
             console.log(response.data);
             sn.$store.dispatch("loadItems", {
-              id: sn.$route.params.id
+              id: sn.$route.params.id,
             });
             sn.dialog = false;
             sn.loading = false;
             sn.$store.dispatch("snack", {
               color: "green",
-              text: "Category added"
+              text: "Category added",
             });
           })
           .catch(function(error) {
@@ -1091,7 +860,7 @@ export default {
             sn.dialog = false;
             sn.$store.dispatch("snack", {
               color: "red",
-              text: "Error occured"
+              text: "Error occured",
             });
           });
       }
@@ -1104,18 +873,18 @@ export default {
           .post("/category/update", {
             id: y,
             content: x,
-            tag: sn.taggedText
+            tag: sn.taggedText,
           })
           .then(function(response) {
             console.log(response.data);
             sn.$store.dispatch("loadItems", {
-              id: sn.$route.params.id
+              id: sn.$route.params.id,
             });
             sn.loading1 = false;
             sn.dialog1 = false;
             sn.$store.dispatch("snack", {
               color: "green",
-              text: "Category edited"
+              text: "Category edited",
             });
           })
           .catch(function(error) {
@@ -1123,7 +892,7 @@ export default {
             sn.loading1 = false;
             sn.$store.dispatch("snack", {
               color: "red",
-              text: "Error occured"
+              text: "Error occured",
             });
           });
       }
@@ -1134,28 +903,28 @@ export default {
         var comp = [];
         var compa = [];
         if (sn.compValue) {
-          var g = sn.compValue.forEach(element => {
+          var g = sn.compValue.forEach((element) => {
             comp.push(
-              sn.mainOptions.find(item => {
+              sn.mainOptions.find((item) => {
                 return item.name === element;
               })
             );
           });
-          compa = comp.map(item => {
+          compa = comp.map((item) => {
             return item.id;
           });
         }
         var opt = [];
         var opta = [];
         if (sn.optValue) {
-          var h = sn.optValue.forEach(element => {
+          var h = sn.optValue.forEach((element) => {
             opt.push(
-              sn.mainOptions.find(item => {
+              sn.mainOptions.find((item) => {
                 return item.name === element;
               })
             );
           });
-          opta = opt.map(item => {
+          opta = opt.map((item) => {
             return item.id;
           });
         }
@@ -1165,27 +934,21 @@ export default {
         axios
           .post("/item/update", {
             cat_id: sn.editCatId,
-            item_id: sn.editCatItemId,
             name: sn.editCatItemName,
-            compulsory: JSON.stringify(compa),
-            optional: JSON.stringify(opta),
+            item_id: sn.editCatItemId,
             cost_price: sn.editCatItemCostPrice,
-            mark_up_price: sn.editCatItemMarkUp,
             description: sn.editCatItemDescription,
-            tel: sn.editCatItemTel,
-            ig: sn.editCatItemIg,
-            address: sn.editCatItemAddress
           })
           .then(function(response) {
             console.log(response.data);
             sn.$store.dispatch("loadItems", {
-              id: sn.$route.params.id
+              id: sn.$route.params.id,
             });
             sn.loading6 = false;
             sn.dialog45 = false;
             sn.$store.dispatch("snack", {
               color: "green",
-              text: "Item edited"
+              text: "Item edited",
             });
           })
           .catch(function(error) {
@@ -1193,7 +956,7 @@ export default {
             sn.loading6 = false;
             sn.$store.dispatch("snack", {
               color: "red",
-              text: "Error occured"
+              text: "Error occured",
             });
           });
       }
@@ -1206,7 +969,7 @@ export default {
         sn.dialog45 = true;
         axios
           .post("/category/delete", {
-            id: x
+            id: x,
           })
           .then(function(response) {
             console.log(response.data);
@@ -1214,7 +977,7 @@ export default {
             sn.dialog45 = false;
             sn.$store.dispatch("snack", {
               color: "green",
-              text: "Category deleted"
+              text: "Category deleted",
             });
             sn.$router.push("/");
           })
@@ -1223,7 +986,7 @@ export default {
             sn.loading2 = false;
             sn.$store.dispatch("snack", {
               color: "red",
-              text: "Error occured"
+              text: "Error occured",
             });
           });
       }
@@ -1237,18 +1000,18 @@ export default {
         axios
           .post("/item/delete", {
             cat_id: x,
-            item_id: y
+            item_id: y,
           })
           .then(function(response) {
             var d = response.data.message;
             sn.$store.dispatch("loadItems", {
-              id: sn.$route.params.id
+              id: sn.$route.params.id,
             });
             sn.loading4 = false;
             sn.dialog45 = false;
             sn.$store.dispatch("snack", {
               color: "green",
-              text: d
+              text: d,
             });
           })
           .catch(function(error) {
@@ -1256,29 +1019,98 @@ export default {
             sn.loading4 = false;
             sn.$store.dispatch("snack", {
               color: "red",
-              text: "Error occured"
+              text: "Error occured",
             });
           });
       }
     },
     editCat(x, y) {
       var sn = this;
-      this.taggedText = null
+      this.taggedText = null;
       sn.editContent = x;
       sn.editId = y;
       sn.dialog1 = true;
     },
+    preorderBtnDirect(e, i, o, u) {
+      var sn = this;
+      sn.selectedAvailable = !e;
+      sn.preOrd = true;
+      sn.selectedId = o;
+      sn.selectedCat = u;
+      sn.timepicker = null
+      sn.picker = null
+      sn.preorderAns = null
+     sn.preorder()
+
+    },
+    preorderBtn(e, i, o, u) {
+      var sn = this;
+      sn.selectedAvailable = !e;
+      sn.preOrd = true;
+      sn.selectedId = o;
+      sn.selectedCat = u;
+      sn.timepicker = null
+      sn.picker = null
+      sn.preorderAns = null
+      if (e) {
+        sn.setDialogName = "Preorder Off";
+        sn.dialog3 = true;
+      } else {
+        sn.setDialogName = "Preorder On";
+        sn.dialog4 = true;
+      }
+
+    },
     offFood(e, i, o, u) {
       var sn = this;
+      sn.preOrd = false;
       if (e) {
-        sn.offName = "Off";
+        sn.setDialogName = "Off";
       } else {
-        sn.offName = "On";
+        sn.setDialogName = "On";
       }
-      sn.offAvailable = !e;
-      sn.offId = o;
-      sn.offCat = u;
+      sn.selectedAvailable = !e;
+      sn.selectedId = o;
+      sn.selectedCat = u;
       sn.dialog3 = true;
+    },
+    preorder() {
+      var sn = this;
+      sn.loading3 = true;
+      sn.dialog4 = false;
+      sn.dialog3 = false;
+      sn.dialog45 = true;
+      var value_preorder = sn.preorderAns? sn.timepicker : sn.picker
+      var type_preorder = sn.preorderAns? 'time' : 'day'
+      axios
+        .post("/item/preorder", {
+          item_id: sn.selectedId,
+          cat_id: sn.selectedCat,
+          preorder: sn.selectedAvailable,
+          preorder_type: sn.selectedAvailable? type_preorder : null,
+          preorder_value: sn.selectedAvailable? value_preorder : null
+        })
+        .then(function(response) {
+          let d = response.data.message;
+          // sn.$store.dispatch("loadOptions");
+          sn.$store.dispatch("loadItems", {
+            id: sn.$route.params.id,
+          });
+          sn.loading3 = false;
+          sn.dialog45 = false;
+          sn.$store.dispatch("snack", {
+            color: "green",
+            text: d,
+          });
+        })
+        .catch(function(error) {
+          sn.dialog45 = false;
+          sn.loading3 = false;
+          sn.$store.dispatch("snack", {
+            color: "red",
+            text: "Error occured",
+          });
+        });
     },
     offItem() {
       var sn = this;
@@ -1287,21 +1119,21 @@ export default {
       sn.dialog45 = true;
       axios
         .post("/item/available", {
-          item_id: sn.offId,
-          cat_id: sn.offCat,
-          availability: sn.offAvailable
+          item_id: sn.selectedId,
+          cat_id: sn.selectedCat,
+          availability: sn.selectedAvailable,
         })
         .then(function(response) {
           let d = response.data.message;
           // sn.$store.dispatch("loadOptions");
           sn.$store.dispatch("loadItems", {
-            id: sn.$route.params.id
+            id: sn.$route.params.id,
           });
           sn.loading3 = false;
           sn.dialog45 = false;
           sn.$store.dispatch("snack", {
             color: "green",
-            text: d
+            text: d,
           });
         })
         .catch(function(error) {
@@ -1309,42 +1141,17 @@ export default {
           sn.loading3 = false;
           sn.$store.dispatch("snack", {
             color: "red",
-            text: "Error occured"
+            text: "Error occured",
           });
         });
     },
-    editCatItem(u, v, x, y, z, a, b, c, d, e) {
+    editCatItem(a, b, c, d, e) {
       var sn = this;
-      sn.compValue = [];
-      sn.optValue = [];
-      sn.editCatId = u;
-      if (a.length) {
-        var compItems = [];
-        var optItems = [];
-        a.forEach(elem => {
-          if (elem.pivot.type === "compulsory") {
-            compItems.push(elem);
-          } else {
-            optItems.push(elem);
-          }
-        });
-        sn.compValue = compItems.map(item => {
-          return item.name;
-        });
-        sn.optValue = optItems.map(item => {
-          return item.name;
-        });
-      }
-      console.log(sn.list);
-      console.log(sn.optValue);
-      sn.editCatItemId = v;
-      sn.editCatItemName = x;
-      sn.editCatItemCostPrice = y;
-      sn.editCatItemMarkUp = b;
-      sn.editCatItemDescription = z;
-      sn.editCatItemTel = c;
-      sn.editCatItemIg = e;
-      sn.editCatItemAddress = d;
+      sn.editCatId = a;
+      sn.editCatItemId = b;
+      sn.editCatItemName = c;
+      sn.editCatItemCostPrice = d;
+      sn.editCatItemDescription = e;
       sn.dialog6 = true;
     },
     addCat(x, y) {
@@ -1413,31 +1220,32 @@ export default {
         var comp = [];
         var compa = [];
         if (sn.compulsory) {
-          var g = sn.compulsory.forEach(element => {
-           comp.push(
-              sn.mainOptions.find(item => {
+          var g = sn.compulsory.forEach((element) => {
+            comp.push(
+              sn.mainOptions.find((item) => {
                 return item.name === element;
               })
             );
           });
-          compa = comp.map(item => {
+          compa = comp.map((item) => {
             return item.id;
           });
         }
         var opt = [];
         var opta = [];
         if (sn.optional) {
-          var h = sn.optional.forEach(element => {
+          var h = sn.optional.forEach((element) => {
             opt.push(
-              sn.mainOptions.find(item => {
+              sn.mainOptions.find((item) => {
                 return item.name === element;
-              }));
+              })
+            );
           });
-          opta = opt.map(item => {
+          opta = opt.map((item) => {
             return item.id;
           });
         }
-        var cost = !sn.serve ? 0 : sn.cost_price
+        var cost = !sn.serve ? 0 : sn.cost_price;
         const fd = new FormData();
         fd.append("name", sn.name);
         fd.append("cost_price", cost);
@@ -1463,21 +1271,21 @@ export default {
           .post("/item/save", fd, config)
           .then(() => {
             sn.$store.dispatch("loadItems", {
-              id: sn.$route.params.id
+              id: sn.$route.params.id,
             });
             sn.attachments = [];
             sn.loading5 = false;
             sn.dialog45 = false;
             sn.$store.dispatch("snack", {
               color: "green",
-              text: "Item added successfully"
+              text: "Item added successfully",
             });
           })
           .catch(() => {
             sn.attachments = [];
             sn.$store.dispatch("snack", {
               color: "red",
-              text: "An error occured"
+              text: "An error occured",
             });
             sn.loading5 = false;
             sn.dialog5 = false;
@@ -1497,25 +1305,25 @@ export default {
         const config = { headers: { "Content-Type": "multipart/form-data" } };
         axios
           .post("/item/image", fd, config)
-          .then(res => {
+          .then((res) => {
             var d = res.data;
             sn.$store.dispatch("loadItems", {
-              id: sn.$route.params.id
+              id: sn.$route.params.id,
             });
             sn.itemAttachments = [];
             sn.loading11 = false;
             sn.itemAttach = null;
             sn.$store.dispatch("snack", {
               color: "green",
-              text: "Image edited"
+              text: "Image edited",
             });
           })
-          .catch(err => {
+          .catch((err) => {
             sn.itemAttachments = [];
             sn.itemAttach = null;
             sn.$store.dispatch("snack", {
               color: "red",
-              text: err
+              text: err,
             });
             sn.loading11 = false;
           });
@@ -1531,7 +1339,7 @@ export default {
       this.itemAttach = d;
       this.itemAttachments = [];
       this.$refs.file81.click();
-    }
-  }
+    },
+  },
 };
 </script>

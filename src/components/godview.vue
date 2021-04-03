@@ -20,35 +20,38 @@
                 src="https://res.cloudinary.com/dnqw7x4bp/image/upload/c_scale,w_80/v1582290476/e_dey_e_only_2.png"
               ></v-img>
             </v-avatar>
-           vendors ({{users.length}})
+           Riders ({{users.length}})
         </h1>
-        <v-btn absolute right @click="flushCache" color="red">flush cache</v-btn>
-        <v-keep-alive>
+        <keep-alive>
 
        
         <v-card
         v-if="defer(1)"
           min-height="80vh"
-          style="border-radius: 25px; top: 48px; z-index:2;    margin-bottom: 180px;"
-          class="elevation-6 pt-1 pb-8"
-        ><div class="px-5 my-5">
+          style="overflow-x: scroll;border-radius: 25px; top: 48px; z-index:2;    margin-bottom: 180px;"
+          class=" pt-1 pb-8"
+        ><div class="px-5 my-5" style="    position: sticky;
+    left: 0;">
 
               <v-text-field
         v-model="search"
+        style="position: sticky;
+    left: 0px;"
         append-icon="mdi-magnify"
         label="Search"
         single-line
         hide-details
       ></v-text-field>
         </div>
-                  <v-keep-alive>
+                  <keep-alive>
 
           <v-data-table
             :mobile-breakpoint="30"
             :headers="headers"
             v-model="selected"
             :items="users"
-            
+            dense
+               style="min-width: 780px;"
             :expanded.sync="expanded"
             :no-data-text="users.length ? 'The end' : ''"
             :search="search"
@@ -82,22 +85,43 @@
                 v-model="item.status"
                 ></v-switch>
            </template>
-           <template class="title" v-slot:item.name="{ item }">{{item.name}}
+           <template class="title" v-slot:item.user.phone="{ item }"> 
+             <h2 class="title text-capitalize grey--text text--darken-1">
+
+             {{item.user.phone}}
+             </h2>
            </template>
-           <template class="title" v-slot:item.orders_count="{ item }">{{item.orders_count | price}}
+           <template class="title" v-slot:item.name="{ item }"> 
+             <h2 class="title text-capitalize grey--text text--darken-1">
+
+             {{item.name}}
+             </h2>
+           </template>
+           <template class="title" v-slot:item.orders_count="{ item }"> 
+             <h2 class="title text-capitalize grey--text text--darken-1">
+
+             {{item.orders_count | price}}
+             </h2>
            </template>
            <template class="title" v-slot:item.orders_sum="{ item }">
-              <v-icon size="12">mdi-currency-ngn</v-icon>{{item.orders_sum | price}}
+                          <h2 class="title text-capitalize grey--text text--darken-1">
+
+              <v-icon size="18" class="pb-1">mdi-currency-ngn</v-icon>{{item.orders_sum | price}}
+                          </h2>
            </template>
            <template v-slot:item.created_at="{ item }">
               {{item.created_at | myDate}}
            </template>
             <template v-slot:expanded-item="{ headers, item }">
-              <td :colspan="headers.length">{{ item }}</td>
+              <td :colspan="headers.length"> 
+                <h2 class="title text-capitalize grey--text text--darken-1">
+                {{ item }}
+                </h2>
+                </td>
             </template>
           </v-data-table>
             
-          </v-keep-alive>
+          </keep-alive>
           <div 
             v-if="loading"
           style="
@@ -115,7 +139,7 @@
             
           </div>
         </v-card>
-         </v-keep-alive>
+         </keep-alive>
       </v-flex>
     </v-row>
     <!-- <div style="position:fixed;width:100%; bottom:49px">
@@ -189,6 +213,7 @@ export default {
       loadingNow: false,
       dialog2: false,
       selected: [],
+      logistic_id: 483,
       loading: true,
       delLoader: false,
       dialog3: false,
@@ -243,17 +268,17 @@ export default {
       const sn = this;
       sn.loadingVend = y
       sn.statusLoad = true;
-      const url = "/vendor/changeStatus2";
+      const url = "/delivery/changeStatus2";
      axios.post(url, {
           status: x? 1 : 0,
-          vendor_id: y
+          delivery_id: y
         })
         .then(() => {
           var t = x ? 'turned on': 'turned off'
           sn.statusLoad = false;
           sn.$store.dispatch("snack", {
             color: "green",
-            text: "Vendor has been "+ t
+            text: "Rider has been "+ t
           });
         })
         .catch(err => {
@@ -311,8 +336,7 @@ export default {
                 color: "red",
               text: "Now Logged in as "+ res.data.success.user.first_name
             });
-this.$store.dispatch("loadVendor")
-this.$store.dispatch("loadTags");
+this.$store.dispatch("loadDeliveryAgent")
         })
         .catch(()=>{
         this.delDialog = false
@@ -349,30 +373,13 @@ this.$store.dispatch("loadTags");
 
         })
     },
-    deluser(){
-        this.delLoader = true
-        axios.post('/del_user', {
-            id: this.clickedId
-        })
-        .then(res => {
-            this.delDialog = false
-            this.delLoader = false
-            this.navb()
-        })
-        .catch(()=>{
-        this.delDialog = false
-            this.delLoader = false
-            alert('Something went wrong')
-
-        })
-    },
     navb() {
         this.loading = true
         if (this.users.length) {
           this.loading = false
         }else{
       axios
-        .get("/get_vendors")
+      .get("/get_delivery_agents?logistic_id="+this.logistic_id)
         .then(res => {
           this.loading = false
           this.$store.dispatch('setVendorList', res.data.users);

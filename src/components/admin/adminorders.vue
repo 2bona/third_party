@@ -71,7 +71,7 @@
             :mobile-breakpoint="30"
             :headers="headers"
             v-model="selected"
-            :items="orders"
+            :items="orders" dense
             style="min-width: 1150px;"
             @click:row="clicker($event)"
             :expanded.sync="expanded"
@@ -163,29 +163,6 @@
                 class=" title text-capitalize"
                :class="setColor(item.status)"
                 >{{ item.tracking_id }}</h2
-              >
-            </template>
-            <template v-slot:item.mark_up="{ item }">
-            <h2
-                class=" title text-capitalize"
-               :class="setColor(item.status)"
-                ><v-icon 
-                size="16" 
-                
-                class="pb-1"
-                       :color="
-                  item.status === 1
-                    ? 'blue'
-                    : item.status === 2
-                    ? 'green'
-                    : item.status === 3
-                    ? 'orange'
-                    : item.status === 4
-                    ? 'grey'
-                    : item.status === 5
-                    ? 'red'
-                    : ''
-                ">mdi-currency-ngn</v-icon>{{ item.mark_up | price }}</h2
               >
             </template>
             <template v-slot:item.grand_total="{ item }">
@@ -362,7 +339,6 @@ export default {
         { text: "stats", value: "status" },
         { text: "Methd", value: "payment_method" },
         { text: "Total", value: "grand_total" },
-        { text: "MKU-P", value: "mark_up" }
       ],
       dialog4: false,
       rules: {
@@ -374,6 +350,9 @@ export default {
   computed: {
     orders() {
       return this.$store.getters.getAdminOrderList;
+    },
+     logistic_id() {
+      return this.$store.getters.getLogisticId;
     },
        sorted_dates() {
       return this.dates.sort();
@@ -419,7 +398,7 @@ export default {
                 "&to=" +
                 this.sorted_dates[1]
               : "?type=single&on=" + this.sorted_dates[0]
-          var url = "/order/adminorderlist"+when_date
+          var url = "/order/adminorderlist"+when_date+"&logistic_id="+this.logistic_id
     http({
       url: url,
         method: 'get'
@@ -441,7 +420,7 @@ export default {
     reload(){
         this.dates = []
       this.orderLoad = true
-          var url = "/order/adminorderlist?type=single&on=" + new Date().toISOString()
+          var url = "/order/adminorderlist?type=single&on=" + new Date().toISOString()+"&logistic_id="+this.logistic_id
     http({
       url: url,
         method: 'get'

@@ -105,29 +105,13 @@ export default {
       return this.$store.getters.getSnackbar2;
     }
   },
-  mounted(){
- this.navb2()
-  },
   methods: {
-        navb2() {
-      const sn = this;
-        let url = "/reply/all";
-        http({
-          url: url,
-          method: "get"
-        })
-          .then(response => {
-            sn.$store.dispatch("setReplys", {
-              replys: response.data.replys
-            });
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-    },
     handleConnectivityChange(status) {
       if (!status) {
-        // this.$router.push("/offlinepage");
+           this.$store.dispatch("snack", {
+            color: "red",
+            text: 'Seems you are offline',
+          });
       }
     },
     action(x, y) {

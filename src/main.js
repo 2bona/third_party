@@ -288,7 +288,7 @@ Vue.filter("duration", function(value) {
 });
 window.Pusher = require('pusher-js');
 
-var pusher = new Pusher("d2e70c8ff384657760d1", {
+ window.pusher2 = new Pusher("d2e70c8ff384657760d1", {
   cluster: "eu",
   encrypted: true,
   authEndpoint: 'https://edeyapp.com/api/broadcasting/auth',
@@ -309,9 +309,10 @@ window.OrderSoundPlaying = false
       OrderSoundPlaying = false
     }
   });
-  
-window.Channel2 = pusher.subscribe('private-orders2');
- Channel2.bind('order_event2', (data) => {
+  const logistic_id = store.getters.getLogisticId
+  if (logistic_id > 0) {
+    window.Channel2 = pusher2.subscribe('private-logistic.'+logistic_id);
+    Channel2.bind('logistic_event.'+logistic_id, (data) => {
 if (!OrderSoundPlaying) {
   OrderSound.play();
 }
@@ -321,6 +322,7 @@ if (!OrderSoundPlaying) {
       action: 'clear' 
   })
 });
+  }
 new Vue({
   vuetify,
   store,

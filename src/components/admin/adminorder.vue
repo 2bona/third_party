@@ -169,7 +169,7 @@
                       {{ order.errand.address[0].pivot.type }}
 </strong>
   <v-btn class="mx-1" x-small 
-                    dark
+                    dark                     v-show="!(order.status === 4 )"
                     :loading="taskLoading"
                     @click="markTask(order.errand, 0)"
                    :color="order.errand.address[0].pivot.status ? 'green' : 'red'"
@@ -216,6 +216,8 @@
                     </strong>
                       <v-btn class="mx-1" x-small 
                     dark
+                                        v-show="!(order.status === 4 )"
+
                     :loading="taskLoading"
                     @click="markTask(order.errand, 2)"
                    :color="order.errand.address[2].pivot.status ? 'green' : 'red'"
@@ -261,6 +263,7 @@
                     </strong>
                     <v-btn class="mx-1" x-small 
                     dark
+                    v-show="!(order.status === 4 )"
                     :loading="taskLoading"
                     @click="markTask(order.errand, 1)"
                    :color="order.errand.address[1].pivot.status ? 'green' : 'red'"
@@ -375,14 +378,7 @@
           <v-list-item-title
             class="body-1 pb-0 font-weight-medium  grey--text text--darken-3 text-wrap"
             >{{ order.vendor.name }}
-                 <v-btn
- @click.stop="auth(order.vendor.id)"        bottom
-        fab x-small
-        color="grey lighten-4" depressed
-        style="z-index:10;margin-bottom0px;"
-      >
-        <v-icon size="16" class="" color="blue darken-2">mdi-login</v-icon> 
-      </v-btn>
+              
             </v-list-item-title
           >
           <v-flex>
@@ -1547,31 +1543,6 @@ if (!this.replys.length) {
       sn.item_no = y
       sn.setItem(n);
       sn.dialog = true;
-    },
-      auth(x){
-      this.orderLoad = true
-      // this.delDialog = true
-        axios.post('/auth_user2', {
-          vendor_id: x,
-        })
-        .then(res => {
-      this.orderLoad = false
-            this.$store.dispatch("setUser", res.data.success.user);
-            this.$store.dispatch("setToken", res.data.success.token);
-            this.$store.dispatch("snack", {
-                color: "red",
-              text: "Now Logged in as "+ res.data.success.user.first_name
-            });
-this.$store.dispatch("loadVendor")
-this.$store.dispatch("loadTags");
-        })
-        .catch((err)=>{
-            this.orderLoad = false
-            this.$store.dispatch("snack", {
-              color: "green",
-              text: "Err - "+err
-            });
-        })
     },
     deliver() {
       const sn = this;

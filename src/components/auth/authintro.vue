@@ -29,14 +29,7 @@
       </v-carousel-item>
     </v-carousel>
     <v-card color="transparent" flat tile class="ma-auto" width="300px">
-      <v-btn
-        to="/auth/register"
-        dark
-        rounded
-        color="orange darken-4"
-        class="mx-2 caption font-weight-black orange--text text--lighten-4"
-        >sign up</v-btn
-      >
+
       <v-btn
         to="/auth/login"
         rounded
@@ -63,18 +56,18 @@ export default {
       },
       statement: [
         {
-          title: "discover",
-          text: "Find restaurants, eateries and chefs around you."
+          title: "Earn",
+          text: "Earn while you are at home."
         },
         {
-          title: "Order",
+          title: "Orders",
           text:
-            "Order from the comfort of your location for fast delivery of your hot meals"
+            "Recieve orders ftom E Dey App in real time."
         },
         {
-          title: "Gift Meals",
+          title: "Track",
           text:
-            "Buy meals for your loved ones, book from your favourite food vendor and have it delivered to them."
+            "See your riders location in real time."
         }
       ]
     };

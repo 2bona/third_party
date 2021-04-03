@@ -1,34 +1,14 @@
 <template>
     
 
-<v-app-bar dark bottom dense  fixed short >
-      <!-- <div class="flex-grow-1">2</div> -->
-
+<v-app-bar color="teal darken-3" dark  bottom dense  fixed short >
       <v-btn to="/" icon class="mx-auto">
-        <v-icon>mdi-food</v-icon>
-      </v-btn>
-
-      <v-btn to="/orders" icon class="mx-auto">
-        <v-icon>mdi-cart</v-icon>
-      </v-btn>
-
-      <v-btn to="/summary" icon class="mx-auto">
-        <v-icon>mdi-poll</v-icon>
-      </v-btn>
-      <v-btn to="/reviews" icon class="mx-auto">
-        <v-icon>mdi-message-reply</v-icon>
-      </v-btn>
-      <v-btn to="/adminedit" icon class="mx-auto">
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn to="/adminuser" color="red" icon class="mx-auto">
+      <v-btn to="/adminuser" icon class="mx-auto">
         <v-icon>mdi-account-details-outline</v-icon>
       </v-btn>
-      <v-btn to="/godorders" color="red" icon class="mx-auto">
+      <v-btn to="/godorders" icon class="mx-auto">
         <v-icon>mdi-cart</v-icon>
-      </v-btn>
-     
-    
-     
-    </v-app-bar>
+      </v-btn></v-app-bar>
     </template>

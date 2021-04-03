@@ -4,62 +4,8 @@ import VueRouter from "vue-router";
 const router = new VueRouter({
   // mode: "history",
   routes: [
-    {
-      path: "/Regvendor",
-      component: () =>
-        import(
-          /* webpackChunkName: "Register-vendor" */ "./components/Register-vendor.vue"
-        )
-      // meta: {
-      //   requiresAuth: true
-      // }
-    },
-    {
-      path: "/vendortables",
-      component: () =>
-        import(
-          /* webpackChunkName: "vendortable" */ "./components/vendortables.vue"
-        )
-    },
-    {
-      path: "/vendorsales",
-      component: () =>
-        import(
-          /* webpackChunkName: "vendorsale" */ "./components/vendorsales.vue"
-        )
-    },
-    {
-      path: "/offlinepage",
-      component: () =>
-        import(
-          /* webpackChunkName: "offlinepage" */
-          "./components/offlinepage.vue"
-        )
-    },
-    {
-      path: "/offlineorders",
-      component: () =>
-        import(
-          /* webpackChunkName: "offlineorders" */
-          "./components/offlineorders.vue"
-        )
-    },
-    {
-      path: "/offlinepage/:id",
-      props: true,
-      component: () =>
-        import(
-          /* webpackChunkName: "offlinepage" */
-          "./components/offlinepage.vue"
-        )
-    },
-    {
-      path: "/vendorreviews",
-      component: () =>
-        import(
-          /* webpackChunkName: "vendorreview" */ "./components/vendorreviews.vue"
-        )
-    },
+  
+
     {
       //vendor pages
       path: "/",
@@ -73,51 +19,7 @@ const router = new VueRouter({
       },
       props: true,
       children: [
-        {
-          path: "",
-          meta: {
-            requiresAuth: true,
-            role: true
-          },
-          component: () =>
-            import(
-              /* webpackChunkName: "items" */ "./components/admin/itemadmin.vue"
-            ),
-          props: true
-        },
-        {
-          path: "item2/:id",
-          meta: {
-            requiresAuth: true
-          },
-          component: () =>
-            import(
-              /* webpackChunkName: "items" */ "./components/admin/details2.vue"
-            ),
-          props: true
-        },
-        {
-          path: "item/:id",
-          meta: {
-            requiresAuth: true
-          },
-          component: () =>
-            import(
-              /* webpackChunkName: "items" */ "./components/admin/details.vue"
-            ),
-          props: true
-        },
-        {
-          path: "summary",
-          meta: {
-            requiresAuth: true
-          },
-          component: () =>
-            import(
-              /* webpackChunkName: "summary" */ "./components/admin/summary.vue"
-            ),
-          props: true
-        },
+
         {
           path: "godorders",
           meta: {
@@ -142,17 +44,7 @@ const router = new VueRouter({
             ),
           props: true
         },
-        {
-          path: "orders",
-          meta: {
-            requiresAuth: true
-          },
-          component: () =>
-            import(
-              /* webpackChunkName: "orders" */ "./components/admin/orders.vue"
-            ),
-          props: true
-        },
+
         {
           path: "adminuser",
           meta: {
@@ -164,19 +56,9 @@ const router = new VueRouter({
             ),
           props: true
         },
+
         {
-          path: "reviews",
-          meta: {
-            requiresAuth: true
-          },
-          component: () =>
-            import(
-              /* webpackChunkName: "reviews" */ "./components/admin/reviews.vue"
-            ),
-          props: true
-        },
-        {
-          path: "adminedit",
+          path: "/",
           meta: {
             requiresAuth: true,
             role: true
@@ -274,28 +156,7 @@ const router = new VueRouter({
             guest: true
           }
         },
-        {
-          path: "register",
-          name: "reg",
-          component: () =>
-            import(
-              /* webpackChunkName: "register" */ "./components/auth/register.vue"
-            ),
-          meta: {
-            guest: true
-          }
-        },
-        {
-          path: "registerdata",
-          name: "regdata",
-          component: () =>
-            import(
-              /* webpackChunkName: "register" */ "./components/auth/registerdata.vue"
-            ),
-          meta: {
-            guest: true
-          }
-        }
+      
       ]
     },
     {
