@@ -34,12 +34,13 @@
           </v-flex>
           <v-flex xs7 style="display: flex;
     justify-content: flex-end;">
-             <v-btn 
+             <!-- <v-btn 
+             
                depressed color="grey lighten-2" rounded :loading="loadingHist" @click="showCalender()"   >
           <v-icon>mdi-history</v-icon><span v-if=" $vuetify.breakpoint.smAndUp">
             history
             </span> 
-        </v-btn>
+        </v-btn> -->
             <v-btn
             :loading="orderLoad"
               @click="start()" class="mx-3"
@@ -71,7 +72,7 @@
             :mobile-breakpoint="30"
             :headers="headers"
             v-model="selected"
-            :items="orders" dense
+            :items="orders" 
             style="min-width: 1150px;"
             @click:row="clicker($event)"
             :expanded.sync="expanded"
@@ -455,7 +456,7 @@ export default {
     },
         showCalender() {
       this.dates = []
-      this.calender = true;
+      // this.calender = true;
     },
 
        paymentMethod(x) {

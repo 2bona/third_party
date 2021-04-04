@@ -38,13 +38,13 @@ import moment from "moment";
 import VueCountdownTimer from "vuejs-countdown-timer";
 import Cohere from "cohere-js";
 Cohere.init("sqObFCvhZF8ro19ItzNDBgFU");
-const vendor = store.getters.getVendor;
-if (vendor.id) {
+const deliveryAgent = store.getters.getDeliveryAgent;
+if (deliveryAgent.id) {
   Cohere.identify(
-    vendor.id ,// Required: can be any unique ID
+    deliveryAgent.id ,// Required: can be any unique ID
     {
-      displayName: vendor.name, // Optional
-      email: vendor.phone, // Optional
+      displayName: 'Logistic_Agent_'+deliveryAgent.logistic_id, // Optional
+      email: deliveryAgent.phone, // Optional
     }
   );
   

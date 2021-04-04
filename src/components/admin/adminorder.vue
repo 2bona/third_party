@@ -323,7 +323,9 @@
               class="mt-0 mb-0 mr-2"
               size="26"
             >
-              <v-img :src="order.user.image"></v-img>
+              <v-img 
+               :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_26,w_26/'+order.user.image.substring(order.user.image.lastIndexOf('/') + 1,order.user.image.lastIndexOf('.'))"
+              ></v-img>
             </v-list-item-avatar>
 
             <v-list-item-content>
@@ -433,7 +435,95 @@
       </v-flex>
         </v-list-item-content>
           </v-list-item>
-          </v-flex>  
+          </v-flex> 
+          
+         <v-flex
+   
+        v-if="(order.delivery != null || order.status === 5 )"
+    md6 sm6 xs12>
+      <span
+        class=" grey--text body-2 text--lighten-1  font-weight-bold"
+      >
+        DISPATCH TIMELINE
+      </span>
+      <v-card-text
+        style="margin-left:-30px"
+        v-if="(order.delivery != null || order.status === 5)"
+        class="pa-0 my-3"
+      >
+        <v-timeline align-top dense>
+          <v-timeline-item color="blue" v-if="order.delivery != null" small>
+            <span class="caption grey--text  text--darken-1 font-weight-medium">
+              Delivered by
+            </span>
+            <v-list-item-content class="mt-0 mb-0 py-0">
+              <p class="body-1 mb-0" v-text="order.delivery.name"></p>
+            </v-list-item-content>
+            <v-list-item-content
+              v-if="!(order.status === 4)"
+              class="text-right"
+              style="display: inline;"
+            >
+              <a
+                style="text-decoration:none"
+                :href="'tel:' + order.delivery.phone"
+              >
+                <v-btn fab dark icon x-small color="primary"
+                  ><v-icon>mdi-phone</v-icon>
+                </v-btn></a
+              >
+              <a
+                style="text-decoration:none"
+                :href="
+                  'https://wa.me/+234' +
+                    order.delivery.phone.substring(1) +
+                    '?text=Hello,%20this%20is%20' +
+                    vendor.name +
+                    '%20,%20I%20just%20want%20to%20confirm%20your%20Request%20for%20a%20food%20delivery.'
+                "
+                target="_blank"
+              >
+                <v-btn fab dark icon x-small color="green">
+                  <v-icon>mdi-whatsapp</v-icon>
+                </v-btn>
+              </a>
+              <!-- <v-btn fab dark depressed color="white" x-small>
+                <v-icon color="primary">mdi-map-marker</v-icon>
+              </v-btn> -->
+            </v-list-item-content>
+            <p
+              v-if="order.transit_time"
+              class="caption grey--text text--lighten-1 mb-0"
+            >
+              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
+              {{ order.transit_time | trackDate }}
+            </p>
+          </v-timeline-item>
+          <v-timeline-item v-if="order.status === 5" color="red" small>
+            <p class=" mb-0 ">Order has been rejected.</p>
+            <p class="caption grey--text  mb-0">{{ order.reject_reason }}</p>
+            <p class="caption grey--text text--lighten-1 mb-0">
+              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
+              {{ order.rejected_time | trackDate }}
+            </p>
+          </v-timeline-item>
+          <v-timeline-item
+            v-if="order.delivery != null && order.status === 4"
+            color="green"
+            small
+          >
+            <p class="body-2 grey--text mb-0">Order has been delivered.</p>
+            <p
+              v-if="order.delivered_time"
+              class="caption grey--text text--lighten-1 mb-0"
+            >
+              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
+              {{ order.delivered_time | trackDate }}
+            </p>
+          </v-timeline-item>
+        </v-timeline>
+      </v-card-text>
+   </v-flex>  
             <v-flex md6 sm6 xs12>  
       <span
         class="body-2 font-weight-bold grey--text text--lighten-1"
@@ -615,61 +705,37 @@
           </v-flex>
         </v-row>
         <v-divider></v-divider>
-        <div style="position: fixed;
-    width: 100%;background: rgb(245, 245, 245);
-    left: 0;
-    z-index: 99;
-    bottom: 2px;">
-          <v-layout
-            v-if="order.status < 3"
-            style="     max-width: 600px;
-    margin: auto;bottom:0px;background: rgb(245, 245, 245);width: 100%; z-index:9"
-            
-            wrap
-            class=" pb-2 px-2"
-          >
-            <v-flex xs6 class="px-2">
-              <v-btn
-                :loading="loading"
-                block
-                @click="dialog2 = true"
-                class="mt-2 elevation-10 font-weight-black"
-                rounded=""
-                dark large
-                color="orange darken-4"
-                >reject
-                <v-scale-transition origin="center center">
-                  <v-icon v-if="order.status === 5" color=""
-                    >mdi-check-decagram</v-icon
-                  >
-                </v-scale-transition>
-              </v-btn>
+        <p v-if="agents.length && order.status < 3" class="headline text-center my-3">{{order.delivery? 'Change ':'Choose '}} Rider</p>
+   <v-row  v-if="agents.length && order.status < 3 " class="pa-3" justify="space-around">
+
+<v-flex xs4 sm3 class="text-center" md2  :key="n.id" v-for="n in agents">
+
+    <v-avatar @click="order.delivery? order.delivery.id == n.id? '':setDeliveryAgent(n): setDeliveryAgent(n)" class="mx-auto" size="100">
+      <img
+   
+         :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_120,w_120/'+n.image.substring(n.image.lastIndexOf('/') + 1,n.image.lastIndexOf('.'))"
+      > 
+
+  <div
+  v-if="order.delivery"
+  >
+          <div
+          v-if="order.delivery.id == n.id"
+            absolute
+            class="infoOverlay overlay"
+            >
+            <v-flex xs12 class="ma-auto">
+                <v-flex  class="text-center d-flex ma-auto">
+                          <v-icon color="grey lighten-3" class="mx-auto" size="45">mdi-check-decagram</v-icon>
+              </v-flex>
             </v-flex>
-            <v-flex v-if=" !orderErrand" xs6 class="px-2">
-              <v-btn
-                :loading="loading"
-                block
-                @click=" serveBtn()
-                "
-                :class="order.status === 2 ? 'mt-2' : 'mt-2 elevation-10'"
-                rounded=""
-                dark large class=" font-weight-black'"
-                color="primary"
-              >
-              {{
-                  order.payment_method === 4 || order.payment_method === 5
-                    ? "deliver"
-                    : "available"
-                }}
-                 <v-scale-transition origin="center center">
-                  <v-icon class="mx-3" v-if="order.status === 2" color=""
-                    >mdi-check-decagram</v-icon
-                  >
-                </v-scale-transition>
-              </v-btn>
-            </v-flex>
-          </v-layout>
-        </div>
+          </div>
+  </div>
+    </v-avatar>
+    <p class="text-center"> {{n.name}}</p>
+</v-flex>
+
+   </v-row>
       </v-card>
   </v-flex>
 
@@ -689,94 +755,7 @@
         </v-list-item>
       </div>
     </v-flex>
-      
-         <v-flex
-   
-        v-if="(order.delivery != null || order.status === 5 )"
-    md6 sm6 xs12>
-      <span
-        class=" grey--text body-2 text--lighten-1  font-weight-bold"
-      >
-        DISPATCH TIMELINE
-      </span>
-      <v-card-text
-        style="margin-left:-30px"
-        v-if="(order.delivery != null || order.status === 5)"
-        class="pa-0 my-3"
-      >
-        <v-timeline align-top dense>
-          <v-timeline-item color="blue" v-if="order.delivery != null" small>
-            <span class="caption grey--text  text--darken-1 font-weight-medium">
-              Delivered by
-            </span>
-            <v-list-item-content class="mt-0 mb-0 py-0">
-              <p class="body-1 mb-0" v-text="order.delivery.name"></p>
-            </v-list-item-content>
-            <v-list-item-content
-              v-if="!(order.status === 4)"
-              class="text-right"
-              style="display: inline;"
-            >
-              <a
-                style="text-decoration:none"
-                :href="'tel:' + order.delivery.phone"
-              >
-                <v-btn fab dark icon x-small color="primary"
-                  ><v-icon>mdi-phone</v-icon>
-                </v-btn></a
-              >
-              <a
-                style="text-decoration:none"
-                :href="
-                  'https://wa.me/+234' +
-                    order.delivery.phone.substring(1) +
-                    '?text=Hello,%20this%20is%20' +
-                    vendor.name +
-                    '%20,%20I%20just%20want%20to%20confirm%20your%20Request%20for%20a%20food%20delivery.'
-                "
-                target="_blank"
-              >
-                <v-btn fab dark icon x-small color="green">
-                  <v-icon>mdi-whatsapp</v-icon>
-                </v-btn>
-              </a>
-              <!-- <v-btn fab dark depressed color="white" x-small>
-                <v-icon color="primary">mdi-map-marker</v-icon>
-              </v-btn> -->
-            </v-list-item-content>
-            <p
-              v-if="order.transit_time"
-              class="caption grey--text text--lighten-1 mb-0"
-            >
-              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
-              {{ order.transit_time | trackDate }}
-            </p>
-          </v-timeline-item>
-          <v-timeline-item v-if="order.status === 5" color="red" small>
-            <p class=" mb-0 ">Order has been rejected.</p>
-            <p class="caption grey--text  mb-0">{{ order.reject_reason }}</p>
-            <p class="caption grey--text text--lighten-1 mb-0">
-              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
-              {{ order.rejected_time | trackDate }}
-            </p>
-          </v-timeline-item>
-          <v-timeline-item
-            v-if="order.delivery != null && order.status === 4"
-            color="green"
-            small
-          >
-            <p class="body-2 grey--text mb-0">Order has been delivered.</p>
-            <p
-              v-if="order.delivered_time"
-              class="caption grey--text text--lighten-1 mb-0"
-            >
-              <v-icon size="12" color="grey lighten-1">mdi-clock</v-icon>
-              {{ order.delivered_time | trackDate }}
-            </p>
-          </v-timeline-item>
-        </v-timeline>
-      </v-card-text>
-   </v-flex> </v-layout>
+      </v-layout>
     </div>
      </keep-alive>
       <div style="position:fixed;width:100%;left:0; top:0px">
@@ -993,62 +972,30 @@ box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
         </div>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialog2" width="400">
-      <v-card>
-        <v-card-title class="body-1 grey lighten-2" primary-title>
-          Reason for cancellation
-          <v-btn
-            class="ml-0"
-            to="/reviews"
-            depressed
-            x-small
-            rounded
-            color="grey"
-            >add new</v-btn
-          >
-        </v-card-title>
+      <v-dialog v-model="dialogAssign" max-width="290">
+      <v-card class="px-2 pb-2">
+        <v-card-title
+          class="body-1 text-center  pl-3  my-2 pb-0 "
+          >Set {{ ' ' + delivery_agent.name}} as Rider
+            </v-card-title
+        >
+        <v-card-actions class="pr-1">
+          <v-spacer></v-spacer>
 
-        <v-card-text>
-          <v-form ref="form">
-            <v-combobox
-            :auto-select-first="true"
-            :items="replys"
-              v-if="replys.length"
-              v-model="reason"
-              label="Write the Reason for rejection here"
-              color="orange darken-4"
-              :rules="[rules.required]"
-              validate-on-blur
-            >
-            </v-combobox>
-          </v-form>
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <div class="flex-grow-1"></div>
-          <v-btn
-            color="grey"
-            class="px-3 font-weight-bold caption"
-            rounded
-            text
-            dark
-            @click="dialog2 = false"
-          >
+          <v-btn rounded 
+             style="background: linear-gradient(145deg, #ffffff, #e6e6e6);
+box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
+          class="font-weight-black orange--text text--darken-4 whiteBtnShadow" color=""  small @click="dialogAssign = false">
             cancel
           </v-btn>
+
           <v-btn
-            color="orange darken-4"
-            class="px-3 font-weight-bold caption"
-            rounded
-            text
-            :disabled="!replys.length"
-            dark
-            :loading="loading2"
-            @click="reject()"
-          >
-            reject
+          rounded
+             style="background: linear-gradient(145deg, #ffffff, #e6e6e6);
+box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
+       class="font-weight-black"
+           color="blue darken-1" text small @click="setRider()">
+            set
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -1191,6 +1138,30 @@ box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
 .v-menu__content--fixed {
     max-width: 328px;
 }
+.overlay {
+  background-color: #2121219e;
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  z-index: 1 !important;
+  top: 0;
+  -webkit-transition: inherit;
+  transition: inherit;
+  width: 100%;
+  border-color: #2121219e;
+  z-index: 9;
+  overflow: hidden;
+}
+.v-overlay__content {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 8px !important;
+}
+.infoOverlay {
+  display: flex !important;
+}
 </style>
 
 <script>
@@ -1216,10 +1187,12 @@ export default {
       dialogIn: false,
       dialogNotify: false,
       dialog2: false,
+      dialogAssign: false,
       orderLoad: false,
       dialogServe: false,
       dialogDelivery: false,
       dialog3: false,
+      delivery_agent: "",
       message: "",
       notifyType: '',
       dialogItem: "",
@@ -1237,14 +1210,6 @@ export default {
     };
   },
   computed: {
-    replys() {
-      var t = this.$store.getters.getReplys;
-      const b = []
-      t.forEach((el)=>{
-        b.push(el.content)
-      })
-      return b
-    },
     disableDelivery() {
       const sn = this;
       let r = null;
@@ -1278,22 +1243,11 @@ export default {
     vendor() {
       return this.$store.getters.getVendor;
     },
+       logistic_id() {
+      return this.$store.getters.getLogisticId;
+    },
     agents() {
-      return this.$store.getters.getAgents;
-    },
-    slider() {
-      if (this.replys.length) {
-        return this.replys.length - 1;
-      } else {
-        return null;
-      }
-    },
-    slider2() {
-      let r = null;
-      if (this.agents.length) {
-        r = this.agents.length - 1;
-      }
-      return r;
+      return this.$store.getters.getVendorList;
     },
     order() {
       return this.$store.getters.getOrderFull;
@@ -1337,14 +1291,9 @@ export default {
       sn.setItem(n);
       sn.dialog = true;
     }
-if (!this.replys.length) {
-  this.getReplys()
-}
-    if (
-      sn.order.status === 1 &&
-      !(sn.order.payment_method === 4 || sn.order.payment_method === 5)
-    ) {
-      // sn.getAgents();
+
+    if (sn.order.status < 3 && !(sn.order.payment_method === 4 || sn.order.payment_method === 5)) {
+      sn.getAgents();
     }
     sn.$nextTick(()=>{
       if (sn.order.loaded && sn.order.status !== 4 && sn.order.status !== 5) {
@@ -1353,6 +1302,11 @@ if (!this.replys.length) {
     })
   },
   methods: {
+    setDeliveryAgent(x){
+      
+      this.delivery_agent = x
+      this.dialogAssign = true
+    },
     sendNotifyBtn(x){
       
       this.notifyType = x
@@ -1384,6 +1338,34 @@ if (!this.replys.length) {
 
         })
               }
+    },
+    setRider(){
+        this.dialogAssign = false
+        this.orderLoad = true
+        axios.post('/order/set_rider', {
+          order_id: this.order.id,
+          rider_id: this.delivery_agent.id,
+        })
+        .then(res => {
+          this.orderLoad = false
+            this.$store.dispatch("snack", {
+                color: "blue",
+                text: "Rider has been set as "+ this.delivery_agent.name
+              });
+        this.$store.dispatch("getOrder", {
+          id: this.order.id,
+          action: 'clear'
+        });
+          console.log(res)
+        }).catch((err)=>{
+          this.orderLoad = false
+          this.$store.dispatch("snack", {
+              color: "green",
+              text: "Err - "+err
+            });
+          console.log(err)
+
+        })
     },
     markTask(x, y){
       this.taskLoading = true
@@ -1418,18 +1400,10 @@ if (!this.replys.length) {
     },
     getAgents() {
       const sn = this;
-      let url = "/delivery/agents";
-      http({
-        url: url,
-        method: "get",
-        params: {
-          city: this.vendor.city
-        }
-      })
-        .then(response => {
-          sn.$store.dispatch("setAgents", {
-            agents: response.data.agents
-          });
+        axios
+      .get("/get_delivery_agents?logistic_id="+this.logistic_id)
+        .then(res => {
+          this.$store.dispatch('setVendorList', res.data.users);
         })
         .catch(function(error) {
           console.log(error);
@@ -1614,24 +1588,6 @@ if (!this.replys.length) {
             sn.$router.push("/godorders");
           });
     },
-    setDeliveryAgent(x) {
-      const sn = this;
-      sn.$store
-        .dispatch("order", {
-          status: sn.order.status,
-          id: sn.order.id,
-          action: "served",
-          delivery_agent_id: x
-        })
-        .then(() => {
-          sn.$store.dispatch("snack", {
-            color: "blue",
-            text: "A delivery agent is on his way"
-          });
-          sn.loading = false;
-        });
-      return;
-    },
     reject() {
       const sn = this;
       if (sn.$refs.form.validate()) {
@@ -1672,22 +1628,6 @@ if (!this.replys.length) {
     },
     rejectBtn() {
       this.dialog2 = true;
-    },
-        getReplys() {
-      const sn = this;
-      let url = "/reply/all2";
-      http({
-        url: url,
-        method: "get"
-      })
-        .then(response => {
-          sn.$store.dispatch("setReplys", {
-            replys: response.data.replys
-          });
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
     },
   }
 };

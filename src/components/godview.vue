@@ -67,15 +67,15 @@
               <v-btn  disabled color="red" @click="wallet(item.user.id)" icon>
               <v-icon>mdi-wallet</v-icon>
               </v-btn> -->
-              <v-btn v-if="search == '.'"  color="blue" @click="clearOrders(item.id)" icon>
+              <!-- <v-btn v-if="search == '.'"  color="blue" @click="clearOrders(item.id)" icon>
               <v-icon>mdi-cart-off</v-icon>
               </v-btn>
               <v-btn  color="blue" @click="getLastOrder(item.id)" icon>
               <v-icon>mdi-cart</v-icon>
-              </v-btn>
-              <v-btn  color="blue" @click="auth(item.user.phone)" icon>
+              </v-btn> -->
+              <!-- <v-btn  color="blue" @click="auth(item.user.phone)" icon>
               <v-icon>mdi-login</v-icon>
-              </v-btn>
+              </v-btn> -->
                    <v-switch
                    style="display: inline-flex;"
                 color="grey lighten-2"
@@ -268,7 +268,7 @@ export default {
       const sn = this;
       sn.loadingVend = y
       sn.statusLoad = true;
-      const url = "/delivery/changeStatus2";
+      const url = "/delivery/changeStatus";
      axios.post(url, {
           status: x? 1 : 0,
           delivery_id: y
@@ -379,7 +379,7 @@ this.$store.dispatch("loadDeliveryAgent")
           this.loading = false
         }else{
       axios
-      .get("/get_delivery_agents?logistic_id="+this.logistic_id)
+      .get("/get_delivery_agents?full=yes&logistic_id="+this.logistic_id)
         .then(res => {
           this.loading = false
           this.$store.dispatch('setVendorList', res.data.users);

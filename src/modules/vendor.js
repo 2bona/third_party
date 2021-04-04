@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
+import store from "../store";
 import router from "../router";
 const axios = require("axios");
 import wrapper from 'axios-cache-plugin'
