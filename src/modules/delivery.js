@@ -125,7 +125,7 @@ export const delivery_agent = {
       });
       if (!fresh.length) {
         // alert("unbinbing")
-        Channel2.unbind("private-orders");
+        Channel2.unbind("private-logistic."+state.logistic_id);
         navigator.geolocation.clearWatch(state.watchId);
       }
       var newFresh = JSON.stringify(fresh);
@@ -225,14 +225,14 @@ export const delivery_agent = {
           });
       }
     },
-    removeItem({ commit, state, dispatch }, data) {
+    removeItem2({ commit, state, dispatch }, data) {
       console.log(data);
       var orderList = state.deliveryOrderList.filter((el) => {
         return el.id !== data;
       });
       state.deliveryOrderList = orderList;
     },
-    addItem({ commit, state, dispatch }, data) {
+    addItem2({ commit, state, dispatch }, data) {
       console.log("getItem");
       const hasId = state.deliveryOrderList.some((el) => {
         el.id == data;
@@ -299,7 +299,8 @@ export const delivery_agent = {
       state,
       dispatch
     }, data) {
-      if (data !== null) {
+      if (data !== null && window.Channel2 == null) {
+       
         window.Channel2 = pusher2.subscribe('private-logistic.'+data);
         Channel2.bind('logistic_event.'+data, (event_data) => {
           if (!OrderSoundPlaying) {

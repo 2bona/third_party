@@ -3,7 +3,7 @@
     <keep-alive>
 
    
-    <div class="grey lighten-5 container mt-0" style="max-width: 565px;margin-bottom: 100px;">
+    <div class="grey lighten-5 container mt-0" style="margin-bottom: 100px;">
       <div class="d-flex " style="justify-content: flex-start"> 
 <div></div>
 <v-layout style="
@@ -36,7 +36,12 @@
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
+   
+        <v-layout class="mb-12" wrap>
 
+   
+      <v-flex md6 sm12 xs12>
+      
       <v-layout row wrap class="mt-12 px-2">
         <v-flex style="justify-content: left;
     display: flex;" xs6>
@@ -477,9 +482,9 @@
                 :href="
                   'https://wa.me/+234' +
                     order.delivery.phone.substring(1) +
-                    '?text=Hello,%20this%20is%20' +
-                    vendor.name +
-                    '%20,%20I%20just%20want%20to%20confirm%20your%20Request%20for%20a%20food%20delivery.'
+                    '?text=Hello,%20' +
+                    order.delivery.name +
+                    '%20,%20How%20is%20the%20order%20going.'
                 "
                 target="_blank"
               >
@@ -705,12 +710,37 @@
           </v-flex>
         </v-row>
         <v-divider></v-divider>
-        <p v-if="agents.length && order.status < 3" class="headline text-center my-3">{{order.delivery? 'Change ':'Choose '}} Rider</p>
-   <v-row  v-if="agents.length && order.status < 3 " class="pa-3" justify="space-around">
+     
+      </v-card>
+  </v-flex>
 
-<v-flex xs4 sm3 class="text-center" md2  :key="n.id" v-for="n in agents">
+    <v-flex v-if="order.table_no" md6 sm6 xs12>
+      <div >
+        <span class="overline grey--text  text--darken-3 font-weight-bold">
+          Table No
+        </span>
+        <v-list-item class="my-1" dense>
+          <v-list-item-content>
+            <p
+              class="text-wrap display-1 font-weight-bold font-weight-medium my-0 pt-0"
+            >
+              {{ order.table_no }}
+            </p>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
+    </v-flex>
+      </v-layout>
+      </v-flex>
+         
+   
+      <v-flex  md6 sm12 xs12>
+   <p v-if="agents.length && order.status < 3" :class="$vuetify.breakpoint.mdAndUp? 'mt-12' : ''" class="headline text-center mb-3">{{order.delivery? 'Change ':'Choose '}} Rider</p>
+   <v-row  v-if="agents.length && order.status < 3 " class="pa-3 justify-space-around" >
 
-    <v-avatar @click="order.delivery? order.delivery.id == n.id? '':setDeliveryAgent(n): setDeliveryAgent(n)" class="mx-auto" size="100">
+<v-flex xs6 sm4 class="text-center" md3  :key="n.id" v-for="n in agents">
+
+    <v-avatar @click="order.delivery? order.delivery.id == n.id? '':setDeliveryAgent(n): setDeliveryAgent(n)" class="elevation-24 mx-auto" size="100">
       <img
    
          :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_120,w_120/'+n.image.substring(n.image.lastIndexOf('/') + 1,n.image.lastIndexOf('.'))"
@@ -732,30 +762,12 @@
           </div>
   </div>
     </v-avatar>
-    <p class="text-center"> {{n.name}}</p>
+    <p class="body-1 text-wrap grey--text text--darken-2 font-weight-bold text-center"> {{n.name}}</p>
 </v-flex>
 
    </v-row>
-      </v-card>
-  </v-flex>
-
-    <v-flex v-if="order.table_no" md6 sm6 xs12>
-      <div >
-        <span class="overline grey--text  text--darken-3 font-weight-bold">
-          Table No
-        </span>
-        <v-list-item class="my-1" dense>
-          <v-list-item-content>
-            <p
-              class="text-wrap display-1 font-weight-bold font-weight-medium my-0 pt-0"
-            >
-              {{ order.table_no }}
-            </p>
-          </v-list-item-content>
-        </v-list-item>
-      </div>
-    </v-flex>
-      </v-layout>
+      </v-flex>
+        </v-layout>
     </div>
      </keep-alive>
       <div style="position:fixed;width:100%;left:0; top:0px">

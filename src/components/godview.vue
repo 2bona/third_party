@@ -8,8 +8,7 @@
     width: 100%;
 " class="my-3 px-0">
         <h1
-          style="   position:fixed; z-index:1;
-"
+          style="position:fixed; z-index:1;"
           class=" title mb-4 font-weight-bold  grey--text text--darken-2"
         >
            Riders ({{users.length}})
@@ -265,7 +264,7 @@ export default {
           delivery_id: y
         })
         .then(() => {
-          var t = x ? 'turned on': 'turned off'
+          var t = x ? 'switched on': 'switched off'
           sn.statusLoad = false;
           sn.$store.dispatch("snack", {
             color: "green",
