@@ -740,7 +740,11 @@
 
 <v-flex xs6 sm4 class="text-center" md3  :key="n.id" v-for="n in agents">
 
-    <v-avatar @click="order.delivery? order.delivery.id == n.id? '':setDeliveryAgent(n): setDeliveryAgent(n)" class="elevation-24 mx-auto" size="100">
+    <v-avatar @click="order.delivery? order.delivery.id == n.id? '':setDeliveryAgent(n): setDeliveryAgent(n)" 
+    
+    :class="order.delivery.id == n.id?'elevation-24 ': 'elevation-0'" 
+    class=" mx-auto" 
+    size="100">
       <img
    
          :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_120,w_120/'+n.image.substring(n.image.lastIndexOf('/') + 1,n.image.lastIndexOf('.'))"
@@ -836,7 +840,10 @@ box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
           ><v-icon>mdi-close-circle</v-icon></v-btn
         >
         <div v-show="dialogItem">
-          <v-card-title style="padding-right: 52px;" class="pb-1 text-capitalize elevation-10" primary-title>
+           <v-card-title style="padding-right: 52px;" class="pb-1 text-capitalize elevation-10" primary-title>
+            <v-flex class="d-block" style="    line-height: 1;" xs12>
+
+          
             <span
               class="pr-1 grey--text text--darken-3 font-weight-black"
               v-show="dialogItem.pivot.qty > 1"
@@ -857,6 +864,8 @@ box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
                 >{{ n.name }}</v-chip
               >
             </div>
+             </v-flex>
+          <div v-if="dialogItem.description" class="caption">{{dialogItem.description}}</div>
           </v-card-title>
           <v-card-text style="max-height:200px;overflow:auto">
             <div v-for="(o, p) in dialogOpt" :key="p + o.id + o.pivot.type">

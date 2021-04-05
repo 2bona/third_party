@@ -73,7 +73,7 @@
             :headers="headers"
             v-model="selected"
             :items="orders" 
-            style="min-width: 1150px;"
+            style="min-width: 880px;"
             @click:row="clicker($event)"
             :expanded.sync="expanded"
             :search="search"
