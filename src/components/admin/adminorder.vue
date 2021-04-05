@@ -91,7 +91,7 @@
                   
                   @click="dialogItemBtn(n, i)"
                   class="my-auto elevation-5 mx-2"
-                  style="border-radius:;overflow:inherit;"
+                  style="border-radius:;overflow:inherit;justify-content: center"
                 >
                   <v-img contain
                           :src="'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_fit,h_70,w_70/'+n.image.substring(n.image.lastIndexOf('/') + 1,n.image.lastIndexOf('.'))"> </v-img>
@@ -371,7 +371,7 @@
         </v-list>
       </div>
       
-        <v-layout class="mb-12" wrap>
+        <v-layout class="mb-3" wrap>
 
    
       <v-flex v-if="!(order.payment_method === 4 || order.payment_method === 5)" md6 sm6 xs12>
@@ -734,15 +734,14 @@
       </v-flex>
          
    
-      <v-flex  md6 sm12 xs12>
+      <v-flex class="mb-12"  md6 sm12 xs12>
    <p v-if="agents.length && order.status < 3" :class="$vuetify.breakpoint.mdAndUp? 'mt-12' : ''" class="headline text-center mb-3">{{order.delivery? 'Change ':'Choose '}} Rider</p>
    <v-row  v-if="agents.length && order.status < 3 " class="pa-3 justify-space-around" >
 
 <v-flex xs6 sm4 class="text-center" md3  :key="n.id" v-for="n in agents">
 
     <v-avatar @click="order.delivery? order.delivery.id == n.id? '':setDeliveryAgent(n): setDeliveryAgent(n)" 
-    
-    :class="order.delivery.id == n.id?'elevation-24 ': 'elevation-0'" 
+    :class="order.delivery? order.delivery.id == n.id?'elevation-24 ': 'elevation-0': ''" 
     class=" mx-auto" 
     size="100">
       <img
