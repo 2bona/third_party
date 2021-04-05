@@ -369,7 +369,7 @@
         <v-layout class="mb-12" wrap>
 
    
-      <v-flex md6 sm6 xs12>
+      <v-flex v-if="!(order.payment_method === 4 || order.payment_method === 5)" md6 sm6 xs12>
       <span
         class="body-2 font-weight-bold grey--text text--lighten-1"
       >
@@ -404,7 +404,7 @@
          </span>
        </span> 
               </a>
-                 <v-btn absolute style="right:-4px" @click.stop="sendNotifyBtn('vendor')" fab x-small class="ml-2 mr-0 font-weight-bold">  <v-icon>mdi-message-outline</v-icon> </v-btn>
+                 <v-btn absolute style="right:-4px" @click.stop="sendNotifyBtn('vendor')" fab x-small class="ml-2 mr-0 font-weight-bold">  <v-icon color="blue lighten-1">mdi-message-outline</v-icon> </v-btn>
       </v-btn>
 
 <v-flex>
@@ -429,7 +429,7 @@
          </span>
        </span> 
       </a>
-    <v-btn absolute style="right:-4px" @click.stop="sendNotifyBtn('user')" fab x-small class="ml-2 mr-0 font-weight-bold">  <v-icon>mdi-message-outline</v-icon> </v-btn>
+    <v-btn absolute style="right:-4px" @click.stop="sendNotifyBtn('user')" fab x-small class="ml-2 mr-0 font-weight-bold">  <v-icon color="blue lighten-1">mdi-message-outline</v-icon> </v-btn>
       </v-btn>
 </v-flex>
       </v-flex>

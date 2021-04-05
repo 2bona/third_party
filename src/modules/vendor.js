@@ -114,27 +114,6 @@ export const vendor = {
         }).catch(function (error) {
         })
     },
-    setLogisticId({
-      commit,
-      state,
-      dispatch
-    }, data) {
-      if (data !== null) { 
-      window.Channel2 = pusher2.subscribe('private-logistic.'+data);
-      Channel2.bind('logistic_event.'+data, (event_data) => {
-          if (!OrderSoundPlaying) {
-            OrderSound.play();
-          }
-          store.dispatch('addItem', event_data.order)
-          store.dispatch('getOrder', {
-            id: event_data.order,
-            action: 'clear' 
-          })
-        });
-        localStorage.setItem("logistic_id", data);
-        commit("setLogisticId", data);
-      }
-    },
     setAdminOrderList({
       commit,
       state,
@@ -441,9 +420,6 @@ loadOptions({
     },
     setReplys(state, data) {
       state.replys = data
-    },
-    setLogisticId(state, data) {
-      state.logistic_id = data
     },
     setAgents(state, data) {
       state.agents = data

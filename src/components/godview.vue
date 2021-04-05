@@ -2,35 +2,26 @@
   <div style="    margin: auto;
     max-width: ;">
     <v-row class="pa-3 mb-12 px-5">
-      <v-flex xs12 class="my-3 px-0">
+      <v-flex xs12 style="
+    max-width: 700px;
+    margin: auto;
+    width: 100%;
+" class="my-3 px-0">
         <h1
-          style="    text-shadow: -3px 3px 5px #d8d8d8;position:fixed; z-index:1;
+          style="   position:fixed; z-index:1;
 "
-          class=" title text-uppercase mb-4 font-weight-black  grey--text"
+          class=" title mb-4 font-weight-bold  grey--text text--darken-2"
         >
-               <v-avatar
-              class="mr-0 mb-1 elevation-9"
-              size="25"
-              color="orange darken-4"
-            >
-              <v-img
-                :lazy-src="
-                  'https://res.cloudinary.com/dnqw7x4bp/image/upload/c_scale,w_5/v1582290476/e_dey_e_only_2.png'
-                "
-                src="https://res.cloudinary.com/dnqw7x4bp/image/upload/c_scale,w_80/v1582290476/e_dey_e_only_2.png"
-              ></v-img>
-            </v-avatar>
            Riders ({{users.length}})
         </h1>
         <keep-alive>
-
-       
         <v-card
         v-if="defer(1)"
           min-height="80vh"
+          max-width="700px"
           style="overflow-x: scroll;border-radius: 25px; top: 48px; z-index:2;    margin-bottom: 180px;"
-          class=" pt-1 pb-8"
-        ><div class="px-5 my-5" style="    position: sticky;
+          class="mx-auto pt-1 pb-8"
+        ><div class="px-5 my-5 " style="    position: sticky;
     left: 0;">
 
               <v-text-field
@@ -51,7 +42,7 @@
             v-model="selected"
             :items="users"
             dense
-               style="min-width: 780px;"
+               style="min-width: 609px;"
             :expanded.sync="expanded"
             :no-data-text="users.length ? 'The end' : ''"
             :search="search"
@@ -229,9 +220,9 @@ export default {
         { align: "center", text: "Phone", value: "user.phone" },
         { align: "center", text: "Wallet", value: "orders_sum" },
         // { text: 'When  ', value: 'created_at' },
-        { align: "right", text: "Orders", value: "orders_count" },
+        { align: "center", text: "Orders", value: "orders_count" },
         // { align: "right", text: "Joined", value: "created_at" },
-        { align: "right", text: "", value: "updated_at" }
+        { align: "center", text: "", value: "updated_at" }
       ],
       dialog4: false,
       rules: {

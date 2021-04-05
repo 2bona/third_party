@@ -330,16 +330,17 @@ export default {
       search: "",
       headers: [
         {
-          text: "S/N",
+          text: "Trckn id",
+          align: "center",
           align: "left",
-          value: "id"
+          value: "tracking_id"
         },
-        { text: "Vendor", value: "vendor.name" },
-        { text: "", value: "preorder" },
-        { text: "When  ", value: "created_at" },
-        { text: "stats", value: "status" },
-        { text: "Methd", value: "payment_method" },
-        { text: "Total", value: "grand_total" },
+        { text: "Vendor", align: "center", value: "vendor.name" },
+        { text: "type", align: "center", value: "preorder" },
+        { text: "When  ", align: "center", value: "created_at" },
+        { text: "status", align: "center", value: "status" },
+        { text: "Methd", align: "center", value: "payment_method" },
+        { text: "Total", align: "center", value: "grand_total" },
       ],
       dialog4: false,
       rules: {
