@@ -41,7 +41,7 @@
             v-model="selected"
             :items="users"
             dense
-               style="min-width: 609px;"
+               style="min-width: 649px;"
             :expanded.sync="expanded"
             :no-data-text="users.length ? 'The end' : ''"
             :search="search"
