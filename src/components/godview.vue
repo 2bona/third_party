@@ -203,7 +203,6 @@ export default {
       loadingNow: false,
       dialog2: false,
       selected: [],
-      logistic_id: 483,
       loading: true,
       delLoader: false,
       dialog3: false,
@@ -234,7 +233,10 @@ export default {
     users() {
       return this.$store.getters.getVendorList;
     },
-      vendor() {
+    logistic_id() {
+      return this.$store.getters.getLogisticId;
+    },
+    vendor() {
       return this.$store.getters.getVendor;
     },
   },

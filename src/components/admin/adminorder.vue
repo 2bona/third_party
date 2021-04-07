@@ -995,7 +995,7 @@ box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
       <v-dialog v-model="dialogAssign" max-width="290">
       <v-card class="px-2 pb-2">
         <v-card-title
-          class="body-1 text-center  pl-3  my-2 pb-0 "
+          class="body-1 text-center  pl-3  mb-2 pb-0 "
           >Set {{ ' ' + delivery_agent.name}} as Rider
             </v-card-title
         >
