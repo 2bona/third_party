@@ -374,7 +374,7 @@
         <v-layout class="mb-3" wrap>
 
    
-      <v-flex v-if="!(order.payment_method === 4 || order.payment_method === 5)" md6 sm6 xs12>
+      <v-flex v-if="order.status < 4" md6 sm6 xs12>
       <span
         class="body-2 font-weight-bold grey--text text--lighten-1"
       >
@@ -713,7 +713,51 @@
      
       </v-card>
   </v-flex>
-
+   <v-layout
+            v-if="order.status < 4"
+            style="     justify-content: center;    max-width: 600px;
+    margin: auto;width: 100%;"
+            wrap
+            class=" pb-2 px-2"
+          >
+            <!-- <v-flex xs6 class="px-2">
+              <v-btn
+                :loading="loading"
+                block
+                @click="dialog2 = true"
+                class="mt-2 elevation-10 font-weight-black"
+                rounded=""
+                dark 
+                color="orange darken-4"
+                >reject
+                <v-scale-transition origin="center center">
+                  <v-icon v-if="order.status === 5" color=""
+                    >mdi-check-decagram</v-icon
+                  >
+                </v-scale-transition>
+              </v-btn>
+            </v-flex> -->
+            <v-flex v-if=" !orderErrand" xs6 class="text-center px-2">
+              <v-btn
+                :loading="loading"
+                block
+                @click=" serveBtn()
+                "
+                :disabled="order.status == 2 && !order.delivery"
+                :class="order.status === 2 ? 'mt-2' : 'mt-2 elevation-10'"
+                rounded=""
+                dark  class=" font-weight-black'"
+                :color="order.status == 1 ?'primary': order.status === 2 ? 'yellow darken-4': 'green darken-3'"
+              >
+              {{
+                  order.status != 1 
+                    ? order.status == 2? 'in-transit':"deliver"
+                    : "available"
+                }}
+              </v-btn>
+              <p class="text-center font-weight-bold red--text mx-auto " v-if="order.status == 2 && !order.delivery"> Kindly assign a Rider to continue</p>
+            </v-flex>
+          </v-layout>
     <v-flex v-if="order.table_no" md6 sm6 xs12>
       <div >
         <span class="overline grey--text  text--darken-3 font-weight-bold">
@@ -1100,11 +1144,34 @@ box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
         </v-card-actions>
       </v-card>
     </v-dialog> -->
+    <v-dialog v-model="dialogTransit" max-width="290">
+      <v-card>
+        <v-card-title class="body-1">
+          Is the order on the way?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="grey lighten-1"
+            text
+            rounded
+            small
+            @click="dialogTransit = false"
+          >
+            cancel
+          </v-btn>
+
+          <v-btn color="blue darken-1" text rounded small @click="accept()">
+            sure
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="dialogDelivery" max-width="290">
       <v-card>
         <v-card-title class="body-1">
-          Have you delivered the food
-          <span v-if="!order.paid">and collected the money</span>?</v-card-title
+          Have you delivered the order?</v-card-title
         >
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -1127,7 +1194,7 @@ box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
     </v-dialog>
     <v-dialog v-model="dialogServe" max-width="290">
       <v-card>
-        <v-card-title class="body-1">Have you served the food ?</v-card-title>
+        <v-card-title class="body-1">Is the item ready for delivery?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
 
@@ -1210,6 +1277,7 @@ export default {
       dialogAssign: false,
       orderLoad: false,
       dialogServe: false,
+      dialogTransit: false,
       dialogDelivery: false,
       dialog3: false,
       delivery_agent: "",
@@ -1386,7 +1454,7 @@ export default {
           console.log(err)
 
         })
-    },
+    }, //errand task button 
     markTask(x, y){
       this.taskLoading = true
          const sn = this;
@@ -1515,9 +1583,11 @@ export default {
       }
     },
     serveBtn() {
-      this.order.payment_method === 4 || this.order.payment_method === 5
-        ? (this.dialogDelivery = true)
-        : (this.dialogServe = true);
+      this.order.status < 2
+        ? (this.dialogServe = true)
+        : this.order.status == 2 ? 
+        this.dialogTransit = true : 
+        (this.dialogDelivery = true)
     },
     reload(e) {
       const sn = this;
@@ -1540,15 +1610,8 @@ export default {
     },
     deliver() {
       const sn = this;
-      sn.loading = true;
-      if (sn.order.status === 4) {
-        sn.$store.dispatch("snack", {
-          color: "blue",
-          text: "Order has already been delivered"
-        });
-        sn.loading = false;
-        return;
-      } else {
+      sn.dialogDelivery = false;
+      sn.orderLoad = true;
         sn.$store
           .dispatch("order", {
             id: sn.order.id,
@@ -1556,14 +1619,34 @@ export default {
             action: "delivered"
           })
           .then(() => {
-            sn.loading = false;
+          this.$store.dispatch("getOrder", {
+          id: this.order.id,
+          action: 'clear'
+        });
+            sn.orderLoad = false;
             sn.$store.dispatch("snack", {
               color: "green",
               text: "Customer has been notified"
             });
-            sn.$router.push("/orders");
-          });
-      }
+        });
+    },
+    accept() {
+      const sn = this;
+this.dialogTransit = false
+this.orderLoad = true
+      sn.$store
+        .dispatch("order", {
+          status: sn.order.status,
+          id: sn.order.id,
+          action: "transit",
+          delivery_agent_id: sn.order.delivery.id,
+        }).then(()=>{
+          this.$store.dispatch("getOrder", {
+            id: this.order.id,
+          action: 'clear'
+        });
+this.orderLoad = false
+        })
     },
     loadOrder2(x){
       const sn = this
@@ -1588,11 +1671,11 @@ export default {
               text: "Err - "+err
             });
           })
-
     },
     serve() {
       const sn = this;
-      sn.loading = true;
+      sn.dialogServe = false;
+      sn.orderLoad = true;
         sn.$store
           .dispatch("order", {
             id: sn.order.id,
@@ -1600,19 +1683,18 @@ export default {
             action: "served"
           })
           .then(() => {
-            sn.loading = false;
+            sn.orderLoad = false;
             sn.$store.dispatch("snack", {
               color: "green",
               text: "Customer has been notified"
             });
-            sn.$router.push("/godorders");
           });
     },
     reject() {
       const sn = this;
       if (sn.$refs.form.validate()) {
-        sn.loading2 = true;
-        if (sn.order.status === 5) {
+  this.orderLoad = true
+          if (sn.order.status === 5) {
           sn.$store.dispatch("snack", {
             color: "blue",
             text:
