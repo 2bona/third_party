@@ -7,8 +7,31 @@
     tile
     class="pb-9 px-3"
   >
+     <div>
+    <v-flex class="d-flex" style="justify-content:center">
+        <v-switch
+          @change="changeDeliveryStatus"
+          class=""
+          :loading="statusLoad"
+          v-model="deliveryAgent.status"
+          color="success"
+          hide-details
+        >
+          <template v-slot:prepend>
+            <span class="pt-1 red--text font-weight-bold" v-if="!deliveryAgent.status"
+              >Closed</span
+            >
+            <span
+              class="pt-1 success--text font-weight-bold"
+              v-if="deliveryAgent.status"
+              >Open</span
+            >
+          </template></v-switch
+        >
+      </v-flex>
+     </div>
     <v-row style="    max-width: 567px;
-    margin: auto;" justify="space-around">
+    margin: auto;" justify="space-around" >
       <v-avatar size="80" color="transparent" class="mt-6 mb-3 elevation-15">
         <v-img
           :src="deliveryAgent.image"
@@ -17,7 +40,7 @@
         ></v-img>
         <v-overlay
           absolute
-          opacity="0.3"
+          opacity="0.3" class="mx-auto"
           z-index="1"
           :value="attachments.length"
         >
@@ -95,18 +118,7 @@
               <v-text-field
                 validate-on-blur
                 @keyup.enter.native="edit"
-                label="Token"
-                v-model="deliveryAgent.token"
-                readonly
-                color="grey"
-                disabled
-                :hint="fcm"
-                persistent-hint
-              ></v-text-field>
-              <v-text-field
-                validate-on-blur
-                @keyup.enter.native="edit"
-                label="Full name"
+                label="Full name" readonly
                 v-model="deliveryAgent.name"
                 placeholder="Your first name"
                 :rules="[rules.required, rules.min]"
@@ -115,20 +127,6 @@
                 :disabled="loading"
                 required
               ></v-text-field>
-              <v-select
-                :items="vendors"
-                attach
-                :rules="[rules.minVendor]"
-                chips
-                :loading="loading"
-                :disabled="loading"
-                v-model="vendor"
-                placeholder
-                cache-items
-                label="Vendors you deliver for"
-                color="grey"
-                multiple
-              ></v-select>
               <v-text-field
                 validate-on-blur
                 label="Address"
@@ -242,7 +240,7 @@
             <p
               class="px-2 mb-0 py-0 mt-0 caption grey--text text--lighten-1 text-center"
             >
-              SET ACCOUNT DETAILS FOR SALARY AND TIPS
+              SET ACCOUNT DETAILS.
             </p>
 
             <v-divider class="mt-2 mb-9 grey lighten-3"></v-divider>
@@ -414,6 +412,7 @@ export default {
     area: [],
     show: [],
     show1: true,
+    statusLoad: false,
     fundDialog: false,
     overlay: true,
     fundAmnt: "",
@@ -530,6 +529,34 @@ export default {
       this.fundAmnt = "";
       this.RiderPassword = "";
       this.fundPhone = "";
+    },
+        changeDeliveryStatus() {
+      const sn = this;
+      sn.statusLoad = true;
+      const url = "/delivery/changeStatus";
+      http({
+        url: url,
+        method: "post",
+        params: {
+          status: sn.deliveryAgent.status ? 1 : 0,
+            delivery_id: sn.deliveryAgent.id
+        }
+      })
+        .then(() => {
+          sn.statusLoad = false;
+          sn.$store.dispatch("loadDeliveryAgent");
+          sn.$store.dispatch("snack", {
+            color: "green",
+            text: "Your Status has been Updated"
+          });
+        })
+        .catch(err => {
+          sn.statusLoad = false;
+          sn.$store.dispatch("snack", {
+            color: "red",
+            text: err
+          });
+        });
     },
     paySet() {
       const sn = this;
