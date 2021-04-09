@@ -194,40 +194,8 @@
           </v-form>
         </v-expansion-panel-content>
       </v-expansion-panel>
-      <v-expansion-panel>
-        <v-expansion-panel-header class="px-3"
-          ><p class="grey--text   text--darken-1 mb-0 title">
-            <v-icon class="mr-2" color="grey lighten-3">mdi-map-marker</v-icon>
-            Areas
-          </p>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-list class="pt-0">
-            <p
-              class="px-2 mb-0 py-0 mt-0 caption grey--text text--lighten-1 text-center"
-            >
-              AREAS YOU COVER
-            </p>
-            <v-divider class="mt-2 mb-9 grey lighten-3"></v-divider>
-            <div v-for="(item, i) in deliveryAgent.areas" :key="item.lat">
-              <v-list-item class="my-2 mt-2" style="max-height: 38px!important">
-                <v-list-item-content v-show="!show[i]">
-                  <v-list-item-title
-                    class="body-2 grey--text font-weight-medium text--darken-1 pb-0"
-                    >{{ item.name }}</v-list-item-title
-                  >
-                  <v-list-item-title
-                    class="overline text-lowercase grey--text mb-7"
-                    >{{ item.pivot.distance | distance }}-{{
-                      item.pivot.duration | duration
-                    }}</v-list-item-title
-                  >
-                </v-list-item-content>
-              </v-list-item>
-            </div>
-          </v-list>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+
+
       <v-expansion-panel>
         <v-expansion-panel-header class="px-3"
           ><p class="grey--text   text--darken-1 mb-0 title">
@@ -257,10 +225,10 @@
                 <v-text-field
                   :disabled="payLoad"
                   :loading="payLoad"
-                  solo
-                  rounded
-                  dense
+                  
+                                  dense
                   color="grey"
+                  label="Bank Name"
                   placeholder="Bank Name"
                   v-model="deliveryAgent.bank_name"
                 >
@@ -280,10 +248,10 @@
                 <v-text-field
                   :disabled="payLoad"
                   :loading="payLoad"
-                  solo
-                  rounded
-                  dense
+                  
+                                  dense
                   color="grey"
+                  label="Account name"
                   placeholder="Account name"
                   v-model="deliveryAgent.account_name"
                 >
@@ -301,13 +269,13 @@
               </v-list-item-content>
               <v-list-item-content class="pl-4 pr-1">
                 <v-text-field
-                  :rules="minRule"
                   :disabled="payLoad"
                   :loading="payLoad"
-                  solo
-                  rounded=""
+                  
+                  
                   dense
                   color="grey"
+                  label="Account number"
                   placeholder="Account number"
                   v-model="deliveryAgent.account_number"
                 >
@@ -329,6 +297,168 @@
               >set</v-btn
             >
           </v-row>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+            <v-expansion-panel>
+        <v-expansion-panel-header class="px-3"
+          ><p class="grey--text   text--darken-1 mb-0 title">
+            <v-icon class="mr-2" color="grey lighten-3">mdi-account-plus</v-icon>
+            Add A New Rider 
+          </p>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content style="position: relative" class="px-4 py-2">
+  <v-form onSubmit="return false;" ref="formAdd">
+    <v-container>
+        <div>Personal Information</div>
+      <v-row>
+        <v-col
+          cols="12"
+          md="4"
+        >
+            <v-text-field
+                validate-on-blur
+                @keyup.enter.native="addNewRider"
+                label="Fist name" 
+                v-model="first_name"
+                placeholder="Rider's first name"
+                :rules="[rules.required, rules.min]"
+                color="grey"
+                :loading="loading"
+                :disabled="loading"
+                required
+              ></v-text-field>
+         
+        </v-col>
+        <v-col
+          cols="12"
+          md="4"
+        >
+            <v-text-field
+                validate-on-blur
+                @keyup.enter.native="addNewRider"
+                label="Surname" 
+                v-model="surname"
+                placeholder="Rider surname"
+                :rules="[rules.min]"
+                color="grey"
+                :loading="loading"
+                :disabled="loading"
+                required
+              ></v-text-field>
+         
+        </v-col>
+        <v-col
+          cols="12"
+          md="4"
+        >
+            <v-text-field
+                validate-on-blur
+                @keyup.enter.native="addNewRider"
+                label="Other Name" 
+                v-model="middle_name"
+                placeholder="Rider's other name"
+                :rules="[rules.min]"
+                color="grey"
+                :loading="loading"
+                :disabled="loading"
+                required
+              ></v-text-field>
+         
+        </v-col>
+        <v-col
+          cols="12"
+          md="12"
+        >
+            <v-text-field
+                validate-on-blur
+                @keyup.enter.native="addNewRider"
+                label="Address" 
+                v-model="address"
+                placeholder="Rider's Address"
+                :rules="[rules.required, rules.min]"
+                color="grey"
+                :loading="loading"
+                :disabled="loading"
+                required
+              ></v-text-field>
+         
+        </v-col>
+      </v-row>
+           <div>Account Information</div>
+      <v-row>
+        <v-col
+          cols="12"
+          md="6"
+        >
+            <v-text-field
+                validate-on-blur
+                @keyup.enter.native="addNewRider"
+                label="Phone" 
+                v-model="phone"
+                placeholder="Phone number"
+                :rules="[rules.required, rules.min]"
+                color="grey"
+                :loading="loading"
+                :disabled="loading"
+                required
+              ></v-text-field>
+         
+        </v-col>
+   
+        <v-col
+          cols="12"
+          md="6"
+        >
+            <v-text-field
+                validate-on-blur
+                @keyup.enter.native="addNewRider"
+                label="Password" 
+                v-model="password"
+                placeholder="Account Password"
+                :rules="[rules.required, rules.min]"
+                color="grey"
+                :loading="loading"
+                :disabled="loading"
+                required
+              ></v-text-field>
+         
+        </v-col>
+             <v-col
+          cols="12"
+          md="12"
+        >
+            <v-textarea
+                validate-on-blur
+                @keyup.enter.native="addNewRider"
+                label="Bio" 
+                v-model="bio"
+                placeholder="Account Bio"
+                :rules="[rules.min]"
+                color="grey"
+                :loading="loading"
+                :disabled="loading"
+                required
+              ></v-textarea>
+         
+        </v-col>
+      </v-row>
+        <v-row class="my-5 px-3" justify="space-around">
+              <v-btn
+                depressed
+                :disabled="loading"
+                @click.prevent="addNewRider"
+                :loading="loading"
+                class="px-6"
+                large
+                outlined
+                color="grey"
+                dark
+                rounded
+                >Submit</v-btn
+              >
+            </v-row>
+    </v-container>
+  </v-form>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -415,6 +545,13 @@ export default {
     statusLoad: false,
     fundDialog: false,
     overlay: true,
+    phone: "",
+    password: "",
+    bio: "",
+    address: "",
+    surname: "",
+    middle_name: "",
+    first_name: "",
     fundAmnt: "",
     RiderPassword: "",
     fundPhone: "",
@@ -422,7 +559,7 @@ export default {
     visible: true,
     rules: {
       required: (value) => !!value || "Required.",
-      min: (value) => value.length >= 3 || "Min 3 characters",
+      min: (value) => (value == '' ||  value.length >= 3) || "Min 3 characters",
       minVendor: (value) => value.length > 0 || "Minimum of 1 vendor",
       minArea: (value) => value.length > 0 || "Minimum of 1 area",
       c_password: (value) =>
@@ -453,6 +590,9 @@ export default {
     },
     user() {
       return this.$store.getters.getUser;
+    },
+    logistic_id() {
+      return this.$store.getters.getLogisticId;
     },
     deliveryAgent() {
       return this.$store.getters.getDeliveryAgent;
@@ -487,6 +627,38 @@ export default {
     });
   },
   methods: {
+    addNewRider(){
+            if (this.$refs.formAdd.validate()) {
+              this.loading = true
+       axios
+          .post("/delivery/addNewRider", {
+            middle_name: this.middle_name,
+            first_name: this.first_name,
+            surname: this.surname,
+            city: this.deliveryAgent.city,
+            address: this.address,
+            logistic_id: this.logistic_id,
+            phone: this.phone,
+            password: this.password,
+            bio: this.bio,
+          }).then((res)=>{
+            console.log(res)
+              this.loading = false
+            this.$store.dispatch("snack", {
+              color: "green darken-4",
+              text: "Rider Added",
+            });
+         })
+          .catch((error) => {
+            this.loading = false
+            console.log(error);
+            this.$store.dispatch("snack", {
+              color: "red",
+              text: "An error occured :"+ error,
+            })
+            });
+            }
+    },
     fundAccnt() {
       if (this.$refs.form2.validate()) {
         this.fundLoad = true;
