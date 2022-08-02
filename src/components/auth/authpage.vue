@@ -9,9 +9,9 @@
                 color="transparent"
               >
                 <div style="min-width:300px; width:100%;" class="ma-auto mb-3 pt-3 align-self-center">
-                  <v-avatar size="180px"  flat   class="elevation-20 mb-3">
+                  <v-avatar tile size="180px"  flat   class="elevation-0 mb-3">
                     <v-img
-                      src="https://res.cloudinary.com/dnqw7x4bp/image/upload/c_scale,w_300/v1582290476/e_dey_e_only_2.png"
+                      src="https://res.cloudinary.com/payhospi/image/upload/v1658811037/byc/spaggit_logo_1_ryxsaq.png"
                       alt="alt" width="300px" contain
                     > </v-img>
                   </v-avatar>

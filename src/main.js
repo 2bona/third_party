@@ -291,7 +291,7 @@ window.Pusher = require('pusher-js');
  window.pusher2 = new Pusher("d2e70c8ff384657760d1", {
   cluster: "eu",
   encrypted: true,
-  authEndpoint: 'https://edeyapp.com/api/broadcasting/auth',
+  authEndpoint: 'https://foodrepublic.herokuapp.com/api/broadcasting/auth',
   auth: {
     headers: {
         Authorization: 'Bearer ' + store.getters.getToken

@@ -14,14 +14,13 @@
           class=""
           :loading="statusLoad"
           v-model="deliveryAgent.status"
-          color="success"
           hide-details
         >
           <template v-slot:prepend>
             <span class="pt-1 red--text font-weight-bold" v-if="!deliveryAgent.status"
               >Closed</span>
             <span
-              class="pt-1 success--text font-weight-bold"
+              class="pt-1 success--text text--darken-2 font-weight-bold"
               v-if="deliveryAgent.status"
               >Open</span
             >
@@ -31,7 +30,7 @@
      </div>
     <v-row style="    max-width: 567px;
     margin: auto;" justify="space-around" >
-      <v-avatar size="80" color="transparent" class="mt-6 mb-3 elevation-15">
+      <v-avatar size="80"  color="transparent" class="mt-6 mb-3 elevation-0">
         <v-img
           :src="deliveryAgent.image"
           @click="openImageInput"

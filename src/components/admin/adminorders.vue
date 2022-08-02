@@ -69,32 +69,25 @@
             disable-pagination
             hide-default-footer
           >
-              <template v-slot:item.preorder="{ item, index }">
-       <countdown 
-        v-if="item.preorder_value && item.preorder"
-        v-bind:orderPage="true"
-        v-bind:minDate_="minDate_"
-        v-bind:index="index"
-        v-bind:item="item"
-        @startCallBack="startCallBack"
-        @endCallBack="endCallBack"
-        @checktimer="checktimer"
-        />    
-    <h2 v-else  class="title text-capitalize"
-                :class="
-                  item.status === 1
-                    ? 'blue--text'
-                    : item.status === 2
-                    ? 'green--text'
-                    : item.status === 3
-                    ? 'orange--text'
-                    : item.status === 4
-                    ? 'grey--text text--lighten-1'
-                    : item.status === 5
-                    ? 'red--text'
-                    : ''
-                "> Instant </h2>    
-     </template>
+           <template v-slot:item.delivery.name="{ item }">
+              <h2 v-if="item.delivery"
+                class="title text-capitalize"
+               :class="setColor(item.status)"
+                >{{ item.delivery.name }}</h2
+              >
+            </template>
+                  <template v-slot:item.address="{ item }">
+              <span
+              style="
+    width: 188px!important;
+    display: block;
+"
+              v-if="item.address"
+                class=" font-weight-bold text-capitalize"
+               :class="setColor(item.status)"
+                >{{ (item.address.name) }}</span>
+            </template>
+           
             <template v-slot:item.status="{ item }">
               <h2
                 class="title text-capitalize"
@@ -311,8 +304,9 @@ export default {
           value: "tracking_id"
         },
         { text: "Vendor", align: "center", value: "vendor.name" },
-        { text: "type", align: "center", value: "preorder" },
+        { text: "Rider", align: "center",value: "delivery.name" },
         { text: "When  ", align: "center", value: "created_at" },
+        { text: "To", align: "center",value: "address" },
         { text: "status", align: "center", value: "status" },
         { text: "Methd", align: "center", value: "payment_method" },
         { text: "Total", align: "center", value: "grand_total" },

@@ -388,7 +388,7 @@
   class="my-1 elevation-0 px-3 text-left blue--text text--darkeen-4"    
         color="grey lighten-4" rounded
         style="height:45px;width:233px;max-width:233px;    display: ;
-    justify-content: end;"
+    justify-content: start;"
       >
       <span  class="font-weight-bold ml-0 mr-2" >  <v-icon>mdi-phone</v-icon> </span>
       <a style="text-decoration:none" :href="'tel:' + order.vendor.phone">
@@ -413,7 +413,7 @@
   class="my-1 elevation-0 px-3 text-left blue--text text--darkeen-4"    
         color="grey lighten-4" rounded
         style="height:45px;width:233px;max-width:233px;    display: ;
-    justify-content: end;"
+    justify-content: start;"
       >
       <span  class="font-weight-bold ml-0 mr-2" >  <v-icon>mdi-phone</v-icon> </span>
       <a style="text-decoration:none" :href="'tel:' + order.user.phone">
@@ -664,7 +664,8 @@
           </v-flex>
           <v-flex xs6>
             <p class="body-1 grey--text  mb-1 font-weight-medium text-right">
-             <v-icon v-if="order.status == 2" @click="bidDialogBtn(order.delivery_fee)" size="14" style="padding-bottom:1px">{{(order.status == 2) ?'mdi-pencil': 'mdi-pencil-off'}}</v-icon> <v-icon size="14" style="padding-bottom:1px" color="grey"
+             <!-- <v-icon v-if="order.status == 2" @click="bidDialogBtn(order.delivery_fee)" size="14" style="padding-bottom:1px">{{(order.status == 2) ?'mdi-pencil': 'mdi-pencil-off'}}</v-icon>  -->
+             <v-icon size="14" style="padding-bottom:1px" color="grey"
                 >mdi-currency-ngn</v-icon>{{ order.delivery_fee | price }}.00
             </p>
           </v-flex>
@@ -742,8 +743,8 @@
               >
               {{
                   order.status != 1 
-                    ? order.status == 2? 'in-transit':"deliver"
-                    : "available"
+                    ? order.status == 2? 'in-transit' : "delivered"
+                    : "accept delivery"
                 }}
               </v-btn>
               <p class="text-center font-weight-bold red--text mx-auto " v-if="order.status == 2 && !order.delivery"> Kindly assign a Rider to continue</p>
@@ -1636,6 +1637,40 @@ export default {
         : this.order.status == 2 ? 
         this.dialogTransit = true : 
         (this.dialogDelivery = true)
+    },
+     notifyUser() {
+      const sn = this;
+      sn.loadingNotified = true;
+      sn.$store
+        .dispatch("order", {
+          status: sn.order.status,
+          id: sn.order.id,
+          action: "notify_customer",
+          delivery_agent_id: sn.deliveryAgent.id,
+        })
+        .then(() => {
+          if (!this.orders) {
+            this.setLocation();
+          }
+          sn.$store.dispatch("addAccepted", {
+            id: sn.order.tracking_id,
+            vendor: sn.order.vendor.name,
+            vendorAddress: sn.order.vendor.address,
+            phone: sn.order.user.phone,
+            address: sn.order.address.name,
+            total: sn.order.grand_total,
+            paid: sn.order.paid,
+          });
+          sn.$store.dispatch("setTask", true);
+          sn.dialogNotified = false;
+        })
+        .catch((err) => {
+          sn.loadingNotified = false;
+          sn.$store.dispatch("snack", {
+            color: "red",
+            text: "An error Occured",
+          });
+        });
     },
     reload(e) {
       const sn = this;
