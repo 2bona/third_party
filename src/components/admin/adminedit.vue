@@ -500,13 +500,6 @@
 </style>
 <script>
 import axios from "axios";
-import wrapper from "axios-cache-plugin";
-
-let http = wrapper(axios, {
-  maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
-  ttl: 60000, // time to live. if you set this option the cached item will be auto deleted after ttl(ms).
-  excludeHeaders: true, // should headers be ignored in cache key, helpful for ignoring tracking headers
-});
 
 export default {
   data: () => ({
@@ -585,25 +578,11 @@ export default {
   },
   created() {
     var sn = this;
-    sn.loading = true;
     sn.$store.dispatch("loadDeliveryAgent").then(() => {
       var l = [];
       var n = sn.deliveryAgent.vendors;
       sn.vendor = n;
-      axios
-        .get("/city/delivery?city=" + sn.deliveryAgent.city)
-        .then(function(response) {
-          sn.areas = response.data.areas;
-          sn.results = response.data.result;
-          sn.load = false;
-          axios
-            .get("/delivery/allvendors?id=" + sn.deliveryAgent.city)
-            .then(function(response) {
-              var d = response.data.vendors;
-              sn.loading = false;
-              sn.vendors = d;
-            });
-        });
+
       sn.editBtn = false;
       const e = sn.$store.getters.getDeliveryAgent.areas;
       sn.area = e.map((item) => {
@@ -691,14 +670,10 @@ export default {
       const sn = this;
       sn.statusLoad = true;
       const url = "/delivery/changeStatus";
-      http({
-        url: url,
-        method: "post",
-        params: {
+      axios.post(url,{
           status: sn.deliveryAgent.status ? 1 : 0,
             delivery_id: sn.deliveryAgent.id
-        }
-      })
+        })
         .then(() => {
           sn.statusLoad = false;
           sn.$store.dispatch("loadDeliveryAgent");
@@ -799,68 +774,16 @@ export default {
       if (this.$refs.form.validate()) {
         this.loading = true;
         const url = "/delivery/update";
-        var d = sn.results;
-        var e = [];
-        sn.area.forEach((element) => {
-          e.push(
-            d.find((item) => {
-              return item.id === element;
-            })
-          );
-        });
-        const origin = [];
-        var set = [];
-        e.forEach((item) => {
-          set = new google.maps.LatLng(item.lat, item.lng);
-          origin.push(set);
-        });
-
-        var service = new google.maps.DistanceMatrixService();
-        service.getDistanceMatrix(
-          {
-            origins: [
-              new google.maps.LatLng(
-                sn.deliveryAgent.lat,
-                sn.deliveryAgent.lng
-              ),
-            ],
-            destinations: origin,
-            travelMode: "DRIVING",
-            unitSystem: google.maps.UnitSystem.METRIC,
-            avoidHighways: false,
-            avoidTolls: false,
-          },
-          function(response, status) {
-            const duration = [];
-            const distance = [];
-            if (status !== "OK") {
-              alert("Error was: " + status);
-            } else {
-              var answer = response.rows[0].elements;
-              answer.forEach((element) => {
-                distance.push(element.distance.value);
-                duration.push(element.duration.value);
-              });
-            }
-
-            http({
-              url: url,
-              method: "post",
-              params: {
+            axios.post(url,{
                 name: sn.deliveryAgent.name,
                 bio: sn.deliveryAgent.bio,
                 phone: sn.deliveryAgent.phone,
-                areas: sn.area,
-                vendors: sn.vendor[0].value
-                  ? sn.vendor.map((n) => {
-                      return n.value;
-                    })
-                  : sn.vendor,
-                duration: duration,
-                distance: distance,
+                areas: [],
+                vendors: [],
+                duration: [],
+                distance: [],
                 token: sn.fcm || "",
-              },
-            })
+              })
               .then(() => {
                 sn.loading = false;
                 sn.$store.dispatch("loadDeliveryAgent");
@@ -876,8 +799,8 @@ export default {
                 });
                 sn.loading = false;
               });
-          }
-        );
+          
+        
       } else {
         sn.loading = false;
       }
