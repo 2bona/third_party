@@ -747,7 +747,7 @@
                     : "accept delivery"
                 }}
               </v-btn>
-              <p class="text-center font-weight-bold red--text mx-auto " v-if="order.status == 2 && !order.delivery"> Kindly assign a Rider to continue</p>
+              <p class="text-center display-1 font-weight-bold red--text mx-auto " v-if="order.status == 2 && !order.delivery"> Kindly assign a Free Rider to continue</p>
             </v-flex>
           </v-layout>
     <v-flex v-if="order.table_no" md6 sm6 xs12>

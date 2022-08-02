@@ -694,14 +694,10 @@ export default {
       const sn = this;
       sn.payLoad = true;
       const url = "/delivery/payset";
-      http({
-        url: url,
-        method: "post",
-        params: {
+      axios.post(url, {
           bank_name: sn.deliveryAgent.bank_name,
           account_name: sn.deliveryAgent.account_name,
           account_number: sn.deliveryAgent.account_number,
-        },
       })
         .then((response) => {
           sn.payLoad = false;
