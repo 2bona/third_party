@@ -3,7 +3,7 @@
     <keep-alive>
 
    
-    <div class="grey lighten-5 container mt-0" style="margin-bottom: 100px;">
+    <div class="grey lighten-5 container-fluid mt-0" style="margin-bottom: 100px;">
       <div class="d-flex " style="justify-content: flex-start"> 
 <div></div>
 <v-layout style="
@@ -18,7 +18,7 @@
    <v-btn fixed right color="grey darken-1"
           class="elevation-24 pr-0 mb-2"
               @click="reload(order)"
-               fab dark small
+               fab dark small top
                :loading="orderLoad"
               ><v-icon>mdi-reload</v-icon></v-btn
             >
@@ -37,12 +37,12 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
    
-        <v-layout class="mb-12" wrap>
+        <v-layout class="mb-12 px-7" wrap>
 
-   
+  
       <v-flex md6 sm12 xs12>
       
-      <v-layout row wrap class="mt-12 px-2">
+      <v-layout row wrap class="mt-12 pt-3 px-2">
         <v-flex style="justify-content: left;
     display: flex;" xs6>
           <p 
@@ -130,15 +130,6 @@
           >
        <keep-alive>
             <v-timeline align-top dense>
-              <v-timeline-item
-                small
-              >
-            <p
-            class="title mb-0 grey--text text--darken-1 text-wrap"
-            v-if="orderErrand"
-            >{{ order.errand.bike_carrier == 1 ? 'Bike': 'Keke'}}
-          </p>
-              </v-timeline-item>
               <v-timeline-item
                 :color="order.errand.address[0].pivot.status ? 'green' : 'red'"
                 small
@@ -236,6 +227,7 @@
               </v-timeline-item>
               
               <v-timeline-item
+              v-if="order.errand.address.length > 1"
                 :color="order.errand.address[1].pivot.status ? 'green' : 'red'"
                 small
               >
@@ -672,9 +664,8 @@
           </v-flex>
           <v-flex xs6>
             <p class="body-1 grey--text  mb-1 font-weight-medium text-right">
-              <v-icon size="14" style="padding-bottom:1px" color="grey"
-                >mdi-currency-ngn</v-icon
-              >{{ order.delivery_fee | price }}.00
+             <v-icon v-if="order.status == 2" @click="bidDialogBtn(order.delivery_fee)" size="14" style="padding-bottom:1px">{{(order.status == 2) ?'mdi-pencil': 'mdi-pencil-off'}}</v-icon> <v-icon size="14" style="padding-bottom:1px" color="grey"
+                >mdi-currency-ngn</v-icon>{{ order.delivery_fee | price }}.00
             </p>
           </v-flex>
         </v-row>
@@ -824,6 +815,56 @@
         :indeterminate="orderLoad"
       ></v-progress-linear>
     </div>
+       <v-dialog v-model="bidDialog" max-width="290">
+      <v-card class="px-2 pb-2">
+        <v-card-title
+          class="body-1 text-center  pl-3  my-2 pb-0 "
+          >Edit Delivery fee.
+            </v-card-title>
+        <v-form  @submit.prevent="bidFee()" ref="formBid">
+          <!-- <v-text-field
+            validate-on-blur
+            autofocus
+            rounded label="Edit Fee"
+            solo
+            v-model="message"
+          ></v-text-field> -->
+          <v-card-text>
+      <v-slider
+        v-model="fee"
+        label="Suggest Fee"
+            hint="Enter the accurate delivery fee"
+            :rules="[rules.required]"
+        :tick-labels="ticksLabels"
+        :max="3"
+        step="1"
+        ticks="always"
+        tick-size="4"
+      ></v-slider>
+    </v-card-text>
+        </v-form>
+
+        <v-card-actions class="pr-1">
+          <v-spacer></v-spacer>
+
+          <v-btn rounded 
+             style="background: linear-gradient(145deg, #ffffff, #e6e6e6);
+box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
+          class="font-weight-black orange--text text--darken-4 whiteBtnShadow" color=""  small @click="dialogNotify = false">
+            cancel
+          </v-btn>
+
+          <v-btn
+          rounded
+             style="background: linear-gradient(145deg, #ffffff, #e6e6e6);
+box-shadow:  5px 5px 10px #d9d9d9,-5px -5px 10px #ffffff!important;"
+       class="font-weight-black"
+           color="blue darken-1" text small @click="sendNotify()">
+            send
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
        <v-dialog v-model="dialogNotify" max-width="290">
       <v-card class="px-2 pb-2">
         <v-card-title
@@ -1276,6 +1317,8 @@ export default {
       dialog2: false,
       dialogAssign: false,
       orderLoad: false,
+      bid: '',
+      bidDialog: false,
       dialogServe: false,
       dialogTransit: false,
       dialogDelivery: false,
@@ -1581,6 +1624,11 @@ export default {
           sn.setItem(n);
         }
       }
+    },
+    bidDialogBtn(x) {
+    this.bidDialog = true
+    this.bid = x
+    
     },
     serveBtn() {
       this.order.status < 2

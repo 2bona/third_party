@@ -3,18 +3,7 @@
     <v-row class="pa-3 mb-12 px-6">
       <v-flex xs12 class="mb-3 pt-2 px-0">
         <v-layout row wrap>
-          <v-btn
-            class="mb-12"
-            bottom
-            fixed
-            right
-            @click="dialog = !dialog"
-            fab
-            small
-            color="white"
-          >
-            <v-icon color="grey darken-1">mdi-camera</v-icon>
-          </v-btn>
+      
 
           <v-flex xs5 class="pl-3">
             <h1 class="title text--darken-2 font-weight-bold  mb-3 grey--text">
@@ -208,21 +197,7 @@
         :indeterminate="orderLoad"
       ></v-progress-linear>
     </div>
-    <v-dialog
-      v-model="dialog"
-      :overlay="false"
-      max-width="300px"
-      max-height="300px"
-      transition="dialog-transition"
-    >
-      <v-card color="grey" height="300px" width="300px">
-        <qrcode-stream
-          v-if="dialog"
-          @init="onInit"
-          @decode="onDecode"
-        ></qrcode-stream>
-      </v-card>
-    </v-dialog>
+
         <v-dialog
       max-width="450"
       style="background:white;"

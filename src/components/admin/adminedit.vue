@@ -1,6 +1,6 @@
 <template>
   <v-card
-    min-height="95vh"
+    min-height="100vh"
     color="grey lighten-3"
     style="overflow-x: hidden;"
     flat
@@ -19,8 +19,7 @@
         >
           <template v-slot:prepend>
             <span class="pt-1 red--text font-weight-bold" v-if="!deliveryAgent.status"
-              >Closed</span
-            >
+              >Closed</span>
             <span
               class="pt-1 success--text font-weight-bold"
               v-if="deliveryAgent.status"
@@ -149,19 +148,6 @@
                 color="grey"
                 required
               ></v-text-field>
-              <v-select
-                :items="areas"
-                attach
-                :rules="[rules.minArea]"
-                chips
-                cache-items
-                :loading="loading"
-                :disabled="loading"
-                v-model="area"
-                label="Areas you cover"
-                color="grey"
-                multiple
-              ></v-select>
               <v-textarea
                 name="bio"
                 :loading="loading"
