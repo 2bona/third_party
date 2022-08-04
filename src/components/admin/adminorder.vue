@@ -670,24 +670,6 @@
             </p>
           </v-flex>
         </v-row>
-        <v-row
-          v-show="!(order.payment_method === 4 || order.payment_method === 5)"
-          justify="space-between"
-          class="px-6 pt-0"
-        >
-          <v-flex xs6>
-            <p class="body-1 grey--text  mb-1 font-weight-medium">
-              Service charge
-            </p>
-          </v-flex>
-          <v-flex xs6>
-            <p class="body-1 grey--text  mb-1 font-weight-medium text-right">
-              <v-icon size="14" style="padding-bottom:1px" color="grey"
-                >mdi-currency-ngn</v-icon
-              >{{ order.service_charge | price }}.00
-            </p>
-          </v-flex>
-        </v-row>
         <v-divider></v-divider>
         <v-row justify="space-between" class="px-5 pt-4">
           <v-flex xs4>
@@ -729,7 +711,7 @@
                 </v-scale-transition>
               </v-btn>
             </v-flex> -->
-            <v-flex v-if=" !orderErrand" xs6 class="text-center px-2">
+            <v-flex v-if=" !orderErrand" xs12 sm6 class="text-center px-2">
               <v-btn
                 :loading="loading"
                 block
@@ -747,7 +729,7 @@
                     : "accept delivery"
                 }}
               </v-btn>
-              <p class="text-center display-1 font-weight-bold red--text mx-auto " v-if="order.status == 2 && !order.delivery"> Kindly assign a Free Rider to continue</p>
+              <p class="text-center display-1 font-weight-bold red--text mx-auto " v-if="order.status == 2 && !order.delivery"> Assign a "Free & Available" Rider to continue</p>
             </v-flex>
           </v-layout>
     <v-flex v-if="order.table_no" md6 sm6 xs12>

@@ -24,6 +24,7 @@ export const vendor = {
     agents: [],
     end: '',
     start: '',
+    cut: '',
     range: false,
     adminOrderList: [],
     orderList: [],
@@ -48,12 +49,20 @@ export const vendor = {
      }, data) {
            commit("setOrderDate", data)
      },
+     setCut({
+       commit,
+       state,
+       dispatch
+     }, data) {
+           commit("setAdminOrderCut", data)
+     },
      setAdminDatedOrderList({
        commit,
        state,
        dispatch
      }, data) {
       commit("setAdminOrderList", data)
+      
     },
      setVendorList({
        commit,
@@ -119,13 +128,14 @@ export const vendor = {
       state,
       dispatch
     }, data) {
-    var url = "/order/adminorderlist?type=single&on=" + new Date().toISOString()+"&logistic_id="+state.logistic_id
+    var url = "/order/adminorderlist_third_party?type=single&on=" + new Date().toISOString()+"&logistic_id="+state.logistic_id
     http({
         url: url,
         method: 'get'
       })
       .then(function (response) {
         commit("setAdminOrderList", response.data.orders)
+        commit("setAdminOrderCut", response.data.cut)
       })
     },
   async orderList({
@@ -448,6 +458,9 @@ loadOptions({
     setItems(state, items) {
       state.items = items
     },
+    setAdminOrderCut(state, cut) {
+      state.cut = cut
+    },
     setAdminOrderList(state, data) {
       state.adminOrderList =  data.map(Object.freeze)
 
@@ -513,6 +526,9 @@ loadOptions({
     },
     getPlatform(state) {
       return state.platform
+    },
+    getCut(state) {
+      return state.cut
     },
     getVendorLoadStatus(state) {
       return state.vendorLoadStatus

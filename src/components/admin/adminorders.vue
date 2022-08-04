@@ -43,7 +43,7 @@
           </v-flex>
         </v-layout>
 
-        <v-card style="overflow-x: scroll;border-radius: 25px" class="mt-4 grey lighten-4 pb-8">
+        <v-card   style="overflow-x: scroll;border-radius: 25px" class="mt-4 grey lighten-4 pb-8">
           <v-card-title style="    position: sticky;
     left: 0;"> 
             <v-text-field
@@ -61,7 +61,7 @@
             :mobile-breakpoint="30"
             :headers="headers"
             v-model="selected"
-            :items="orders" 
+            :items="orders"  
             style="min-width: 880px;"
             @click:row="clicker($event)"
             :expanded.sync="expanded"
@@ -96,7 +96,7 @@
                   item.status === 1
                     ? 'read'
                     : item.status === 2
-                    ? 'served'
+                    ? 'Processed'
                     : item.status === 3
                     ? 'in-transit'
                     : item.status === 4
@@ -148,7 +148,7 @@
                 >{{ item.tracking_id }}</h2
               >
             </template>
-            <template v-slot:item.grand_total="{ item }">
+            <template v-slot:item.delivery_fee="{ item }">
             <h2
                 class=" title text-capitalize"
                :class="setColor(item.status)"
@@ -168,7 +168,7 @@
                     : item.status === 5
                     ? 'red'
                     : ''
-                ">mdi-currency-ngn</v-icon>{{ item.grand_total | price }}</h2
+                ">mdi-currency-ngn</v-icon>{{ (item.delivery_fee - cut) | price }}</h2
               >
             </template>
             <template v-slot:expanded-item="{ headers, item }">
@@ -308,8 +308,7 @@ export default {
         { text: "When  ", align: "center", value: "created_at" },
         { text: "To", align: "center",value: "address" },
         { text: "status", align: "center", value: "status" },
-        { text: "Methd", align: "center", value: "payment_method" },
-        { text: "Total", align: "center", value: "grand_total" },
+        { text: "Delivery Fee", align: "center", value: "delivery_fee" },
       ],
       dialog4: false,
       rules: {
@@ -321,6 +320,9 @@ export default {
   computed: {
     orders() {
       return this.$store.getters.getAdminOrderList;
+    },
+    cut() {
+      return this.$store.getters.getCut;
     },
      logistic_id() {
       return this.$store.getters.getLogisticId;
@@ -369,7 +371,7 @@ export default {
                 "&to=" +
                 this.sorted_dates[1]
               : "?type=single&on=" + this.sorted_dates[0]
-          var url = "/order/adminorderlist"+when_date+"&logistic_id="+this.logistic_id
+          var url = "/order/adminorderlist_third_party"+when_date+"&logistic_id="+this.logistic_id
     http({
       url: url,
         method: 'get'
@@ -378,6 +380,7 @@ export default {
         sn.orderLoad = false
         sn.loadingHist = false
         this.$store.dispatch("setAdminDatedOrderList", response.data.orders)
+        this.$store.dispatch("setCut", response.data.cut)
       }).catch((err)=>{
         sn.orderLoad = false
         sn.loadingHist = false
@@ -391,7 +394,7 @@ export default {
     reload(){
         this.dates = []
       this.orderLoad = true
-          var url = "/order/adminorderlist?type=single&on=" + new Date().toISOString()+"&logistic_id="+this.logistic_id
+          var url = "/order/adminorderlist_third_party?type=single&on=" + new Date().toISOString()+"&logistic_id="+this.logistic_id
     http({
       url: url,
         method: 'get'
@@ -399,6 +402,7 @@ export default {
       .then( (response) => {
       this.orderLoad = false
         this.$store.dispatch("setAdminDatedOrderList", response.data.orders)
+        this.$store.dispatch("setCut", response.data.cut)
           this.$store.dispatch("snack", {
             color: "blue",
             text: "Orders Reloaded"
