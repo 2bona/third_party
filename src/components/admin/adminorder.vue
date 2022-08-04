@@ -643,18 +643,7 @@
         <span class="body-2 font-weight-bold grey--text text--lighten-1">
           SUMMARY
         </span>
-        <v-row class="px-6 pt-3">
-          <v-flex xs6>
-            <p class="body-1 grey--text  mb-1 font-weight-medium">Subtotal</p>
-          </v-flex>
-          <v-flex xs6>
-            <p class="body-1 grey--text  mb-1 font-weight-medium text-right">
-              <v-icon size="14" style="padding-bottom:1px" color="grey"
-                >mdi-currency-ngn</v-icon
-              >{{ order.total | price }}.00
-            </p>
-          </v-flex>
-        </v-row>
+      
         <v-row
           v-show="!(order.payment_method === 4 || order.payment_method === 5)"
           class="px-6 pt-0"
@@ -666,7 +655,7 @@
             <p class="body-1 grey--text  mb-1 font-weight-medium text-right">
              <!-- <v-icon v-if="order.status == 2" @click="bidDialogBtn(order.delivery_fee)" size="14" style="padding-bottom:1px">{{(order.status == 2) ?'mdi-pencil': 'mdi-pencil-off'}}</v-icon>  -->
              <v-icon size="14" style="padding-bottom:1px" color="grey"
-                >mdi-currency-ngn</v-icon>{{ order.delivery_fee | price }}.00
+                >mdi-currency-ngn</v-icon>{{ (order.delivery_fee - cut) | price }}.00
             </p>
           </v-flex>
         </v-row>
@@ -679,7 +668,7 @@
             <p class=" font-weight-black headline text-right">
               <v-icon style="padding-bottom:5px" color="black" size="22"
                 >mdi-currency-ngn</v-icon
-              >{{ order.grand_total | price }}.00
+              >{{ (order.delivery_fee - cut) | price }}.00
             </p>
           </v-flex>
         </v-row>
@@ -1359,6 +1348,9 @@ export default {
     },
        logistic_id() {
       return this.$store.getters.getLogisticId;
+    },
+        cut() {
+      return this.$store.getters.getCut;
     },
     agents() {
       return this.$store.getters.getVendorList;

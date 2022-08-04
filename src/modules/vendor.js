@@ -202,8 +202,7 @@ export const vendor = {
         el.id == data;
       });
       if (hasId) return;
-      axios
-        .get(AXIOS_CONFIG.API_URL + "/order/admin_find?id=" + data)
+      axios.get(AXIOS_CONFIG.API_URL + "/order/admin_find?id=" + data)
         .then((res) => {
           var order = res.data;
           console.log(order);
