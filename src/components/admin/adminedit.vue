@@ -74,11 +74,11 @@
         class="v-input"
       />
       <v-row class="">
-        <v-flex xs6>
+        <v-flex xs12>
           <h3
             class="grey--text text--darken-1 font-weight-regular  text-center mb-0"
           >
-            {{ deliveryAgent.orders_count | price }}
+            {{ deliveryAgent.orders_number | price }}
           </h3>
           <p
             class=" mt-0 grey--text text-capitalize body-2 font-weight-regular text--lighten-1  text-center"
@@ -86,19 +86,7 @@
             Orders
           </p>
         </v-flex>
-        <v-flex xs6>
-          <h3
-            class="grey--text text--darken-1 font-weight-regular  text-center mb-0"
-          >
-            <v-icon class="pb-1" size="19">mdi-currency-ngn</v-icon
-            >{{ deliveryAgent.funds_collected | price }}
-          </h3>
-          <p
-            class=" mt-0 grey--text text-capitalize body-2 font-weight-regular text--lighten-1  text-center"
-          >
-            Funds Collected
-          </p>
-        </v-flex>
+    
       </v-row>
     </v-row>
     <v-expansion-panels style="    max-width: 567px;
@@ -163,15 +151,15 @@
             </v-row>
             <v-row class="my-5 px-3" justify="space-around">
               <v-btn
-                depressed
+                
                 :disabled="editBtn"
                 @click.prevent="edit"
                 :loading="loading"
                 class="px-6"
-                small
-                outlined
-                color="primary"
-                dark
+                
+                
+                color=""
+              
                 rounded
                 >Edit</v-btn
               >
@@ -269,18 +257,18 @@
             </v-list-item>
           </v-list>
           <v-row class="mb-7 mt-0 px-3" justify="space-around">
+                      <div class="text-center">
+
             <v-btn
-              depressed
+              
               @click.prevent="paySet"
               :loading="payLoad"
               class="px-6"
-              small
-              outlined
-              color="primary"
-              dark
               rounded
               >set</v-btn
             >
+                          <p class="mt-5 grey--text body-2">This is the account to Remit your Payments at the end of the day.</p>
+                      </div>
           </v-row>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -304,6 +292,8 @@
                 validate-on-blur
                 @keyup.enter.native="addNewRider"
                 label="Fist name" 
+                persistent-hint
+                hint="Please be careful, you cannot edit this."
                 v-model="first_name"
                 placeholder="Rider's first name"
                 :rules="[rules.required, rules.min]"
@@ -322,6 +312,8 @@
                 validate-on-blur
                 @keyup.enter.native="addNewRider"
                 label="Surname" 
+                persistent-hint
+                hint="Please be careful, you cannot edit this."
                 v-model="surname"
                 placeholder="Rider surname"
                 :rules="[rules.min]"
@@ -340,6 +332,8 @@
                 validate-on-blur
                 @keyup.enter.native="addNewRider"
                 label="Other Name" 
+              persistent-hint
+                hint="Please be careful, you cannot edit this."
                 v-model="middle_name"
                 placeholder="Rider's other name"
                 :rules="[rules.min]"
@@ -357,7 +351,8 @@
             <v-text-field
                 validate-on-blur
                 @keyup.enter.native="addNewRider"
-                label="Address" 
+                label="Address"  persistent-hint
+                hint="Please be careful, you cannot edit this."
                 v-model="address"
                 placeholder="Rider's Address"
                 :rules="[rules.required, rules.min]"
@@ -380,7 +375,8 @@
                 @keyup.enter.native="addNewRider"
                 label="Phone" 
                 v-model="phone"
-                placeholder="Phone number"
+                placeholder="Phone number" persistent-hint
+                hint="Please be careful, you cannot edit this."
                 :rules="[rules.required, rules.min]"
                 color="grey"
                 :loading="loading"
@@ -428,19 +424,20 @@
         </v-col>
       </v-row>
         <v-row class="my-5 px-3" justify="space-around">
+          <div class="text-center">
+
               <v-btn
-                depressed
                 :disabled="loading"
                 @click.prevent="addNewRider"
                 :loading="loading"
                 class="px-6"
                 large
-                outlined
-                color="grey"
                 dark
                 rounded
                 >Submit</v-btn
               >
+              <p class="mt-5 grey--text body-2">By clicking submit you are saying this Rider has the State's Rider's License and is qualified by the State Government to deliver goods in the State.</p>
+          </div>
             </v-row>
     </v-container>
   </v-form>
@@ -456,6 +453,7 @@
               >mdi-information</v-icon
             >
             Support
+            <p class="grey--text text--darken-0 body-2 text-wrap px-9">Chat us on whatsapp, contact us on any issue you have on this app.</p>
           </v-list-item-title>
           <v-btn
             outlined
