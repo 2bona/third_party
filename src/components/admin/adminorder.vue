@@ -668,7 +668,7 @@
             <p class=" font-weight-black headline text-right">
               <v-icon style="padding-bottom:5px" color="black" size="22"
                 >mdi-currency-ngn</v-icon
-              >{{ (order.delivery_fee - cut) | price }}.00
+              >{{ (order.delivery_fee - cpt) | price }}.00
             </p>
           </v-flex>
         </v-row>
@@ -1349,7 +1349,7 @@ export default {
        logistic_id() {
       return this.$store.getters.getLogisticId;
     },
-        cut() {
+        cpt() {
       return this.$store.getters.getCut;
     },
     agents() {
