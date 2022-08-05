@@ -326,7 +326,7 @@ if (logistic_id > 0) {
   Channel3.bind("order_event", (data) => {
     console.log(data);
 
-    if (data.logistic_id > 0) {
+    if (!data.delivery_id) {
       if (!OrderSoundPlaying) {
         OrderSound.play();
       }
