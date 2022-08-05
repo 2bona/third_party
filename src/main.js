@@ -336,7 +336,25 @@ if (logistic_id > 0) {
         action: "clear",
       });
     } else {
-      store.dispatch("removeItem", data.order);
+      var bol = store.getters.getVendorList.some(el=>{
+        return el.id == data.delivery_id
+      })
+     
+      if(!bol){
+        store.dispatch("removeItem", data.order);
+        if (store.getters.getOrderFull) {
+        if (store.getters.getOrderFull.id == data.order) {
+        store.dispatch("snack", {
+            color: "black darken-4",
+            text: "Order has been assigned",
+          });
+          router.push('/godorders')
+        }
+      }
+      }
+      if (OrderSoundPlaying) {
+        OrderSound.stop();
+      }
     }
   });
 }
