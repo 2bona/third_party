@@ -5,9 +5,9 @@
       interval="4000"
       height="154px"
       continuous
-      cycle class="mt-9"
-      :show-arrows="false"
-      :hide-delimiters="true">
+      cycle class="caro mt-9"
+      :show-arrows="false" hide-delimiter-background
+      :hide-delimiters="false">
       <v-carousel-item v-for="n in statement" :key="n.title">
         <v-card
           width="400px"
@@ -22,7 +22,7 @@
             </p>
           </v-card-title>
 
-          <v-card-text class="px-12 caption grey--text font-weight-regular">{{
+          <v-card-text class="px-12 body-2 grey--text font-weight-regular">{{
             n.text
           }}</v-card-text>
         </v-card>
@@ -31,16 +31,21 @@
     <v-card color="transparent" flat tile class="ma-auto" width="300px">
 
       <v-btn
-        to="/auth/login"
-        rounded
-        color="white"
-        class="caption font-weight-black text--darken-4 mx-2 orange--text"
+        to="/auth/login" depressed
+        style="border-radius:10px"
+       block x-large 
+        class=" font-weight-black mt-4 text--darken-4 mx-2 "
       >
         login
       </v-btn>
     </v-card>
   </div>
 </template>
+<style>
+.caro .v-btn--round .v-btn__content .v-icon {
+    color: #b7b7b7;
+}
+</style>
 <script>
 export default {
   data() {
@@ -56,19 +61,23 @@ export default {
       },
       statement: [
         {
-          title: "Earn",
-          text: "Earn while you are at home."
-        },
-        {
           title: "Orders",
           text:
-            "Recieve orders ftom E Dey App in real time."
+            "Recieve orders from Vendors in real time."
         },
         {
-          title: "Track",
-          text:
-            "See your riders location in real time."
-        }
+          title: "Manage Riders",
+          text: "Assign riders to orders, and update customers automatically."
+        },
+        {
+          title: "Accounting",
+          text: "Easily calculate your earning and access past records."
+        },
+        // {
+        //   title: "Track",
+        //   text:
+        //     "See your riders location in real time."
+        // }
       ]
     };
   }

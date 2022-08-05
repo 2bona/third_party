@@ -301,8 +301,8 @@ export const delivery_agent = {
     }, data) {
       if (data !== null && window.Channel2 == null) {
        
-        window.Channel2 = pusher2.subscribe('private-logistic.'+data);
-        Channel2.bind('logistic_event.'+data, (event_data) => {
+        window.Channel2 = pusher2.subscribe('private-logistic.'+484);
+        Channel2.bind('logistic_event.'+484, (event_data) => {
           if (!OrderSoundPlaying) {
             OrderSound.play();
           }

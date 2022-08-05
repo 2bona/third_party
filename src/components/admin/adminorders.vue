@@ -23,13 +23,13 @@
           </v-flex>
           <v-flex xs7 style="display: flex;
     justify-content: flex-end;">
-             <!-- <v-btn 
+             <v-btn 
              
                depressed color="grey lighten-2" rounded :loading="loadingHist" @click="showCalender()"   >
           <v-icon>mdi-history</v-icon><span v-if=" $vuetify.breakpoint.smAndUp">
             history
             </span> 
-        </v-btn> -->
+        </v-btn>
             <v-btn
             :loading="orderLoad"
               @click="start()" class="mx-3"
@@ -250,6 +250,9 @@
     font-size: 16px!important;
     text-transform: uppercase;
 }
+td h1.title{
+  font-size:9px!important;
+}
 .v-data-table-header th.sortable:first-child{
       padding: 0px 0px 0px 14px!important;
 }
@@ -259,21 +262,10 @@
 </style>
 <script>
 import axios from "axios";
-import wrapper from "axios-cache-plugin";
-import { QrcodeStream } from "vue-qrcode-reader";
-import countdown from "./countdown"
 
-let http = wrapper(axios, {
-  maxCacheSize: 15, // cached items amounts. if the number of cached items exceeds, the earliest cached item will be deleted. default number is 15.
-  ttl: 60000, // time to live. if you set this option the cached item will be auto deleted after ttl(ms).
-  excludeHeaders: true // should headers be ignored in cache key, helpful for ignoring tracking headers
-});
 
 export default {
-  components: {
-    QrcodeStream,
-    countdown
-  },
+
   data() {
     return {
       dates: [],
@@ -303,11 +295,11 @@ export default {
           align: "left",
           value: "tracking_id"
         },
-        { text: "Vendor", align: "center", value: "vendor.name" },
-        { text: "Rider", align: "center",value: "delivery.name" },
         { text: "When  ", align: "center", value: "created_at" },
-        { text: "To", align: "center",value: "address" },
+        { text: "Rider", align: "center",value: "delivery.name" },
         { text: "status", align: "center", value: "status" },
+        { text: "To", align: "center",value: "address" },
+        { text: "Vendor", align: "center", value: "vendor.name" },
         { text: "Delivery Fee", align: "center", value: "delivery_fee" },
       ],
       dialog4: false,
@@ -372,11 +364,8 @@ export default {
                 this.sorted_dates[1]
               : "?type=single&on=" + this.sorted_dates[0]
           var url = "/order/adminorderlist_third_party"+when_date+"&logistic_id="+this.logistic_id
-    http({
-      url: url,
-        method: 'get'
-      })
-      .then( (response) =>{
+   axios.get(url)
+      .then((response)=>{
         sn.orderLoad = false
         sn.loadingHist = false
         this.$store.dispatch("setAdminDatedOrderList", response.data.orders)
@@ -395,10 +384,7 @@ export default {
         this.dates = []
       this.orderLoad = true
           var url = "/order/adminorderlist_third_party?type=single&on=" + new Date().toISOString()+"&logistic_id="+this.logistic_id
-    http({
-      url: url,
-        method: 'get'
-      })
+    axios.get(url)
       .then( (response) => {
       this.orderLoad = false
         this.$store.dispatch("setAdminDatedOrderList", response.data.orders)
@@ -430,7 +416,7 @@ export default {
     },
         showCalender() {
       this.dates = []
-      // this.calender = true;
+      this.calender = true;
     },
 
        paymentMethod(x) {

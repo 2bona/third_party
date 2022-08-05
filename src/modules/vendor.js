@@ -195,6 +195,7 @@ export const vendor = {
         return el.id !== data;
       });
       state.adminOrderList = orderList;
+      router.push('/godorders')
     },
     addItem({ commit, state, dispatch }, data) {
       console.log("getItem");

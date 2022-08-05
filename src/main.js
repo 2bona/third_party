@@ -28,7 +28,7 @@ import Apps from "./App.vue";
 import VueRouter from "vue-router";
 import vuetify from "./plugins/vuetify";
 import router from "./router";
-import {Howl, Howler} from 'howler';
+import { Howl, Howler } from "howler";
 import VueMeta from "vue-meta";
 import "./registerServiceWorker";
 import Vuex from "vuex";
@@ -41,13 +41,12 @@ Cohere.init("sqObFCvhZF8ro19ItzNDBgFU");
 const deliveryAgent = store.getters.getDeliveryAgent;
 if (deliveryAgent.id) {
   Cohere.identify(
-    deliveryAgent.id ,// Required: can be any unique ID
+    deliveryAgent.id, // Required: can be any unique ID
     {
-      displayName: 'Logistic_Agent_'+deliveryAgent.logistic_id, // Optional
+      displayName: "Logistic_Agent_" + deliveryAgent.logistic_id, // Optional
       email: deliveryAgent.phone, // Optional
     }
   );
-  
 }
 Vue.use(VueCountdownTimer);
 const platform = JSON.parse(localStorage.getItem("platform"));
@@ -77,7 +76,7 @@ Device.getInfo().then((res) => {
     console.log("getting platform..............");
     localStorage.setItem("platform", JSON.stringify(res));
   }
-  platform = res
+  platform = res;
 });
 if (platform) {
   if (platform.platform !== "web") {
@@ -286,43 +285,61 @@ Vue.filter("duration", function(value) {
     return "0";
   }
 });
-window.Pusher = require('pusher-js');
+window.Pusher = require("pusher-js");
 
- window.pusher2 = new Pusher("d2e70c8ff384657760d1", {
+window.pusher2 = new Pusher("d2e70c8ff384657760d1", {
   cluster: "eu",
   encrypted: true,
-  authEndpoint: 'https://foodrepublic.herokuapp.com/api/broadcasting/auth',
+  authEndpoint: "https://foodrepublic.herokuapp.com/api/broadcasting/auth",
   auth: {
     headers: {
-        Authorization: 'Bearer ' + store.getters.getToken
-    }
-},
-});
-window.OrderSoundPlaying = false
-  window.OrderSound = new Howl({
-    src: 'https://res.cloudinary.com/dnqw7x4bp/video/upload/v1608357177/Air_Plane_Ding-SoundBible.com-496729130.mp3',
-    loop: true,
-    onplay: function() {
-      OrderSoundPlaying = true
+      Authorization: "Bearer " + store.getters.getToken,
     },
-    onstop: function() {
-      OrderSoundPlaying = false
+  },
+});
+window.OrderSoundPlaying = false;
+window.OrderSound = new Howl({
+  src:
+    "https://res.cloudinary.com/dnqw7x4bp/video/upload/v1608357177/Air_Plane_Ding-SoundBible.com-496729130.mp3",
+  loop: true,
+  onplay: function() {
+    OrderSoundPlaying = true;
+  },
+  onstop: function() {
+    OrderSoundPlaying = false;
+  },
+});
+const logistic_id = store.getters.getLogisticId;
+if (logistic_id > 0) {
+  window.Channel2 = pusher2.subscribe("private-logistic." + 484);
+  Channel2.bind("logistic_event." + 484, (data) => {
+    if (!OrderSoundPlaying) {
+      OrderSound.play();
+    }
+    store.dispatch("addItem", data.order);
+    store.dispatch("getOrder", {
+      id: data.order,
+      action: "clear",
+    });
+  });
+  window.Channel3 = pusher2.subscribe("private-orders");
+  Channel3.bind("order_event", (data) => {
+    console.log(data);
+
+    if (data.logistic_id > 0) {
+      if (!OrderSoundPlaying) {
+        OrderSound.play();
+      }
+      store.dispatch("addItem", data.order);
+      store.dispatch("getOrder", {
+        id: data.order,
+        action: "clear",
+      });
+    } else {
+      store.dispatch("removeItem", data.order);
     }
   });
-  const logistic_id = store.getters.getLogisticId
-  if (logistic_id > 0) {
-    window.Channel2 = pusher2.subscribe('private-logistic.'+logistic_id);
-    Channel2.bind('logistic_event.'+logistic_id, (data) => {
-if (!OrderSoundPlaying) {
-  OrderSound.play();
 }
-    store.dispatch('addItem', data.order)
-    store.dispatch('getOrder', {
-      id: data.order,
-      action: 'clear' 
-  })
-});
-  }
 new Vue({
   vuetify,
   store,

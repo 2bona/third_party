@@ -9,10 +9,10 @@
                 color="transparent"
               >
                 <div style="min-width:300px; width:100%;" class="ma-auto mb-3 pt-3 align-self-center">
-                  <v-avatar tile size="180px"  flat   class="elevation-0 mb-3">
+                  <v-avatar tile size="200px"  flat   class="elevation-0 mb-3">
                     <v-img
-                      src="https://res.cloudinary.com/payhospi/image/upload/v1658811037/byc/spaggit_logo_1_ryxsaq.png"
-                      alt="alt" width="300px" contain
+                      src="https://res.cloudinary.com/payhospi/image/upload/c_fit,w_600/v1659678002/food%20dashboard/delivery6_pv9rth.png"
+                      alt="alt" width="330px" contain
                     > </v-img>
                   </v-avatar>
                 <v-slide-x-reverse-transition leave-absolute>

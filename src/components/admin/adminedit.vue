@@ -456,10 +456,10 @@
             <p class="grey--text text--darken-0 body-2 text-wrap px-9">Chat us on whatsapp, contact us on any issue you have on this app.</p>
           </v-list-item-title>
           <v-btn
-            outlined
+            
             rounded
             small
-            color="grey darken-1"
+            color=""
             :href="
               'https://wa.me/+234' +
                 8033685498 +
@@ -469,7 +469,7 @@
             class="px-3 font-weight-bold"
             target="_blank"
             ><v-icon size="18" class="px-2 mt-0"
-              >mdi-information-outline</v-icon
+              >mdi-whatsapp</v-icon
             ></v-btn
           >
         </v-list-item>
