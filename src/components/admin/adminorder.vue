@@ -655,7 +655,7 @@
             <p class="body-1 grey--text  mb-1 font-weight-medium text-right">
              <!-- <v-icon v-if="order.status == 2" @click="bidDialogBtn(order.delivery_fee)" size="14" style="padding-bottom:1px">{{(order.status == 2) ?'mdi-pencil': 'mdi-pencil-off'}}</v-icon>  -->
              <v-icon size="14" style="padding-bottom:1px" color="grey"
-                >mdi-currency-ngn</v-icon>{{ (order.delivery_fee - cut) | price }}.00
+                >mdi-currency-ngn</v-icon>{{ (order.errand_id? order.grand_total - cut: order.delivery_fee - cut) | price }}.00
             </p>
           </v-flex>
         </v-row>
@@ -668,7 +668,7 @@
             <p class=" font-weight-black headline text-right">
               <v-icon style="padding-bottom:5px" color="black" size="22"
                 >mdi-currency-ngn</v-icon
-              >{{ (order.delivery_fee - cut) | price }}.00
+              >{{ (order.errand_id? order.grand_total - cut : order.delivery_fee - cut) | price }}.00
             </p>
           </v-flex>
         </v-row>

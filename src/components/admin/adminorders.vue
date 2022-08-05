@@ -168,7 +168,7 @@
                     : item.status === 5
                     ? 'red'
                     : ''
-                ">mdi-currency-ngn</v-icon>{{ (item.delivery_fee - cut) | price }}</h2
+                ">mdi-currency-ngn</v-icon>{{ (item.type == 'Errands'? item.total - cut : item.delivery_fee - cut) | price }}</h2
               >
             </template>
             <template v-slot:expanded-item="{ headers, item }">
