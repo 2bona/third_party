@@ -267,7 +267,7 @@
               rounded
               >set</v-btn
             >
-                          <p class="mt-5 grey--text body-2">This is the account to Remit your Payments at the end of the day.</p>
+                          <p class="mt-5 grey--text body-2">This is the account to recieve your Payments at the end of the day.</p>
                       </div>
           </v-row>
         </v-expansion-panel-content>
