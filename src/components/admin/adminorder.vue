@@ -1409,7 +1409,7 @@ export default {
   },
   methods: {
     setDeliveryAgent(x){
-      if(this.order.status > 1 && order.status < 3){
+      if(this.order.status > 1 && this.order.status < 3){
 
         this.delivery_agent = x
       this.dialogAssign = true
