@@ -216,7 +216,7 @@ export default {
       headers: [
         { align: "left", text: "Name", value: "name" },
         { align: "center", text: "Phone", value: "user.phone" },
-        { align: "center", text: "Wallet", value: "orders_sum" },
+        // { align: "center", text: "Wallet", value: "orders_sum" },
         // { text: 'When  ', value: 'created_at' },
         { align: "center", text: "Orders", value: "orders_count" },
         // { align: "right", text: "Joined", value: "created_at" },

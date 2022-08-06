@@ -26,7 +26,7 @@
              <v-btn 
              
                depressed color="grey lighten-2" rounded :loading="loadingHist" @click="showCalender()"   >
-          <v-icon>mdi-history</v-icon><span v-if=" $vuetify.breakpoint.smAndUp">
+          <v-icon>mdi-history</v-icon><span>
             history
             </span> 
         </v-btn>
@@ -94,7 +94,7 @@
                :class="setColor(item.status)"
                 v-text="
                   item.status === 1
-                    ? 'read'
+                    ? 'In Processing'
                     : item.status === 2
                     ? 'Processed'
                     : item.status === 3

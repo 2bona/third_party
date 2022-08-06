@@ -700,7 +700,7 @@
                 </v-scale-transition>
               </v-btn>
             </v-flex> -->
-            <v-flex v-if=" !orderErrand" xs12 sm6 class="text-center px-2">
+            <v-flex v-if=" !orderErrand && order.status > 1" xs12 sm6 class="text-center px-2">
               <v-btn
                 :loading="loading"
                 block
@@ -741,11 +741,11 @@
       </v-flex>
          
    
-      <v-flex class="mb-12"  md6 sm12 xs12>
+      <v-flex v-if=" order.status > 1" class="mb-12"  md6 sm12 xs12>
    <p v-if="agents.length && order.status < 3" :class="$vuetify.breakpoint.mdAndUp? 'mt-12' : ''" class="headline text-center mb-3">{{order.delivery? 'Change ':'Choose '}} Rider</p>
-   <v-row  v-if="agents.length && order.status < 3 " class="pa-3 justify-space-around" >
+   <v-row  v-if="agents.length && order.status < 3 && order.status > 1 " class="pa-3 justify-space-around" >
 
-<v-flex xs6 sm4 class="text-center" md3  :key="n.id" v-for="n in agents">
+<v-flex  xs6 sm4 class="text-center" md3  :key="n.id" v-for="n in agents">
 
     <v-avatar @click="order.delivery? order.delivery.id == n.id? '':setDeliveryAgent(n): setDeliveryAgent(n)" 
     :class="order.delivery? order.delivery.id == n.id?'elevation-24 ': 'elevation-0': ''" 
@@ -1409,9 +1409,11 @@ export default {
   },
   methods: {
     setDeliveryAgent(x){
-      
-      this.delivery_agent = x
+      if(this.order.status > 1 && order.status < 3){
+
+        this.delivery_agent = x
       this.dialogAssign = true
+      }
     },
     sendNotifyBtn(x){
       
