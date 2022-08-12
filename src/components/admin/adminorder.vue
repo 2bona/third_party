@@ -382,7 +382,7 @@
           >
           <v-flex>
     
-        <v-btn
+        <v-btn  v-if="order.status > 1"
         small
         right 
   class="my-1 elevation-0 px-3 text-left blue--text text--darkeen-4"    
