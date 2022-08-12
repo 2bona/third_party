@@ -405,9 +405,7 @@
       </v-btn>
 
 <v-flex>
-
-
-        <v-btn
+        <v-btn v-if="order.status > 1"
         small
         right 
   class="my-1 elevation-0 px-3 text-left blue--text text--darkeen-4"    
@@ -527,7 +525,7 @@
       >
         DELIVERY & PAYMENT
       </span>
-      <v-list-item v-if="order.address" class="mt-1 mb-0" two-line>
+      <v-list-item v-if="order.address && (order.status == 2 || order.status == 3)" class="mt-1 mb-0" two-line>
         <v-list-item-content class="mt-0 py-0">
           <v-list-item-title
             class="body-1 grey--trxt text--darken-1 font-weight-medium text-wrap"
